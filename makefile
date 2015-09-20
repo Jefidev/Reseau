@@ -1,6 +1,6 @@
 
 CC = g++ 
 
-main:	main.cpp
-	echo creation main
-	$(CC) -o main main.cpp
+serveur:	serveur.cpp
+	echo creation serveur
+	$(CC) -o serveur serveur.cpp

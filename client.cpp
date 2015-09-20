@@ -55,11 +55,14 @@ int main()
         cout << "erreur accept" << errno << endl;
     }
 
-    char* message;
+    char message[50];
 
-    recv(soHandle, message, 50, 0);
+    if(recv(soHandle, message, 50, 0) == -1)
+    {
+        cout << "erreur receive : " << errno << endl;
+    }
 
-    cout << message;
+    cout << "Test : " << message;
 
 }
 
