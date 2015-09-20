@@ -29,6 +29,7 @@ int main()
     if((infohost = gethostbyname("localhost"))==0)
     {
         cout << "Erreur getHost" <<endl;
+        return 0;
     }
 
     memcpy(&transfAdresse, infohost->h_addr, infohost->h_length);
@@ -38,31 +39,20 @@ int main()
     ip.sin_port = htons(PORT);
     memcpy(&ip.sin_addr, infohost->h_addr, infohost->h_length);
 
-    if(bind(soHandle, (struct sockaddr*)&ip, sizeof(struct sockaddr))==-1)
-    {
-        cout << "Erreur bind" << endl;
-    }
-
-    if(listen(soHandle, MAXCO) == -1)
-    {
-        cout << "Erreur de listen" << endl;
-    }
-
     unsigned int t = sizeof(struct sockaddr);
+    int ser;
 
-    if((accept(soHandle, (struct sockaddr*)&ip, &t))==-1)
+    if((connect(soHandle, (struct sockaddr*)&ip, t))==-1)
     {
-        cout << "erreur accept" << errno << endl;
+        cout << "erreur connect" << errno << endl;
+        return 0;
     }
 
-    char message[50];
 
-    if(recv(soHandle, message, 50, 0) == -1)
+    if(send(soHandle, "Bonjour", 50, 0) == -1)
     {
-        cout << "erreur receive : " << errno << endl;
+        cout << "erreur send : " << errno << endl;
     }
-
-    cout << "Test : " << message;
 
 }
 

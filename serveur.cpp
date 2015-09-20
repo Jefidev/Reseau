@@ -17,6 +17,7 @@ int main()
     struct hostent* infohost;
     struct in_addr transfAdresse;
     struct sockaddr_in ip;
+    int ecoute;
 
     int soHandle = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -41,25 +42,29 @@ int main()
     if(bind(soHandle, (struct sockaddr*)&ip, sizeof(struct sockaddr))==-1)
     {
         cout << "Erreur bind" << endl;
+        return 0;
     }
 
     if(listen(soHandle, MAXCO) == -1)
     {
         cout << "Erreur de listen" << endl;
+        return 0;
     }
 
     unsigned int t = sizeof(struct sockaddr);
 
-    if((accept(soHandle, (struct sockaddr*)&ip, &t))==-1)
+    if((ecoute = accept(soHandle, (struct sockaddr*)&ip, &t))==-1)
     {
         cout << "erreur accept" << errno << endl;
+        return 0;
     }
 
     char message[50];
 
-    if(recv(soHandle, message, 50, 0) == -1)
+    if(recv(ecoute, message, 50, 0) == -1)
     {
         cout << "erreur receive : " << errno << endl;
+        return 0;
     }
 
     cout << "Test : " << message;
