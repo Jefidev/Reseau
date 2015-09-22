@@ -12,40 +12,20 @@
 
 using namespace std;
 
+#include "socket.h"
+
 int main()
 {
-    struct hostent* infohost;
-    struct in_addr transfAdresse;
-    struct sockaddr_in ip;
+    Socket sock = new Socket("localhost", PORT, false);
     int ecoute;
 
-    int soHandle = socket(AF_INET, SOCK_STREAM, 0);
-
-    if(soHandle == -1)
-    {
-        cout << "Erreur creation socket : " << errno << endl;
-        return(1);
-    }
-
-    if((infohost = gethostbyname("localhost"))==0)
-    {
-        cout << "Erreur getHost" <<endl;
-    }
-
-    memcpy(&transfAdresse, infohost->h_addr, infohost->h_length);
-
-    memset(&ip, 0, sizeof(struct sockaddr_in));
-    ip.sin_family = AF_INET;
-    ip.sin_port = htons(PORT);
-    memcpy(&ip.sin_addr, infohost->h_addr, infohost->h_length);
-
-    if(bind(soHandle, (struct sockaddr*)&ip, sizeof(struct sockaddr))==-1)
+    if(bind(sock.getSocketHandle(), (struct sockaddr*)sock.getSockAdd(), sizeof(struct sockaddr))==-1)
     {
         cout << "Erreur bind" << endl;
         return 0;
     }
 
-    if(listen(soHandle, MAXCO) == -1)
+    if(listen(sock.getSocketHandle(), MAXCO) == -1)
     {
         cout << "Erreur de listen" << endl;
         return 0;
@@ -53,7 +33,7 @@ int main()
 
     int t = sizeof(struct sockaddr);
 
-    if((ecoute = accept(soHandle, (struct sockaddr*)&ip, &t))==-1)
+    if((ecoute = accept(sock.getSocketHandle(), (struct sockaddr*)sock.getSockAdd(), &t))==-1)
     {
         cout << "erreur accept" << errno << endl;
         return 0;
