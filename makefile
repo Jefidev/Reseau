@@ -1,5 +1,5 @@
 
-CC = g++ 
+CC = g++
 
 all: serveur client
 

@@ -51,7 +51,7 @@ int main()
         return 0;
     }
 
-    unsigned int t = sizeof(struct sockaddr);
+    int t = sizeof(struct sockaddr);
 
     if((ecoute = accept(soHandle, (struct sockaddr*)&ip, &t))==-1)
     {
