@@ -1,10 +1,21 @@
+#include <iostream>
+#include <sys/socket.h>
+#include <errno.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <cstdlib>
+#include <unistd.h>
+#include <cstring>
+#include <string>
+
 using namespace std;
 #include "socket.h"
 
 
 
 /* Constructeur d'initialisation */
-Socket::Socket(string host, int port, bool isIP);
+Socket::Socket(string host, int port, bool isIP)
 {
 	socketHandle = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -20,7 +31,7 @@ Socket::Socket(string host, int port, bool isIP);
 
 		socketAdress.sin_family = AF_INET;
 		socketAdress.sin_port = htons(port);
-		socketAdress.s_addr = inet_addr(host.c_str);
+		socketAdress.sin_addr.s_addr = inet_addr(host.c_str());
 
 		return;
 	}
@@ -28,7 +39,7 @@ Socket::Socket(string host, int port, bool isIP);
 	{
 		struct hostent* infohost;
 
-		if((infohost = gethostbyname(host.c_str))==0)
+		if((infohost = gethostbyname(host.c_str()))==0)
 	    {
 	        cout << "Erreur getHost : " << errno <<endl;
 	        exit(-1);

@@ -12,11 +12,11 @@
 
 using namespace std;
 
-#include "socket.h"
+#include "Librairie/socket.h"
 
 int main()
 {
-    Socket sock = new Socket("localhost", PORT, false);
+    Socket sock = Socket("localhost", PORT, false);
     int ecoute;
 
     if(bind(sock.getSocketHandle(), (struct sockaddr*)sock.getSockAdd(), sizeof(struct sockaddr))==-1)

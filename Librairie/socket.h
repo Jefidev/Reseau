@@ -1,11 +1,5 @@
-#ifndef CLIENT_H_INCLUDED
-#define CLIENT_H_INCLUDED
-
-#include <sys/socket.h>
-#include <errno.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <cstdlib>
+#ifndef SOCKET_H_INCLUDED
+#define SOCKET_H_INCLUDED
 
 class Socket
 {
