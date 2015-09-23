@@ -13,19 +13,13 @@
 using namespace std;
 
 #include "Librairie/socket.h"
+#include "Librairie/socketClient.h"
 
 int main()
 {
-    Socket sock = Socket("localhost", PORT, false);
+    SocketClient sock = SocketClient("localhost", PORT, false);
 
-    unsigned int t = sizeof(struct sockaddr);
-
-    if((connect(sock.getSocketHandle(), (struct sockaddr*)sock.getSockAdd(), t))==-1)
-    {
-        cout << "erreur connect" << errno << endl;
-        return 0;
-    }
-
+    sock.connecter();
 
     if(send(sock.getSocketHandle(), "Bonjour", 50, 0) == -1)
     {

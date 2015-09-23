@@ -59,13 +59,8 @@ Socket::~Socket()
 	close(socketHandle);
 }
 
-int Socket::getSocketHandle()
+int Socket::getSocketHandle() const 
 {
 	return socketHandle;
-}
-
-struct sockaddr_in * Socket::getSockAdd()
-{
-	return &socketAdress;
 }
 

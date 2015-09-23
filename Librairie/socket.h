@@ -3,7 +3,7 @@
 
 class Socket
 {
-	private :
+	protected :
 		struct sockaddr_in socketAdress;
     	int socketHandle;
 		
@@ -12,16 +12,9 @@ class Socket
 		Socket(string host, int port, bool isIP);
 		~Socket();
 
-		/* SETTERS */
-		
-		int getSocketHandle();
-		struct sockaddr_in * getSockAdd();
 
-		/* GETTERS */
-
-
-		/* METHODES */
-
+		/*getter*/
+		int getSocketHandle() const;
 };
 
 #endif

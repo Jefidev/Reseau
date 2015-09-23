@@ -13,32 +13,17 @@
 using namespace std;
 
 #include "Librairie/socket.h"
+#include "Librairie/socketServeur.h"
 
 int main()
 {
-    Socket sock = Socket("localhost", PORT, false);
+    SocketServeur sock = SocketServeur("localhost", PORT, false);
     int ecoute;
+    
+    sock.ecouter();
 
-    if(bind(sock.getSocketHandle(), (struct sockaddr*)sock.getSockAdd(), sizeof(struct sockaddr))==-1)
-    {
-        cout << "Erreur bind" << endl;
-        return 0;
-    }
-
-    if(listen(sock.getSocketHandle(), MAXCO) == -1)
-    {
-        cout << "Erreur de listen" << endl;
-        return 0;
-    }
-
-    int t = sizeof(struct sockaddr);
-
-    if((ecoute = accept(sock.getSocketHandle(), (struct sockaddr*)sock.getSockAdd(), &t))==-1)
-    {
-        cout << "erreur accept" << errno << endl;
-        return 0;
-    }
-
+    ecoute = sock.accepter();
+    
     char message[50];
 
     if(recv(ecoute, message, 50, 0) == -1)
