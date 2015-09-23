@@ -15,10 +15,10 @@ serveur:	serveur.cpp $(OBJ)
 
 ../Librairie/socket/socket.o:	../Librairie/socket/socket.cpp ../Librairie/socket/socket.h
 								echo creation socket.o
-								$(CC) -c ..Librairie/socket/socket.cpp
+								$(CC) -c ../Librairie/socket/socket.cpp
 								mv socket.o ../Librairie/socket
 
-../Librairie/fichierProp/fichierProp.o:	../Librairie/fichierProp/fichierProp.cpp ../Librairie/fichierProp/fichierProp.o
+../Librairie/fichierProp/fichierProp.o:	../Librairie/fichierProp/fichierProp.cpp
 										echo creation fichierprop.o
 										$(CC) -c ../Librairie/fichierProp/fichierProp.cpp
 										mv fichierProp.o ../Librairie/fichierProp

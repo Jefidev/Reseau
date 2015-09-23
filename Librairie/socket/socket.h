@@ -9,6 +9,7 @@ class Socket
 		
 	public :
 
+		Socket();
 		Socket(string host, int port, bool isIP);
 		~Socket();
 

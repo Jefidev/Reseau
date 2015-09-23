@@ -5,6 +5,7 @@ class SocketServeur: public Socket
 {
 	public :
 
+		SocketServeur();
 		SocketServeur(string host, int port, bool isIP);
 		~SocketServeur();
 		

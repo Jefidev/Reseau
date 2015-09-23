@@ -14,6 +14,7 @@ using namespace std;
 #include "socketClient.h"
 
 
+SocketClient::SocketClient(){}
 
 /* Constructeur d'initialisation */
 SocketClient::SocketClient(string host, int port, bool isIP):Socket(host, port, isIP)

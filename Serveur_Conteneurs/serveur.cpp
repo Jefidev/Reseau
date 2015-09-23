@@ -7,8 +7,6 @@
 #include <cstdlib>
 #include <cstring>
 
-#define PORT 50001
-
 using namespace std;
 
 #include "../Librairie/socket/socket.h"
@@ -20,7 +18,19 @@ int main()
 
     FichierProp fp = FichierProp("properties.txt");
 
-    SocketServeur sock = SocketServeur("localhost", PORT, false);
+    string host = fp.getValue("HOST");
+    string port = fp.getValue("PORT");
+    string isip = fp.getValue("ISIP");
+
+    SocketServeur sock;
+
+    if(isip == "1")
+        sock = SocketServeur(host , atoi(port.c_str()), true);
+    else
+        sock = SocketServeur(host , atoi(port.c_str()), false);
+
+
+
     int ecoute;
     
     sock.ecouter();

@@ -1,13 +1,6 @@
 #ifndef FICHIERPROP_H_INCLUDED
 #define FICHIERPROP_H_INCLUDED
 
-typedef struct
-{
-  char cle[40];
-  char valeur[40];
-} FPENTREE;
-
-
 class FichierProp
 {
 	private :
@@ -17,6 +10,9 @@ class FichierProp
 
 		FichierProp(string n);
 		~FichierProp();
+
+		/*METHODES*/
+		string getValue(string v);
 };
 
 #endif

@@ -20,6 +20,8 @@ using namespace std;
 #include "socketServeur.h"
 
 
+SocketServeur::SocketServeur(){}
+
 
 /* Constructeur d'initialisation */
 SocketServeur::SocketServeur(string host, int port, bool isIP):Socket(host, port, isIP)
