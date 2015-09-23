@@ -13,9 +13,13 @@ using namespace std;
 
 #include "../Librairie/socket/socket.h"
 #include "../Librairie/socket/socketServeur.h"
+#include "../Librairie/fichierProp/fichierProp.h"
 
 int main()
 {
+
+    FichierProp fp = FichierProp("properties.txt");
+
     SocketServeur sock = SocketServeur("localhost", PORT, false);
     int ecoute;
     
