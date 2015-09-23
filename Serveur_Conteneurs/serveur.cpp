@@ -8,12 +8,11 @@
 #include <cstring>
 
 #define PORT 50001
-#define MAXCO 1024
 
 using namespace std;
 
-#include "Librairie/socket.h"
-#include "Librairie/socketServeur.h"
+#include "../Librairie/socket/socket.h"
+#include "../Librairie/socket/socketServeur.h"
 
 int main()
 {

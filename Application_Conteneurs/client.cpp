@@ -8,12 +8,12 @@
 #include <cstring>
 
 #define PORT 50001
-#define MAXCO 1024
+#define FICHIER_PROP "properties.txt"
 
 using namespace std;
 
-#include "Librairie/socket.h"
-#include "Librairie/socketClient.h"
+#include "../Librairie/socket/socket.h"
+#include "../Librairie/socket/socketClient.h"
 
 int main()
 {
