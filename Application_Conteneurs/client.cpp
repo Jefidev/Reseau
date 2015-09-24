@@ -14,14 +14,27 @@ using namespace std;
 
 #include "../Librairie/socket/socket.h"
 #include "../Librairie/socket/socketClient.h"
+#include "../Librairie/fichierProp/fichierProp.h"
 
 int main()
 {
-    SocketClient sock = SocketClient("localhost", PORT, false);
+    FichierProp fp = FichierProp("properties.txt");
 
-    sock.connecter();
+    string host = fp.getValue("HOST");
+    string port = fp.getValue("PORT");
+    string isip = fp.getValue("ISIP");
 
-    if(send(sock.getSocketHandle(), "Bonjour", 50, 0) == -1)
+    SocketClient* sock = NULL;
+
+    if(isip == "1")
+        sock = new SocketClient(host , atoi(port.c_str()), true);
+    else
+        sock = new SocketClient(host , atoi(port.c_str()), false);
+
+
+    sock->connecter();
+
+    if(send(sock->getSocketHandle(), "Bonjour", 50, 0) == -1)
     {
         cout << "erreur send : " << errno << endl;
     }

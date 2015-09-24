@@ -22,20 +22,20 @@ int main()
     string port = fp.getValue("PORT");
     string isip = fp.getValue("ISIP");
 
-    SocketServeur sock;
+    SocketServeur* sock = NULL;
 
     if(isip == "1")
-        sock = SocketServeur(host , atoi(port.c_str()), true);
+        sock = new SocketServeur(host , atoi(port.c_str()), true);
     else
-        sock = SocketServeur(host , atoi(port.c_str()), false);
+        sock = new SocketServeur(host , atoi(port.c_str()), false);
 
 
 
     int ecoute;
     
-    sock.ecouter();
+    sock->ecouter();
 
-    ecoute = sock.accepter();
+    ecoute = sock->accepter();
     
     char message[50];
 

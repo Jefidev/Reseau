@@ -13,7 +13,6 @@ using namespace std;
 #include "socket.h"
 
 
-Socket::Socket(){}
 
 /* Constructeur d'initialisation */
 Socket::Socket(string host, int port, bool isIP)

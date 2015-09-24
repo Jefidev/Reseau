@@ -50,6 +50,7 @@ string FichierProp::getValue(string v)
   	strcpy (cstr, nomFichier.c_str());
 
 	f = fopen(cstr, "r");
+	delete cstr;
 
 	if(f == (FILE*)NULL)
 	{
@@ -71,11 +72,10 @@ string FichierProp::getValue(string v)
 	  if(sortie == 0)
 	  	return 0;
 	  	
-	  p = strtok(NULL, "=");
+	  p = strtok(NULL, "\n");
 
 	  fclose(f);
-	  delete cstr;
-	  
+
 	  return string(p);  
 
 }

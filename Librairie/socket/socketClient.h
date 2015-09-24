@@ -5,7 +5,6 @@ class SocketClient: public Socket
 {
 	public :
 
-		SocketClient();
 		SocketClient(string host, int port, bool isIP);
 		~SocketClient();
 

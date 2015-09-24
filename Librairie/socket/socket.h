@@ -9,13 +9,17 @@ class Socket
 		
 	public :
 
-		Socket();
 		Socket(string host, int port, bool isIP);
 		~Socket();
 
 
 		/*getter*/
 		int getSocketHandle() const;
+
+		/*METHODE*/
+		int receiveChar(char* r, char sep);
+		//int receiveByte(void* r, int size);
+
 };
 
 #endif
