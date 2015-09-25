@@ -72,11 +72,13 @@ string FichierProp::getValue(string v)
 	  if(sortie == 0)
 	  	return 0;
 	  	
-	  p = strtok(NULL, "\r");
+	  p = strtok(NULL, "=");
 
 	  fclose(f);
 
-	  return string(p);  
+	  string fullString = string(p);
+
+	  return fullString.substr(0, fullString.size()-1);  
 
 }
 
