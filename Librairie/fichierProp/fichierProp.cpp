@@ -72,7 +72,7 @@ string FichierProp::getValue(string v)
 	  if(sortie == 0)
 	  	return 0;
 	  	
-	  p = strtok(NULL, "\n");
+	  p = strtok(NULL, "\r");
 
 	  fclose(f);
 

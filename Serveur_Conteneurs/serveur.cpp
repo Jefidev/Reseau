@@ -24,22 +24,23 @@ int main()
 
     SocketServeur* sock = NULL;
 
+    cout << host << "---- test " << endl;
+
     if(isip == "1")
         sock = new SocketServeur(host , atoi(port.c_str()), true);
     else
         sock = new SocketServeur(host , atoi(port.c_str()), false);
 
 
-
-    int ecoute;
+    int service;
     
     sock->ecouter();
 
-    ecoute = sock->accepter();
+    service = sock->accepter();
     
     char message[50];
 
-    if(recv(ecoute, message, 50, 0) == -1)
+    if(recv(service, message, 50, 0) == -1)
     {
         cout << "erreur receive : " << errno << endl;
         return 0;
