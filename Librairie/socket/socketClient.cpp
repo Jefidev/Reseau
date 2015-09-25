@@ -14,18 +14,19 @@ using namespace std;
 #include "socketClient.h"
 
 
-/* Constructeur d'initialisation */
+/* Constructeur d'initialisation (appel le constructeur de socket)*/
 SocketClient::SocketClient(string host, int port, bool isIP):Socket(host, port, isIP)
 {
 
 }
 
 /* Destructeur */
-SocketClient::~SocketClient()
-{
+SocketClient::~SocketClient(){}
 
-}
 
+/************************************************************************
+*Connecte le client au serveur via le socket créée dans le constructeur
+*************************************************************************/
 void SocketClient::connecter()
 {
 	unsigned int t = sizeof(struct sockaddr);

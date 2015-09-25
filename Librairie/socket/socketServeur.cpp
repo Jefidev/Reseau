@@ -20,7 +20,7 @@ using namespace std;
 #include "socketServeur.h"
 
 
-/* Constructeur d'initialisation */
+/* Constructeur d'initialisation (Appel le constructeur de la classe socket et effectue le bind)*/
 SocketServeur::SocketServeur(string host, int port, bool isIP):Socket(host, port, isIP)
 {
 	if(bind(socketHandle, (struct sockaddr*)&socketAdress, sizeof(struct sockaddr))==-1)
@@ -31,11 +31,10 @@ SocketServeur::SocketServeur(string host, int port, bool isIP):Socket(host, port
 }
 
 /* Destructeur */
-SocketServeur::~SocketServeur()
-{
+SocketServeur::~SocketServeur(){}
 
-}
 
+//Ecoute sur le port de la socket créée par le constructeur
 void SocketServeur::ecouter()
 {
 	if(listen(socketHandle, SOMAXCONN) == -1)
@@ -45,18 +44,20 @@ void SocketServeur::ecouter()
     }
 }
 
+
+//Accepte une connection pendante et renvois le handle de socket dupliqué
 int SocketServeur::accepter()
 {
-	int ecoute;
+	int service;
 
 	int t = sizeof(struct sockaddr);
 
-    if((ecoute = accept(socketHandle, (struct sockaddr*)&socketAdress, &t))==-1)
+    if((service = accept(socketHandle, (struct sockaddr*)&socketAdress, &t))==-1)
     {
         cout << "erreur accept" << errno << endl;
         exit(-1);
     }
 
-    return ecoute;
+    return service;
 }
 

@@ -14,7 +14,10 @@ using namespace std;
 
 
 
-/* Constructeur d'initialisation */
+/**************************************************************************************
+*Constructeur effectuant les actions communes d'un client et serveur : creation socket, 
+remplissage de structure sockaddr_in
+**************************************************************************************/
 Socket::Socket(string host, int port, bool isIP)
 {
 	socketHandle = socket(AF_INET, SOCK_STREAM, 0);
@@ -25,7 +28,7 @@ Socket::Socket(string host, int port, bool isIP)
 		exit(-1);
 	}
 
-	if(isIP)
+	if(isIP)//Si l'host est une IP
 	{
 		memset(&socketAdress, '0', sizeof(sockaddr_in));
 
@@ -35,7 +38,7 @@ Socket::Socket(string host, int port, bool isIP)
 
 		return;
 	}
-	else
+	else //Si l'host est un serveur
 	{
 		struct hostent* infohost;
 

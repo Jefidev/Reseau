@@ -9,50 +9,58 @@ using namespace std;
 
 #include "fichierProp.h"
 
+
+/****************************************************************************
+*Vérifie si le fichier existe. Sinon il est créé avec des valeurs par défaut
+*****************************************************************************/
 FichierProp::FichierProp(string n)
 {
-	FILE* f;
+	FILE* file;
 
-	char * cstr = new char [n.length()+1];
-  	strcpy (cstr, n.c_str());
+	char * nomFichierChar = new char [n.length()+1];
+  	strcpy (nomFichierChar, n.c_str());
 
-	f = fopen(cstr, "r");
+	file = fopen(nomFichierChar, "r");
 
-	if(f == (FILE*) NULL)
+	if(file == (FILE*) NULL)
 	{
-		f = fopen(cstr, "w");
+		file = fopen(nomFichierChar, "w");
 
-		if(f == (FILE*)NULL)
+		if(file == (FILE*)NULL)
 		{
 			cout << "Impossible de créer le fichier properties" << endl;
 			exit(-1);
 		}
 
-		fputs("HOST=localhost\n", f);
-		fputs("PORT=31040\n", f);
-		fputs("ISIP=0\n", f);
+		fputs("HOST=localhost\n", file);
+		fputs("PORT=31040\n", file);
+		fputs("ISIP=0\n", file);
 	}
 
-	fclose(f);
-	delete cstr;
+	fclose(file);
+	delete nomFichierChar;
 
 	nomFichier = n;
 }
 
 FichierProp::~FichierProp(){}
 
+
+/******************************************************************************************************
+*Reçoit la valeur d'une clé en parametre et cherche la valeur correspondante dans la fichier properties
+*******************************************************************************************************/
 string FichierProp::getValue(string v)
 {
-	FILE* f;
+	FILE* file;
 	char lec[255];
 	char* p;
-	char * cstr = new char [nomFichier.length()+1];
-  	strcpy (cstr, nomFichier.c_str());
+	char * nomFichierChar = new char [nomFichier.length()+1];
+  	strcpy (nomFichierChar, nomFichier.c_str());
 
-	f = fopen(cstr, "r");
-	delete cstr;
+	file = fopen(nomFichierChar, "r");
+	delete nomFichierChar;
 
-	if(f == (FILE*)NULL)
+	if(file == (FILE*)NULL)
 	{
 		cout << "Erreur de lecture du fichier : " << errno << endl;
 		exit(-1);
@@ -60,7 +68,7 @@ string FichierProp::getValue(string v)
 
 	int sortie = 0;
 
-	while (sortie == 0 && (fgets(lec, 255, f)))
+	while (sortie == 0 && (fgets(lec, 255, file)))
 	{
 	 	strtok(lec, "=");
 	  	
@@ -74,7 +82,7 @@ string FichierProp::getValue(string v)
 	  	
 	  p = strtok(NULL, "=");
 
-	  fclose(f);
+	  fclose(file);
 
 	  string fullString = string(p);
 
