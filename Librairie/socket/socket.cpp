@@ -11,6 +11,7 @@
 
 using namespace std;
 #include "socket.h"
+#include "../utility.h"
 
 
 
@@ -72,31 +73,19 @@ int Socket::getSocketHandle() const
 	return socketHandle;
 }
 
+
+/*********************************************************
+*Prend une chaine de caractere en parametre et l'envois au serveur
+*********************************************************/
+
 void Socket::sendChar(string message)
 {
 	int nbrByteSend, messageLength;
 	string stringSend;
 
 	messageLength = message.size();
+	stringSend = Utility::intToString(messageLength) + '#' + message;
 
-	cout << messageLength << endl;
-
-	stringSend = '#';
-
-	while(messageLength > 0)
-	{
-		int digit = messageLength%10;
-
-		char digitToChar = digit + 48;//on convertis le nombre isolé en son symbol dans la table ascii
-
-		messageLength =  messageLength / 10;
-
-		stringSend = digitToChar + stringSend;
-	}
-
-	stringSend = stringSend + message;
-
-	cout << stringSend << "-----" << stringSend.size() << endl;
 
 	nbrByteSend = send(socketHandle, (void*)stringSend.c_str(), stringSend.size(), 0);
 
@@ -106,10 +95,13 @@ void Socket::sendChar(string message)
     }
 }
 
+/******************************************************************************************
+*Prend une struct castée en void* en parametre et le sizeof() de cette struct.
+*********************************************************************************************/
 
-void Socket::sendStruct(void* stru)
+void Socket::sendStruct(void* stru, int size)
 {
-	int nbrByteSend = send(socketHandle, stru, sizeof(stru), 0);
+	int nbrByteSend = send(socketHandle, stru, size, 0);
 
 	if(nbrByteSend == -1)
     {
@@ -117,10 +109,15 @@ void Socket::sendStruct(void* stru)
     }
 }
 
+/******************************************************************************************
+*Place les bytes reçus dans void* r (struct attendue castée en void*) et a besoin de sizeof() de cette struct
+******************************************************************************************/
+
 void Socket::receiveStruct(void* r, int size)
 {
 	int totBytesReceives = 0;
-	int bytes;
+	int bytes, sizeMax;
+
 	do
 	{
 
@@ -141,5 +138,65 @@ void Socket::receiveStruct(void* r, int size)
 		cout << totBytesReceives << "------" << size << endl;
 
 	}while(totBytesReceives < size);
+
+	if(totBytesReceives > size)
+	{
+		cout << "Erreur message trop long" << endl;
+		exit(-1);
+	}
+}
+
+
+/******************************************************************************************
+*Renvois la chaine de caractere lue sur le réseau.
+*******************************************************************************************/
+string Socket::receiveChar()
+{
+	int totBytesReceives = 0;
+	int bytesReceived, stringLength = 0;
+
+	char buff[500], cpBuff[500], *messageSize;
+	string retString;
+
+	do
+	{
+		if((bytesReceived = recv(socketHandle, buff, 500, 0)) == -1)
+		{
+			cout << "Erreur de reception " << endl;
+			exit(-1);
+		}
+		else
+		{
+			if(totBytesReceives == 0)//Si on est au début du message (0 caracteres traités)
+			{
+				strcpy(cpBuff, buff);
+				messageSize = strtok(cpBuff, "#");
+
+				//le nombre de byte à lire  = taille du message + taille du chiffres au debut + le caractere # "effacé" au strtok ci dessus
+				stringLength =  atoi(messageSize) + strlen(messageSize) + 1;
+			}
+			
+			totBytesReceives += bytesReceived; //On met à jour la longueur
+			retString += buff;
+
+			if(stringLength == 0)
+			{
+				cout << "Chaine reçue non valide " << endl;
+				exit(-1);
+			}
+		}
+
+
+	}while(totBytesReceives < stringLength);
+
+	cout << retString << endl;
+
+	if(totBytesReceives > stringLength)
+	{
+		cout << "Erreur message trop long" << endl;
+		exit(-1);
+	}
+
+	return retString.erase(0, strlen(messageSize) + 1); //On retourne la chaine composée sans les caractères devant 
 }
 

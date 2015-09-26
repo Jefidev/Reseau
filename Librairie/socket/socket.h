@@ -19,11 +19,11 @@ class Socket
 
 		/*METHODE*/
 		void sendChar(string message);
-		void sendStruct(void* stru);
+		void sendStruct(void* stru, int size);
 
 
 		void receiveStruct(void* r, int size);
-
+		string receiveChar();
 };
 
 #endif

@@ -1,6 +1,6 @@
 CC = g++
 
-OBJ = ../Librairie/socket/socket.o ../Librairie/socket/socketClient.o ../Librairie/fichierProp/fichierProp.o
+OBJ = ../Librairie/socket/socket.o ../Librairie/socket/socketClient.o ../Librairie/fichierProp/fichierProp.o ../Librairie/utility.o
 
 
 client:	client.cpp $(OBJ)
@@ -13,7 +13,7 @@ client:	client.cpp $(OBJ)
 									mv socketClient.o ../Librairie/socket
 
 
-../Librairie/socket/socket.o:	../Librairie/socket/socket.cpp ../Librairie/socket/socket.h
+../Librairie/socket/socket.o:	../Librairie/socket/socket.cpp ../Librairie/socket/socket.h ../Librairie/utility.o
 								echo creation socket.o
 								$(CC) -c ../Librairie/socket/socket.cpp
 								mv socket.o ../Librairie/socket
@@ -23,5 +23,8 @@ client:	client.cpp $(OBJ)
 										$(CC) -c ../Librairie/fichierProp/fichierProp.cpp
 										mv fichierProp.o ../Librairie/fichierProp
 
-
+../Librairie/utility.o:	../Librairie/utility.cpp
+						echo creation de utility.o
+						$(CC) -c ../Librairie/utility.cpp
+						mv utility.o ../Librairie
 

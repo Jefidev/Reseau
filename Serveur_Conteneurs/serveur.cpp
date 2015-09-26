@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include <sys/socket.h>
 #include <errno.h>
 #include <netinet/in.h>
@@ -12,6 +11,7 @@ using namespace std;
 #include "../Librairie/socket/socket.h"
 #include "../Librairie/socket/socketServeur.h"
 #include "../Librairie/fichierProp/fichierProp.h"
+#include "../protocole.ini"
 
 int main()
 {
@@ -37,12 +37,10 @@ int main()
     Socket service = sock->accepter();
 
     cout << "Un client a été accepté" << endl;
-    
-    char message[50];
 
-    service.receiveStruct((void*)message, 8);
-    
-    cout << "Test : " << message;
+    string tt = service.receiveChar();
+
+    cout << tt << endl;
 
 }
 
