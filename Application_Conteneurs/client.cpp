@@ -34,10 +34,7 @@ int main()
 
     sock->connecter();
 
-    if(send(sock->getSocketHandle(), "Bonjour", 50, 0) == -1)
-    {
-        cout << "erreur send : " << errno << endl;
-    }
+    sock->sendStruct((void*)"Bonjour");
 
 }
 

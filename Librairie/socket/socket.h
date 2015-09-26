@@ -10,6 +10,7 @@ class Socket
 	public :
 
 		Socket(string host, int port, bool isIP);
+		Socket(int h);
 		~Socket();
 
 
@@ -17,8 +18,11 @@ class Socket
 		int getSocketHandle() const;
 
 		/*METHODE*/
-		int receiveChar(char* r, char sep);
-		//int receiveByte(void* r, int size);
+		void sendChar(string message);
+		void sendStruct(void* stru);
+
+
+		void receiveStruct(void* r, int size);
 
 };
 

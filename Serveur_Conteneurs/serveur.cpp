@@ -31,21 +31,17 @@ int main()
     else
         sock = new SocketServeur(host , atoi(port.c_str()), false);
 
-
-    int service;
     
     sock->ecouter();
 
-    service = sock->accepter();
+    Socket service = sock->accepter();
+
+    cout << "Un client a été accepté" << endl;
     
     char message[50];
 
-    if(recv(service, message, 50, 0) == -1)
-    {
-        cout << "erreur receive : " << errno << endl;
-        return 0;
-    }
-
+    service.receiveStruct((void*)message, 8);
+    
     cout << "Test : " << message;
 
 }

@@ -46,7 +46,7 @@ void SocketServeur::ecouter()
 
 
 //Accepte une connection pendante et renvois le handle de socket dupliqué
-int SocketServeur::accepter()
+Socket SocketServeur::accepter()
 {
 	int service;
 
@@ -58,6 +58,6 @@ int SocketServeur::accepter()
         exit(-1);
     }
 
-    return service;
+    return Socket(service);
 }
 
