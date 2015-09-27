@@ -12,6 +12,7 @@ using namespace std;
 #include "../Librairie/socket/socketServeur.h"
 #include "../Librairie/fichierProp/fichierProp.h"
 #include "../protocole.ini"
+#include "../Librairie/exceptions/errnoException.h"
 
 int main()
 {
@@ -24,12 +25,19 @@ int main()
 
     SocketServeur* sock = NULL;
 
-    cout << host << "---- test " << endl;
+    try
+    {
 
-    if(isip == "1")
-        sock = new SocketServeur(host , atoi(port.c_str()), true);
-    else
-        sock = new SocketServeur(host , atoi(port.c_str()), false);
+        if(isip == "1")
+            sock = new SocketServeur(host , atoi(port.c_str()), true);
+        else
+            sock = new SocketServeur(host , atoi(port.c_str()), false);
+    }
+    catch(ErrnoException er)
+    {
+        cout << er.getErrorCode() << "------" << er.getMessage() << endl;
+        exit(-1);
+    }
 
     
     sock->ecouter();

@@ -12,6 +12,7 @@
 using namespace std;
 #include "socket.h"
 #include "socketClient.h"
+#include "../exceptions/errnoException.h"
 
 
 /* Constructeur d'initialisation (appel le constructeur de socket)*/
@@ -32,9 +33,6 @@ void SocketClient::connecter()
 	unsigned int t = sizeof(struct sockaddr);
 
     if((connect(socketHandle, (struct sockaddr*)&socketAdress, t))==-1)
-    {
-        cout << "erreur connect" << errno << endl;
-        exit(-1);
-    }
+        throw ErrnoException(errno, "Erreur connect");  
 }
 

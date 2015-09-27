@@ -17,16 +17,14 @@
 using namespace std;
 #include "socket.h"
 #include "socketServeur.h"
+#include "../exceptions/errnoException.h"
 
 
 /* Constructeur d'initialisation (Appel le constructeur de la classe socket et effectue le bind)*/
 SocketServeur::SocketServeur(string host, int port, bool isIP):Socket(host, port, isIP)
 {
 	if(bind(socketHandle, (struct sockaddr*)&socketAdress, sizeof(struct sockaddr))==-1)
-    {
-        cout << "Erreur bind : " << errno << endl;
-        exit(1);
-    }
+        throw ErrnoException(errno, "Erreur bind");  
 }
 
 /* Destructeur */
@@ -37,10 +35,7 @@ SocketServeur::~SocketServeur(){}
 void SocketServeur::ecouter()
 {
 	if(listen(socketHandle, SOMAXCONN) == -1)
-    {
-        cout << "Erreur de listen" << errno <<endl;
-        exit(-1);
-    }
+        throw ErrnoException(errno, "Erreur listen");  
 }
 
 
@@ -53,10 +48,10 @@ Socket SocketServeur::accepter()
 
     if((service = accept(socketHandle, (struct sockaddr*)&socketAdress, &t))==-1)
     {
-        cout << "erreur accept" << errno << endl;
-        exit(-1);
+        throw ErrnoException(errno, "Erreur accept");
+        return Socket(-1);
     }
-
-    return Socket(service);
+    else
+        return Socket(service);
 }
 

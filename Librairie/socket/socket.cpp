@@ -12,6 +12,8 @@
 using namespace std;
 #include "socket.h"
 #include "../utility.h"
+#include "../exceptions/errnoException.h"
+#include "../exceptions/communicationException.h"
 
 
 
@@ -24,11 +26,8 @@ Socket::Socket(string host, int port, bool isIP)
 	socketHandle = socket(AF_INET, SOCK_STREAM, 0);
 
 	if(socketHandle == -1)
-	{
-		cout << "Erreur création socket  : " << errno <<endl;
-		exit(-1);
-	}
-
+		throw ErrnoException(errno, "Erreur creation de socket");
+	
 	if(isIP)//Si l'host est une IP
 	{
 		memset(&socketAdress, '0', sizeof(sockaddr_in));
@@ -44,10 +43,8 @@ Socket::Socket(string host, int port, bool isIP)
 		struct hostent* infohost;
 
 		if((infohost = gethostbyname(host.c_str()))==0)
-	    {
-	        cout << "Erreur getHost : " << errno <<endl;
-	        exit(-1);
-	    }
+	        throw ErrnoException(errno, "Erreur gethostbyname");
+	    
 
 	    socketAdress.sin_family = AF_INET;
 		socketAdress.sin_port = htons(port);
@@ -91,8 +88,10 @@ void Socket::sendChar(string message)
 
 	if(nbrByteSend == -1)
     {
-        cout << "Le message n'a pas été correctement envoye" << endl;
+        throw ErrnoException(errno, "Erreur send");
     }
+    else if(nbrByteSend < stringSend.size())
+    	cout << "communication excepiton";
 }
 
 /******************************************************************************************
@@ -105,8 +104,10 @@ void Socket::sendStruct(void* stru, int size)
 
 	if(nbrByteSend == -1)
     {
-        cout << "Le message n'a pas été correctement envoye" << endl;
+        throw ErrnoException(errno, "Erreur send");
     }
+    else if(nbrByteSend < size)
+    	cout << "communication excepiton";
 }
 
 /******************************************************************************************
@@ -122,10 +123,7 @@ void Socket::receiveStruct(void* r, int size)
 	{
 
 		if((bytes = recv(socketHandle, r, size, 0)) == -1)
-		{
-			cout << "Erreur de reception " << endl;
-			exit(-1);
-		}
+			throw ErrnoException(errno, "Erreur receive");
 
 		totBytesReceives += bytes;
 
@@ -161,10 +159,8 @@ string Socket::receiveChar()
 	do
 	{
 		if((bytesReceived = recv(socketHandle, buff, 500, 0)) == -1)
-		{
-			cout << "Erreur de reception " << endl;
-			exit(-1);
-		}
+			throw ErrnoException(errno, "Erreur receive");
+
 		else
 		{
 			if(totBytesReceives == 0)//Si on est au début du message (0 caracteres traités)

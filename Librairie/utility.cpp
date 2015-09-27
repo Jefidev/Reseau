@@ -1,6 +1,4 @@
 #include <iostream>
-#include <sys/socket.h>
-#include <errno.h>
 #include <cstring>
 #include <string>
 
