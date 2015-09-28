@@ -21,6 +21,7 @@ using namespace std;
 *Constructeur effectuant les actions communes d'un client et serveur : creation socket, 
 remplissage de structure sockaddr_in
 **************************************************************************************/
+
 Socket::Socket(string host, int port, bool isIP)
 {
 	socketHandle = socket(AF_INET, SOCK_STREAM, 0);
@@ -28,7 +29,7 @@ Socket::Socket(string host, int port, bool isIP)
 	if(socketHandle == -1)
 		throw ErrnoException(errno, "Erreur creation de socket");
 	
-	if(isIP)//Si l'host est une IP
+	if(isIP)//Si l'host est identifié par une IP
 	{
 		memset(&socketAdress, '0', sizeof(sockaddr_in));
 
@@ -38,7 +39,7 @@ Socket::Socket(string host, int port, bool isIP)
 
 		return;
 	}
-	else //Si l'host est un serveur
+	else //Si l'host est identifié par un nom
 	{
 		struct hostent* infohost;
 
@@ -50,8 +51,8 @@ Socket::Socket(string host, int port, bool isIP)
 		socketAdress.sin_port = htons(port);
 		memcpy(&socketAdress.sin_addr, infohost->h_addr, infohost->h_length);
 	}
-
 }
+
 
 Socket::Socket(int h)
 {
@@ -72,7 +73,7 @@ int Socket::getSocketHandle() const
 
 
 /*********************************************************
-*Prend une chaine de caractere en parametre et l'envois au serveur
+*Prend une chaine de caracteres en parametre et l'envoie au serveur
 *********************************************************/
 
 void Socket::sendChar(string message)
@@ -84,15 +85,16 @@ void Socket::sendChar(string message)
 	stringSend = Utility::intToString(messageLength) + '#' + message;
 
 
-	nbrByteSend = send(socketHandle, (void*)stringSend.c_str(), stringSend.size(), 0);
+	nbrByteSend = send(socketHandle, (void*)stringSend.c_str(), stringSend.size(), 0);	// c_str() : string vers char*
 
 	if(nbrByteSend == -1)
     {
         throw ErrnoException(errno, "Erreur send");
     }
     else if(nbrByteSend < stringSend.size())
-    	cout << "communication excepiton";
+    	cout << "communication exception";
 }
+
 
 /******************************************************************************************
 *Prend une struct castée en void* en parametre et le sizeof() de cette struct.
@@ -107,8 +109,9 @@ void Socket::sendStruct(void* stru, int size)
         throw ErrnoException(errno, "Erreur send");
     }
     else if(nbrByteSend < size)
-    	cout << "communication excepiton";
+    	cout << "communication exception";
 }
+
 
 /******************************************************************************************
 *Place les bytes reçus dans void* r (struct attendue castée en void*) et a besoin de sizeof() de cette struct
@@ -122,7 +125,7 @@ void Socket::receiveStruct(void* r, int size)
 	do
 	{
 
-		if((bytes = recv(socketHandle, r, size, 0)) == -1)
+		if((bytes = recv(socketHandle, r + totBytesReceives, size, 0)) == -1)	// déplacement à l'offset
 			throw ErrnoException(errno, "Erreur receive");
 
 		totBytesReceives += bytes;
@@ -146,8 +149,9 @@ void Socket::receiveStruct(void* r, int size)
 
 
 /******************************************************************************************
-*Renvois la chaine de caractere lue sur le réseau.
+*Renvoie la chaine de caracteres lue sur le réseau.
 *******************************************************************************************/
+
 string Socket::receiveChar()
 {
 	int totBytesReceives = 0;
@@ -163,26 +167,24 @@ string Socket::receiveChar()
 
 		else
 		{
-			if(totBytesReceives == 0)//Si on est au début du message (0 caracteres traités)
+			if(totBytesReceives == 0)	// Si on est au début du message (0 caracteres traités)
 			{
 				strcpy(cpBuff, buff);
 				messageSize = strtok(cpBuff, "#");
 
-				//le nombre de byte à lire  = taille du message + taille du chiffres au debut + le caractere # "effacé" au strtok ci dessus
-				stringLength =  atoi(messageSize) + strlen(messageSize) + 1;
+				// nombre de bytes à lire = taille du message + taille du chiffres au debut + le caractere # "effacé" au strtok ci dessus
+				stringLength = atoi(messageSize) + strlen(messageSize) + 1;
 			}
-			
-			totBytesReceives += bytesReceived; //On met à jour la longueur
-			retString += buff;
 
 			if(stringLength == 0)
 			{
 				cout << "Chaine reçue non valide " << endl;
 				exit(-1);
 			}
+
+			totBytesReceives += bytesReceived;	// On met à jour la longueur
+			retString += buff;
 		}
-
-
 	}while(totBytesReceives < stringLength);
 
 	cout << retString << endl;
@@ -193,6 +195,5 @@ string Socket::receiveChar()
 		exit(-1);
 	}
 
-	return retString.erase(0, strlen(messageSize) + 1); //On retourne la chaine composée sans les caractères devant 
+	return retString.erase(0, strlen(messageSize) + 1);	// On retourne la chaine composée sans les caractères devant 
 }
-
