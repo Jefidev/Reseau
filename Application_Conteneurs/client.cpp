@@ -53,7 +53,7 @@ int main()
 
     sock->sendChar("testificate");//Envois d'une string au serveur 
 
-    /*Pour info pour composer une string j'ai mis une fonction intToString(int chiffre) qui permet de renvoyé sous forme de string un nombre entier
+    /*Pour info pour composer une string j'ai mis une fonction Utility::intToString(int chiffre) qui permet de renvoyé sous forme de string un nombre entier
 
     Le fichier protocol.ini reprend les différents types de messages et structures
 
