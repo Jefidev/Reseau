@@ -14,7 +14,7 @@ string Utility::intToString(int i)
     {
         int digit = i%10;
 
-        char digitToChar = digit + 48;//on convertis le nombre isolé en son symbol dans la table ascii
+        char digitToChar = digit + 48;	// on convertit le nombre isolé en son symbole dans la table ascii
 
         i =  i / 10;
 
