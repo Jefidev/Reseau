@@ -1,6 +1,6 @@
 CC = g++
 
-OBJ = ../Librairie/socket/socket.o ../Librairie/socket/socketServeur.o ../Librairie/fichierProp/fichierProp.o ../Librairie/utility.o ../Librairie/exceptions/errnoException.o ../Librairie/exceptions/communicationException.o
+OBJ = ../Librairie/socket/socket.o ../Librairie/socket/socketServeur.o ../Librairie/fichierProp/fichierProp.o ../Librairie/utility.o ../Librairie/exceptions/errnoException.o ../Librairie/exceptions/communicationException.o ../LibrairieConteneur/sendFunction.o
 
 serveur:	serveur.cpp $(OBJ)
 			echo creation serveur
@@ -39,4 +39,9 @@ serveur:	serveur.cpp $(OBJ)
 													echo creation communicationException.o
 													$(CC) -c ../Librairie/exceptions/communicationException.cpp
 													mv communicationException.o ../Librairie/exceptions
+
+../LibrairieConteneur/sendFunction.o:	../LibrairieConteneur/sendFunction.cpp
+										echo creation sendFunction.o
+										$(CC) -c ../LibrairieConteneur/sendFunction.cpp
+										mv sendFunction.o ../LibrairieConteneur
 
