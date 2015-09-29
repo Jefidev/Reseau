@@ -13,8 +13,9 @@ using namespace std;
 #include "../Librairie/socket/socket.h"
 #include "../Librairie/socket/socketClient.h"
 #include "../Librairie/fichierProp/fichierProp.h"
-#include "../protocole.ini"
+#include "../LibrairieConteneur/protocole.ini"
 #include "../Librairie/exceptions/errnoException.h"
+#include "../LibrairieConteneur/sendFunction.h"
 /**********************EXEMPLE DE CLIENT****************************/
 
 int main()
@@ -51,7 +52,12 @@ int main()
         exit(-1);
     }
 
-    sock->sendChar("testificate");//Envois d'une string au serveur 
+    StructConnexion sc;
+    
+    sc.nom = "Jerome";
+    sc.motDePasse = "testificate";
+
+    sock->sendChar(composeConnexion(LOGIN, sc));
 
     /*Pour info pour composer une string j'ai mis une fonction Utility::intToString(int chiffre) qui permet de renvoyé sous forme de string un nombre entier
 

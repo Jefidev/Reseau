@@ -11,8 +11,9 @@ using namespace std;
 #include "../Librairie/socket/socket.h"
 #include "../Librairie/socket/socketServeur.h"
 #include "../Librairie/fichierProp/fichierProp.h"
-#include "../protocole.ini"
+#include "../LibrairieConteneur/protocole.ini"
 #include "../Librairie/exceptions/errnoException.h"
+#include "../LibrairieConteneur/sendFunction.h"
 
 int main()
 {
@@ -44,12 +45,11 @@ int main()
 
     Socket service = sock->accepter();
 
-    cout << "Un client a été accepté" << endl;
+    StructConnexion sc;
 
-    string tt = service.receiveChar();
+    sc = decomposeConnexion(service.receiveChar());
 
-    cout << tt << endl;
-
+    cout << sc.nom << "------" << sc.motDePasse << endl;
 }
 
 
