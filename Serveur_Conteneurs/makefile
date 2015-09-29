@@ -1,4 +1,4 @@
-CC = g++
+CC = g++ -fpermissive
 
 OBJ = ../Librairie/socket/socket.o ../Librairie/socket/socketServeur.o ../Librairie/fichierProp/fichierProp.o ../Librairie/utility.o ../Librairie/exceptions/errnoException.o ../Librairie/exceptions/communicationException.o ../LibrairieConteneur/sendFunction.o
 

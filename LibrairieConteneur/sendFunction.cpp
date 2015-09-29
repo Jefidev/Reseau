@@ -1,11 +1,24 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <stdlib.h>
+#include <stdio.h>
 
 using namespace std;
 
 #include "protocole.ini"
 #include "sendFunction.h"
+
+string typeRequestParse(string s, int* type)
+{
+	istringstream iss(s);
+	string token;
+
+	getline(iss, token, SEPARATION);
+	*type = atoi((char*)token.c_str());
+
+	return s.erase(0, token.size() + 1);
+}
 
 string composeConnexion(char l, StructConnexion sc)
 {
@@ -18,14 +31,13 @@ string composeConnexion(char l, StructConnexion sc)
 }
 
 
-StructConnexion decomposeConnexion(string s)
+StructConnexion parseConnexion(string s)
 {
 	StructConnexion sc;
-	cout << s << endl;
+
 	istringstream iss(s);
 	string token;
 
-	getline(iss, token, SEPARATION);//On passe le type de message
 	getline(iss, token, SEPARATION);
 	sc.nom = token;
 
@@ -34,4 +46,140 @@ StructConnexion decomposeConnexion(string s)
 
 	return sc;
 }
+
+string composeInputTruck(char l, StructInputTruck sc)
+{
+	string retour;
+
+	retour = l;
+	retour = retour + SEPARATION + sc.immatriculation + SEPARATION + sc.idContainers;
+
+	return retour;
+}
+
+
+StructInputTruck parseInputTruck(string s)
+{
+	StructInputTruck si;
+
+	istringstream iss(s);
+	string token;
+
+	getline(iss, token, SEPARATION);
+	si.immatriculation = token;
+
+	getline(iss, token, SEPARATION);
+	si.idContainers = token;
+
+	return si;
+}
+
+string composeInputDone(char l, StructInputDone sc)
+{
+	string retour;
+
+	retour = l;
+	retour = retour + SEPARATION + sc.etat + SEPARATION + sc.poids;
+
+	return retour;
+}
+
+StructInputDone parseInputDone(string s)
+{
+	StructInputDone si;
+
+	istringstream iss(s);
+	string token;
+
+	getline(iss, token, SEPARATION);
+	si.etat = token;
+
+	getline(iss, token, SEPARATION);
+	si.poids = token;
+
+	return si;
+}
+
+string composeOutputReady(char l, StructOuputReady sc)
+{
+	string retour;
+	ostringstream convert;
+
+	convert << sc.capaciteMax;
+
+	retour = l;
+	retour = retour + SEPARATION + sc.idTrainBateau + SEPARATION + convert.str();
+
+	return retour;
+}
+
+StructOuputReady parseOutputReady(string s)
+{
+	StructOuputReady si;
+
+	istringstream iss(s);
+	string token;
+
+	getline(iss, token, SEPARATION);
+	si.idTrainBateau = token;
+
+	getline(iss, token, SEPARATION);
+	si.capaciteMax = atoi((char*)token.c_str());
+
+	return si;
+}
+
+string composeOutputOne(char l, StructOutputOne sc)
+{
+	string retour;
+
+	retour = l;
+	retour = retour + SEPARATION + sc.idContainer;
+
+	return retour;
+}
+
+StructOutputOne parseOutputOne(string s)
+{
+	StructOutputOne si;
+
+	istringstream iss(s);
+	string token;
+
+	getline(iss, token, SEPARATION);
+	si.idContainer = token;
+
+	return si;
+}
+
+string composeOutputDone(char l, StructOutputDone sc)
+{
+	string retour;
+	ostringstream convert;
+
+	convert << sc.nbrContainers;
+
+	retour = l;
+	retour = retour + SEPARATION + sc.idTrainBateau + SEPARATION + convert.str();
+
+	return retour;
+}
+
+StructOutputDone parseOutputDone(string s)
+{
+	StructOutputDone si;
+
+	istringstream iss(s);
+	string token;
+
+	getline(iss, token, SEPARATION);
+	si.idTrainBateau = token;
+
+	getline(iss, token, SEPARATION);
+	si.nbrContainers = atoi((char*)token.c_str());
+
+	return si;
+}
+
+
 

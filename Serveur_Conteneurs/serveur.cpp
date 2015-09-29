@@ -45,11 +45,18 @@ int main()
 
     Socket service = sock->accepter();
 
-    StructConnexion sc;
+    string sc;
+    int type;
 
-    sc = decomposeConnexion(service.receiveChar());
+    sc = typeRequestParse(service.receiveChar(), &type);
 
-    cout << sc.nom << "------" << sc.motDePasse << endl;
+    if(type == 1)
+    {
+        StructConnexion connex;
+        connex = parseConnexion(sc);
+
+        cout << connex.nom << "-----" << connex.motDePasse << endl;
+    }
 }
 
 
