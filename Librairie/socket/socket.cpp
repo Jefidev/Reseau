@@ -92,7 +92,9 @@ void Socket::sendChar(string message)
         throw ErrnoException(errno, "Erreur send");
     }
     else if(nbrByteSend < stringSend.size())
-    	cout << "communication exception";
+    {
+    	throw CommunicationException("Erreur : la chaine envoyee n'est pas complete");
+    }
 }
 
 
@@ -109,7 +111,10 @@ void Socket::sendStruct(void* stru, int size)
         throw ErrnoException(errno, "Erreur send");
     }
     else if(nbrByteSend < size)
-    	cout << "communication exception";
+    {
+    	throw CommunicationException("Erreur : la structure envoyee n'est pas complete");
+    }
+    	
 }
 
 
@@ -132,8 +137,7 @@ void Socket::receiveStruct(void* r, int size)
 
 		if(totBytesReceives > size)
 		{
-			cout << "Erreur de reception " << endl;
-			exit(-1);
+			throw CommunicationException("Erreur : la structure recue n'est pas complete");
 		}
 
 		cout << totBytesReceives << "------" << size << endl;
@@ -142,8 +146,7 @@ void Socket::receiveStruct(void* r, int size)
 
 	if(totBytesReceives > size)
 	{
-		cout << "Erreur message trop long" << endl;
-		exit(-1);
+		throw CommunicationException("Erreur : la structure recue est invalide");
 	}
 }
 
@@ -178,8 +181,7 @@ string Socket::receiveChar()
 
 			if(stringLength == 0)
 			{
-				cout << "Chaine reçue non valide " << endl;
-				exit(-1);
+				throw CommunicationException("Erreur : la chaine recue est invalide");
 			}
 
 			totBytesReceives += bytesReceived;	// On met à jour la longueur
@@ -191,8 +193,7 @@ string Socket::receiveChar()
 
 	if(totBytesReceives > stringLength)
 	{
-		cout << "Erreur message trop long" << endl;
-		exit(-1);
+		throw CommunicationException("Erreur : la chaine recue est invalide");
 	}
 
 	return retString.erase(0, strlen(messageSize) + 1);	// On retourne la chaine composée sans les caractères devant 
