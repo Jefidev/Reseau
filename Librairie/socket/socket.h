@@ -20,6 +20,7 @@ class Socket
 		/*METHODE*/
 		void sendChar(string message);
 		void sendStruct(void* stru, int size);
+		void finConnexion();
 
 
 		void receiveStruct(void* r, int size);

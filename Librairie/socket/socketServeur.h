@@ -12,7 +12,7 @@ class SocketServeur: public Socket
 		/* METHODES */
 
 		void ecouter();
-		Socket accepter();
+		int accepter();
 };
 
 #endif

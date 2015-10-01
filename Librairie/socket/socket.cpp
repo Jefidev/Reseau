@@ -53,7 +53,6 @@ Socket::Socket(string host, int port, bool isIP)
 	}
 }
 
-
 Socket::Socket(int h)
 {
 	socketHandle = h;
@@ -61,14 +60,17 @@ Socket::Socket(int h)
 
 
 /* Destructeur */
-Socket::~Socket()
-{
-	close(socketHandle);
-}
+Socket::~Socket(){}
 
 int Socket::getSocketHandle() const 
 {
 	return socketHandle;
+}
+
+void Socket::finConnexion()
+{
+	close(socketHandle);
+	socketHandle = -1;
 }
 
 

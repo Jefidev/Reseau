@@ -40,18 +40,16 @@ void SocketServeur::ecouter()
 
 
 //Accepte une connection pendante et renvois le handle de socket dupliqué
-Socket SocketServeur::accepter()
+int SocketServeur::accepter()
 {
 	int service;
 
 	int t = sizeof(struct sockaddr);
 
     if((service = accept(socketHandle, (struct sockaddr*)&socketAdress, &t))==-1)
-    {
         throw ErrnoException(errno, "Erreur accept");
-        return Socket(-1);
-    }
+    
     else
-        return Socket(service);
+        return service;
 }
 

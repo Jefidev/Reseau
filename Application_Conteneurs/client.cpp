@@ -57,7 +57,9 @@ int main()
     sc.nom = "Jerome";
     sc.motDePasse = "testificate";
 
-    sock->sendChar(composeConnexion(LOGIN, sc));
+    string str = sock->receiveChar();
+
+    cout << str << endl;
 
     /*Pour info pour composer une string j'ai mis une fonction Utility::intToString(int chiffre) qui permet de renvoyé sous forme de string un nombre entier
 
