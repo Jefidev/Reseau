@@ -5,6 +5,7 @@
 #include <netdb.h>
 #include <cstdlib>
 #include <cstring>
+#include <pthread.h>
 
 using namespace std;
 
@@ -15,6 +16,17 @@ using namespace std;
 #include "../Librairie/exceptions/errnoException.h"
 #include "../LibrairieConteneur/sendFunction.h"
 
+#define MAXCLIENT 10
+
+
+pthread_mutex_t mutexIncideCourant;
+pthread_cond_t condIndiceCourant;
+int indiceCourant = -1;
+
+pthread_t threadsLances[MAXCLIENT];
+
+void* threadClient(void* p);
+
 int main()
 {
 
@@ -23,6 +35,9 @@ int main()
     string host = fp.getValue("HOST");
     string port = fp.getValue("PORT");
     string isip = fp.getValue("ISIP");
+
+    pthread_cond_init(&condIndiceCourant, NULL);
+    pthread_mutex_init(&mutexIncideCourant, NULL);
 
     SocketServeur* sock = NULL;
 
@@ -38,6 +53,15 @@ int main()
     {
         cout << er.getErrorCode() << "------" << er.getMessage() << endl;
         exit(-1);
+    }
+
+    //LANCEMENT DES THREADS
+    for(int i = 0; i < MAXCLIENT; i++)
+    {
+        int ret = pthread_create(&threadsLances[i], NULL, threadClient, (void*) i);
+
+        cout << ret << endl;
+        pthread_detach(threadsLances[i]);
     }
 
     
@@ -59,5 +83,8 @@ int main()
     }
 }
 
-
+void* threadClient(void* p)
+{
+    cout << "coucou" <<endl;
+}
 
