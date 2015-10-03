@@ -5,10 +5,12 @@ class FichierProp
 {
 	private :
 		string nomFichier;
+		char separator;
 		
 	public :
 
 		FichierProp(string n);
+		FichierProp(string n, char sepa);
 		~FichierProp();
 
 		/*METHODES*/

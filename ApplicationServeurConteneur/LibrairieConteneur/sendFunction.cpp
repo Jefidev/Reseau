@@ -3,16 +3,20 @@
 #include <sstream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <sstream>
 
 using namespace std;
 
 #include "protocole.ini"
 #include "sendFunction.h"
+#include "../Librairie/utility.h"
 
 string typeRequestParse(string s, int* type)
 {
 	istringstream iss(s);
 	string token;
+
+	cout << s << endl;
 
 	getline(iss, token, SEPARATION);
 	*type = atoi((char*)token.c_str());
@@ -20,13 +24,20 @@ string typeRequestParse(string s, int* type)
 	return s.erase(0, token.size() + 1);
 }
 
-string composeConnexion(char l, StructConnexion sc)
+string composeAckErr(int l, string m)
+{
+	string retour;
+	retour = Utility::intToString(l);
+	retour = retour + SEPARATION + m;
+	return retour;
+}
+
+string composeConnexion(int l, StructConnexion sc)
 {
 	string retour;
 
-	retour = l;
+	retour = Utility::intToString(l);
 	retour = retour + SEPARATION + sc.nom + SEPARATION + sc.motDePasse;
-
 	return retour;
 }
 
@@ -47,11 +58,11 @@ StructConnexion parseConnexion(string s)
 	return sc;
 }
 
-string composeInputTruck(char l, StructInputTruck sc)
+string composeInputTruck(int l, StructInputTruck sc)
 {
 	string retour;
 
-	retour = l;
+	retour = Utility::intToString(l);
 	retour = retour + SEPARATION + sc.immatriculation + SEPARATION + sc.idContainers;
 
 	return retour;
@@ -74,12 +85,16 @@ StructInputTruck parseInputTruck(string s)
 	return si;
 }
 
-string composeInputDone(char l, StructInputDone sc)
+string composeInputDone(int l, StructInputDone sc)
 {
 	string retour;
 
-	retour = l;
-	retour = retour + SEPARATION + sc.etat + SEPARATION + sc.poids;
+	ostringstream ss;
+	ss << sc.poids;
+	string s(ss.str());
+
+	retour = Utility::intToString(l);
+	retour = retour + SEPARATION + sc.etat + SEPARATION + s;
 
 	return retour;
 }
@@ -95,19 +110,19 @@ StructInputDone parseInputDone(string s)
 	si.etat = token;
 
 	getline(iss, token, SEPARATION);
-	si.poids = token;
+	si.poids = atof(token.c_str());
 
 	return si;
 }
 
-string composeOutputReady(char l, StructOuputReady sc)
+string composeOutputReady(int l, StructOuputReady sc)
 {
 	string retour;
 	ostringstream convert;
 
 	convert << sc.capaciteMax;
 
-	retour = l;
+	retour = Utility::intToString(l);
 	retour = retour + SEPARATION + sc.idTrainBateau + SEPARATION + convert.str();
 
 	return retour;
@@ -129,11 +144,11 @@ StructOuputReady parseOutputReady(string s)
 	return si;
 }
 
-string composeOutputOne(char l, StructOutputOne sc)
+string composeOutputOne(int l, StructOutputOne sc)
 {
 	string retour;
 
-	retour = l;
+	retour = Utility::intToString(l);
 	retour = retour + SEPARATION + sc.idContainer;
 
 	return retour;
@@ -152,14 +167,14 @@ StructOutputOne parseOutputOne(string s)
 	return si;
 }
 
-string composeOutputDone(char l, StructOutputDone sc)
+string composeOutputDone(int l, StructOutputDone sc)
 {
 	string retour;
 	ostringstream convert;
 
 	convert << sc.nbrContainers;
 
-	retour = l;
+	retour = Utility::intToString(l);
 	retour = retour + SEPARATION + sc.idTrainBateau + SEPARATION + convert.str();
 
 	return retour;

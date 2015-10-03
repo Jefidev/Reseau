@@ -31,6 +31,8 @@ pthread_t threadsLances[MAXCLIENT];
 Socket* socketOuverte[MAXCLIENT];
 
 void* threadClient(void* p);
+void finConnexion(int cTraite, Socket* s);
+void login(Socket* s, int clientTraite);
 
 int main()
 {
@@ -84,7 +86,7 @@ int main()
         }
 
         pthread_mutex_lock(&mutexThreadsLibres);
-        while(mutexThreadsLibres == 0)
+        while(threadsLibres == 0)
             pthread_cond_wait(&condThreadsLibres, &mutexThreadsLibres);
 
         int service = sock->accepter();
@@ -110,10 +112,11 @@ void* threadClient(void* p)
 {
     while(1)
     {
-        cout << "j'attend" << endl;
         pthread_mutex_lock(&mutexIndiceCourant);
         while(indiceCourant == -1)
             pthread_cond_wait(&condIndiceCourant, &mutexIndiceCourant);
+
+        cout << "Au boulot" << endl;
 
         int clientTraite = indiceCourant;
         indiceCourant = -1;
@@ -121,23 +124,84 @@ void* threadClient(void* p)
         Socket* socketService = socketOuverte[clientTraite];
         pthread_mutex_unlock(&mutexIndiceCourant);
 
-        cout << socketService->getSocketHandle() << endl;
+        login(socketService, clientTraite);
 
-        //SERVEUR ICI
-        socketService->sendChar("je suis un thread et j'envois un message");
+        finConnexion(clientTraite, socketService);
 
-        socketService->finConnexion();
-        delete socketService;
+    }
+}
 
-        pthread_mutex_lock(&mutexIndiceCourant);
-        socketOuverte[clientTraite] = NULL;
-        pthread_mutex_unlock(&mutexIndiceCourant);
+void finConnexion(int cTraite, Socket* s)
+{
+    cout << "degage" << endl;
 
-        pthread_mutex_lock(&mutexThreadsLibres);
-        threadsLibres++;
-        pthread_mutex_unlock(&mutexThreadsLibres);
-        pthread_cond_signal(&condThreadsLibres);
+    StructConnexion sc;
 
+    s->sendChar(composeConnexion(LOGOUT, sc));
+    s->finConnexion();
+    delete s;
+
+    pthread_mutex_lock(&mutexIndiceCourant);
+    socketOuverte[cTraite] = NULL;
+    pthread_mutex_unlock(&mutexIndiceCourant);
+
+    pthread_mutex_lock(&mutexThreadsLibres);
+    threadsLibres++;
+    pthread_mutex_unlock(&mutexThreadsLibres);
+    pthread_cond_signal(&condThreadsLibres);
+}
+
+
+void login(Socket* s, int clientTraite)
+{
+    string str;
+    int requestType, nbrReq = 0;
+
+    FichierProp fp("login.csv", ';');
+
+    while(1)
+    {
+        str = typeRequestParse(s->receiveChar(), &requestType);
+
+        if(requestType != LOGIN)
+        {
+            s->sendChar(composeAckErr(ERREUR, "INVALIDE"));
+
+            finConnexion(clientTraite, s);
+        }
+
+        if(requestType == LOGIN)
+        {   
+            StructConnexion sc;
+
+            sc = parseConnexion(str);
+
+            string test = fp.getValue(sc.nom);
+
+            if(!test.compare("#"))
+            {
+                s->sendChar(composeAckErr(ERREUR, "LOGERR"));
+                nbrReq++;
+            }
+            else
+            {
+                cout << sc.motDePasse << endl;
+                if(!test.compare(sc.motDePasse))
+                {
+                    s->sendChar(composeAckErr(ACK, "ALLRIGHT"));
+                    return;
+                }
+                else
+                {
+                    s->sendChar(composeAckErr(ERREUR, "LOGERR"));
+                    nbrReq++;
+                }
+            }
+        }
+        else if(requestType == LOGOUT)
+        {
+            finConnexion(clientTraite, s);
+        }
     }
 }
 

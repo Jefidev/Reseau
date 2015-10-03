@@ -16,7 +16,8 @@ using namespace std;
 #include "../LibrairieConteneur/protocole.ini"
 #include "../Librairie/exceptions/errnoException.h"
 #include "../LibrairieConteneur/sendFunction.h"
-/**********************EXEMPLE DE CLIENT****************************/
+
+void login(SocketClient* sock);
 
 int main()
 {
@@ -52,23 +53,68 @@ int main()
         exit(-1);
     }
 
+    login(sock);
+
+} 
+
+void login(SocketClient* sock)
+{
     StructConnexion sc;
-    
-    sc.nom = "Jerome";
-    sc.motDePasse = "testificate";
+    int nbrTentative = 0;
+    int reponseType;
+    do
+    {
 
-    string str = sock->receiveChar();
+        cout << "Connexion au serveur" << endl;
+        cout << "--------------------" << endl << endl;
 
-    cout << str << endl;
+        cout << "Login : ";
+        cin >> sc.nom;
+        cout << endl;
 
-    /*Pour info pour composer une string j'ai mis une fonction Utility::intToString(int chiffre) qui permet de renvoyé sous forme de string un nombre entier
+        cout << "mot de passe : ";
+        cin >> sc.motDePasse;
+        cout << endl;
 
-    Le fichier protocol.ini reprend les différents types de messages et structures
+        sock->sendChar(composeConnexion(LOGIN, sc));
+        
+       
 
-    Il y a deux classes d'exceptions : une qui détecte les erreurs systeme (errnoException) générallement c'est fatal erreur et faut tout couper
-    une deuxième qui détecte le erreurs de communication (message recus trop court, tout le message n'a pas été envoye etc) /!\ je n'ai pas fini de l'implémenter*/
+        string str = typeRequestParse(sock->receiveChar(), &reponseType);
 
-}   
+        if(reponseType == ERREUR)
+        {
+
+            cout << str << endl;
+            if(!str.compare("INVALIDE"))
+            {
+                cout << "Requete recue invalide" << endl;
+                sock->sendChar(composeConnexion(LOGOUT, sc));
+                string str = typeRequestParse(sock->receiveChar(), &reponseType);
+                sock->finConnexion();
+                exit(-1); 
+            }
+            else if(!str.compare("LOGERR"))
+            {
+                cout << "Infos de login invalides" << endl << endl << endl;
+                nbrTentative++;
+            }
+            
+        }
+        else if(reponseType == ACK)
+            return;
+
+    }while(nbrTentative < 3);
+
+    cout << "Login ou mot de passe invalide connexion refusee" << endl << endl;
+
+    sock->sendChar(composeConnexion(LOGOUT, sc));
+
+    string str = typeRequestParse(sock->receiveChar(), &reponseType);
+
+    sock->finConnexion();
+    exit(0);
+}
 
 
 

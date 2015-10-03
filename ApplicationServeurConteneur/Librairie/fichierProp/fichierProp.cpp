@@ -41,9 +41,41 @@ FichierProp::FichierProp(string n)
 	delete nomFichierChar;
 
 	nomFichier = n;
+	separator = '=';
 }
 
 FichierProp::~FichierProp(){}
+
+FichierProp::FichierProp(string n, char sepa)
+{
+	FILE* file;
+
+	char * nomFichierChar = new char [n.length()+1];
+  	strcpy (nomFichierChar, n.c_str());
+
+	file = fopen(nomFichierChar, "r");
+
+	if(file == (FILE*) NULL)
+	{
+		file = fopen(nomFichierChar, "w");
+
+		if(file == (FILE*)NULL)
+		{
+			cout << "Impossible de créer le fichier properties" << endl;
+			exit(-1);
+		}
+
+		fputs("jerome;fink\n", file);
+		fputs("oceane;seel\n", file);
+		fputs("ben;dem\n", file);
+	}
+
+	fclose(file);
+	delete nomFichierChar;
+
+	nomFichier = n;
+	separator = sepa;
+}
 
 
 /******************************************************************************************************
@@ -53,7 +85,7 @@ string FichierProp::getValue(string v)
 {
 	FILE* file;
 	char lec[255];
-	char* p;
+	char* p, *saveptr;
 	char * nomFichierChar = new char [nomFichier.length()+1];
   	strcpy (nomFichierChar, nomFichier.c_str());
 
@@ -70,23 +102,23 @@ string FichierProp::getValue(string v)
 
 	while (sortie == 0 && (fgets(lec, 255, file)))
 	{
-	 	strtok(lec, "=");
+	 	strtok_r(lec, &separator, &saveptr);
 	  	
 	  	if(v.compare(lec) == 0)
 	  		sortie = 1;
 	  	  	
 	}
-	  
-	  if(sortie == 0)
-	  	return 0;
+
+	if(sortie == 0)
+	  return "#";
 	  	
-	  p = strtok(NULL, "=");
+	p = strtok_r(NULL, &separator, &saveptr);
 
-	  fclose(file);
+	fclose(file);
 
-	  string fullString = string(p);
+	string fullString = string(p);
 
-	  return fullString.substr(0, fullString.size()-1);  
+	return fullString.substr(0, fullString.size()-1);  
 
 }
 

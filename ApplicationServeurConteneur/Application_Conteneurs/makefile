@@ -39,7 +39,7 @@ client:	client.cpp $(OBJ)
 													$(CC) -c ../Librairie/exceptions/communicationException.cpp
 													mv communicationException.o ../Librairie/exceptions
 
-../LibrairieConteneur/sendFunction.o:	../LibrairieConteneur/sendFunction.cpp
+../LibrairieConteneur/sendFunction.o:	../LibrairieConteneur/sendFunction.cpp ../Librairie/utility.o
 										echo creation sendFunction.o
 										$(CC) -c ../LibrairieConteneur/sendFunction.cpp
 										mv sendFunction.o ../LibrairieConteneur

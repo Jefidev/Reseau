@@ -86,8 +86,9 @@ void Socket::sendChar(string message)
 	messageLength = message.size();
 	stringSend = Utility::intToString(messageLength) + '#' + message;
 
-
 	nbrByteSend = send(socketHandle, (void*)stringSend.c_str(), stringSend.size(), 0);	// c_str() : string vers char*
+
+	cout << nbrByteSend << "------" << stringSend.c_str() << endl;
 
 	if(nbrByteSend == -1)
     {
@@ -142,8 +143,6 @@ void Socket::receiveStruct(void* r, int size)
 			throw CommunicationException("Erreur : la structure recue n'est pas complete");
 		}
 
-		cout << totBytesReceives << "------" << size << endl;
-
 	}while(totBytesReceives < size);
 
 	if(totBytesReceives > size)
@@ -162,8 +161,11 @@ string Socket::receiveChar()
 	int totBytesReceives = 0;
 	int bytesReceived, stringLength = 0;
 
-	char buff[500], cpBuff[500], *messageSize;
+	char buff[500], cpBuff[500], *messageSize, *saveptr;
 	string retString;
+
+	memset(buff, '\0', sizeof(buff));
+	memset(buff, '\0', sizeof(cpBuff));
 
 	do
 	{
@@ -175,7 +177,7 @@ string Socket::receiveChar()
 			if(totBytesReceives == 0)	// Si on est au début du message (0 caracteres traités)
 			{
 				strcpy(cpBuff, buff);
-				messageSize = strtok(cpBuff, "#");
+				messageSize = strtok_r(cpBuff, "#", &saveptr);
 
 				// nombre de bytes à lire = taille du message + taille du chiffres au debut + le caractere # "effacé" au strtok ci dessus
 				stringLength = atoi(messageSize) + strlen(messageSize) + 1;
@@ -185,18 +187,18 @@ string Socket::receiveChar()
 			{
 				throw CommunicationException("Erreur : la chaine recue est invalide");
 			}
-
+			cout << bytesReceived << "-----" << strlen(buff) << endl;
 			totBytesReceives += bytesReceived;	// On met à jour la longueur
 			retString += buff;
 		}
 	}while(totBytesReceives < stringLength);
 
-	cout << retString << endl;
-
 	if(totBytesReceives > stringLength)
 	{
 		throw CommunicationException("Erreur : la chaine recue est invalide");
 	}
+
+	cout << retString << endl;
 
 	return retString.erase(0, strlen(messageSize) + 1);	// On retourne la chaine composée sans les caractères devant 
 }

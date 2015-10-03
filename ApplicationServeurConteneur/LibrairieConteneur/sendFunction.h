@@ -3,22 +3,24 @@
 	
 	string typeRequestParse(string s, int* type);
 
-	string composeConnexion(char l, StructConnexion sc);
+	string composeAckErr(int l, string m);
+
+	string composeConnexion(int l, StructConnexion sc);
 	StructConnexion parseConnexion(string s);
 
-	string composeInputTruck(char l, StructInputTruck sc);
+	string composeInputTruck(int l, StructInputTruck sc);
 	StructInputTruck parseInputTruck(string s);
 
-	string composeInputDone(char l, StructInputDone sc);
+	string composeInputDone(int l, StructInputDone sc);
 	StructInputDone parseInputDone(string s);
 
-	string composeOutputReady(char l, StructOuputReady sc);
+	string composeOutputReady(int l, StructOuputReady sc);
 	StructOuputReady parseOutputReady(string s);
 
-	string composeOutputOne(char l, StructOutputOne sc);
+	string composeOutputOne(int l, StructOutputOne sc);
 	StructOutputOne parseOutputOne(string s);
 
-	string composeOutputDone(char l, StructOutputDone sc);
+	string composeOutputDone(int l, StructOutputDone sc);
 	StructOutputDone parseOutputDone(string s);
 
 #endif
