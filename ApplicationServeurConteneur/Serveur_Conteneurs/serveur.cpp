@@ -16,6 +16,7 @@ using namespace std;
 #include "../Librairie/exceptions/errnoException.h"
 #include "../LibrairieConteneur/sendFunction.h"
 #include "../Librairie/log/log.h"
+#include "parc.h"
 
 #define MAXCLIENT 2
 
@@ -30,6 +31,9 @@ int threadsLibres = MAXCLIENT;
 
 pthread_mutex_t mutexLog;
 Log logFile("logServeur.txt");
+
+pthread_mutex_t mutexParc;
+Parc parcFile("parc.dat");
 
 pthread_t threadsLances[MAXCLIENT];
 Socket* socketOuverte[MAXCLIENT];
@@ -52,8 +56,13 @@ int main()
     pthread_cond_init(&condIndiceCourant, NULL);
     pthread_mutex_init(&mutexIndiceCourant, NULL);
     pthread_mutex_init(&mutexLog, NULL);
+    pthread_mutex_init(&mutexParc, NULL);
 
     SocketServeur* sock = NULL;
+
+    int x, y;
+    parcFile.getFirstFree(&x, &y);
+    cout << x << " ----- " << y << endl;
 
     try
     {

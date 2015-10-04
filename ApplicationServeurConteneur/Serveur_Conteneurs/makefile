@@ -7,7 +7,7 @@ LIBEX = ../Librairie/exceptions
 LIBCONT =  ../LibrairieConteneur
 LIBLOG = ../Librairie/log
 
-OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o $(LIBLOG)/log.o
+OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o $(LIBLOG)/log.o parc.o
 
 serveur:	serveur.cpp $(OBJ)
 			echo creation serveur
@@ -56,6 +56,10 @@ $(LIBLOG)/log.o:	$(LIBLOG)/log.cpp
 					echo creation du log
 					$(CC) -c $(LIBLOG)/log.cpp
 					mv log.o $(LIBLOG)
+
+parc.o:	parc.cpp
+		echo creation du log
+		$(CC) -c parc.cpp
 
 
 
