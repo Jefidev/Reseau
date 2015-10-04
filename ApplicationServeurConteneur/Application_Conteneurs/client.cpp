@@ -18,6 +18,9 @@ using namespace std;
 #include "../LibrairieConteneur/sendFunction.h"
 
 void login(SocketClient* sock);
+void logout(SocketClient* sock);
+void inputTruck(SocketClient* sock);
+int menu();
 
 int main()
 {
@@ -49,14 +52,32 @@ int main()
     }
     catch(ErrnoException er)
     {
-        cout << er.getErrorCode() << "------" << er.getMessage() << endl;
+        cout << "Serveur hors ligne" << endl;
         exit(-1);
     }
 
     login(sock);
 
+    int action = menu();
+
+    switch(action)//Choix de l'action à faire selon le menu
+    {
+        case 1://INPUT READY
+
+            break;
+        case 2: //OUTPUT READY
+            break;
+        case 3: //LOGOUT
+            logout(sock);
+            break;
+    }
+
 } 
 
+
+/************************************
+*On va demander au client d'entrer son LOGIN et mot de passe au serveur. Celui-ci va vérifier si le login est ok (3 essais apres deconnexion)
+***************************************/
 void login(SocketClient* sock)
 {
     StructConnexion sc;
@@ -86,7 +107,7 @@ void login(SocketClient* sock)
         {
 
             cout << str << endl;
-            if(!str.compare("INVALIDE"))
+            if(!str.compare("INVALIDE"))//Si le serveur à reçus un type de requete invalide (hacker ou autre client sur la meme socket c'est la merde)
             {
                 cout << "Requete recue invalide" << endl;
                 sock->sendChar(composeConnexion(LOGOUT, sc));
@@ -94,7 +115,7 @@ void login(SocketClient* sock)
                 sock->finConnexion();
                 exit(-1); 
             }
-            else if(!str.compare("LOGERR"))
+            else if(!str.compare("LOGERR"))//Si le couple LOGIN MDP etaient invalide
             {
                 cout << "Infos de login invalides" << endl << endl << endl;
                 nbrTentative++;
@@ -106,15 +127,59 @@ void login(SocketClient* sock)
 
     }while(nbrTentative < 3);
 
-    cout << "Login ou mot de passe invalide connexion refusee" << endl << endl;
+    cout << "Login ou mot de passe invalide connexion refusee" << endl << endl;//trop d'erreurs
 
-    sock->sendChar(composeConnexion(LOGOUT, sc));
+    logout(sock);
+}
 
-    string str = typeRequestParse(sock->receiveChar(), &reponseType);
+void logout(SocketClient* sock)// on envoit la demande de LOGOUT au serveur qui nous ACK le LOGOUT puis on met fin à la connexion
+{
+    StructConnexion sc;
+    int reponseType;
+    sock->sendChar(composeConnexion(LOGOUT, sc)); //envois demande LOGOUT
+
+    string str = typeRequestParse(sock->receiveChar(), &reponseType); //Reception ACK
 
     sock->finConnexion();
     exit(0);
 }
 
+
+int menu()//Bon la si tu comprend pas ... :p
+{   
+    int choix;
+
+    do
+    {
+
+        cout << endl << endl << "\tMENU" << endl;
+        cout << "\t----" << endl << endl;
+
+        cout << "\t1) Entree container" << endl;
+        cout << "\t2) Sortie container" << endl << endl;
+        cout << "\t3) deconnexion" << endl << endl;
+
+        cout << "choix : ";
+        cin >> choix;
+
+        if(choix < 1  && choix > 3)
+            cout << endl << endl << "Choix invalide (choisissez un nombre entre 1 et 3" << endl << endl;
+
+    }while(choix < 1 || choix > 3);
+
+    return choix;
+
+}
+
+void inputTruck(SocketClient* sock)
+{
+    StructInputTruck sit;
+    cout << endl << endl <<"\tEntree container" << endl;
+    cout << "\t----------------" << endl << endl;
+
+    cout << "Immatriculation du camion : ";
+    cin >> sit.immatriculation;
+
+}
 
 

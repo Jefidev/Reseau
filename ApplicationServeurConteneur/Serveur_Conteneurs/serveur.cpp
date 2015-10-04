@@ -110,6 +110,7 @@ int main()
 
 void* threadClient(void* p)
 {
+    int requestType;
     while(1)
     {
         pthread_mutex_lock(&mutexIndiceCourant);
@@ -127,7 +128,18 @@ void* threadClient(void* p)
         if(!login(socketService, clientTraite))
             continue;
 
-        
+        string str = typeRequestParse(socketService->receiveChar(), &requestType);
+
+        switch(requestType)
+        {
+            case INPUT_TRUCK:
+                break;
+            case OUTPUT_READY:
+                break;
+            case LOGOUT:
+                finConnexion(clientTraite, socketService);
+                break;
+        }
 
     }
 }
