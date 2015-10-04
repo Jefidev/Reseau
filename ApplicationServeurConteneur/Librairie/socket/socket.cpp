@@ -36,7 +36,6 @@ Socket::Socket(string host, int port, bool isIP)
 		socketAdress.sin_family = AF_INET;
 		socketAdress.sin_port = htons(port);
 		socketAdress.sin_addr.s_addr = inet_addr(host.c_str());
-
 		return;
 	}
 	else //Si l'host est identifié par un nom

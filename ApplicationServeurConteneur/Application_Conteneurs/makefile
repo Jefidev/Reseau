@@ -1,46 +1,52 @@
 CC = g++ -w
 
-OBJ = ../Librairie/socket/socket.o ../Librairie/socket/socketClient.o ../Librairie/fichierProp/fichierProp.o ../Librairie/utility.o ../Librairie/exceptions/errnoException.o ../Librairie/exceptions/communicationException.o ../LibrairieConteneur/sendFunction.o
+LIB = ../Librairie
+LIBESOCK = ../Librairie/socket
+LIBPROP = ../Librairie/fichierProp
+LIBEX = ../Librairie/exceptions
+LIBCONT =  ../LibrairieConteneur
+
+OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o
 
 
 client:	client.cpp $(OBJ)
 		echo creation client
 		$(CC) -o client client.cpp $(OBJ)
 
-../Librairie/socket/socketClient.o:	../Librairie/socket/socketClient.cpp ../Librairie/socket/socket.o ../Librairie/exceptions/errnoException.o
-									echo creation socketClient
-									$(CC) -c ../Librairie/socket/socketClient.cpp
-									mv socketClient.o ../Librairie/socket
+$(LIBESOCK)/socketClient.o:		$(LIBESOCK)/socketClient.cpp $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o
+								echo creation socketClient
+								$(CC) -c $(LIBESOCK)/socketClient.cpp $(LIBESOCK)/socket.o
+								mv socketClient.o $(LIBESOCK)
 
 
-../Librairie/socket/socket.o:	../Librairie/socket/socket.cpp ../Librairie/socket/socket.h ../Librairie/utility.o ../Librairie/exceptions/errnoException.o ../Librairie/exceptions/communicationException.o
-								echo creation socket.o
-								$(CC) -c ../Librairie/socket/socket.cpp
-								mv socket.o ../Librairie/socket
+$(LIBESOCK)/socket.o:	$(LIBESOCK)/socket.cpp $(LIBESOCK)/socket.h $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
+						echo creation socket.o
+						$(CC) -c $(LIBESOCK)/socket.cpp
+						mv socket.o $(LIBESOCK)
 
-../Librairie/fichierProp/fichierProp.o:	../Librairie/fichierProp/fichierProp.cpp
-										echo creation fichierprop.o
-										$(CC) -c ../Librairie/fichierProp/fichierProp.cpp
-										mv fichierProp.o ../Librairie/fichierProp
+$(LIBPROP)/fichierProp.o:	$(LIBPROP)/fichierProp.cpp
+							echo creation fichierprop.o
+							$(CC) -c $(LIBPROP)/fichierProp.cpp
+							mv fichierProp.o $(LIBPROP)
 
-../Librairie/utility.o:	../Librairie/utility.cpp
-						echo creation de utility.o
-						$(CC) -c ../Librairie/utility.cpp
-						mv utility.o ../Librairie
+$(LIB)/utility.o:	$(LIB)/utility.cpp
+					echo creation de utility.o
+					$(CC) -c $(LIB)/utility.cpp
+					mv utility.o $(LIB)
 
-../Librairie/exceptions/errnoException.o:	../Librairie/exceptions/errnoException.cpp
-											echo creation errnoException.o
-											$(CC) -c ../Librairie/exceptions/errnoException.cpp
-											mv errnoException.o ../Librairie/exceptions
+$(LIBEX)/errnoException.o:	$(LIBEX)/errnoException.cpp
+							echo creation errnoException.o
+							$(CC) -c $(LIBEX)/errnoException.cpp
+							mv errnoException.o $(LIBEX)
 
 
-../Librairie/exceptions/communicationException.o:	../Librairie/exceptions/communicationException.cpp
-													echo creation communicationException.o
-													$(CC) -c ../Librairie/exceptions/communicationException.cpp
-													mv communicationException.o ../Librairie/exceptions
+$(LIBEX)/communicationException.o:	$(LIBEX)/communicationException.cpp
+									echo creation communicationException.o
+									$(CC) -c $(LIBEX)/communicationException.cpp
+									mv communicationException.o $(LIBEX)
 
-../LibrairieConteneur/sendFunction.o:	../LibrairieConteneur/sendFunction.cpp ../Librairie/utility.o
-										echo creation sendFunction.o
-										$(CC) -c ../LibrairieConteneur/sendFunction.cpp
-										mv sendFunction.o ../LibrairieConteneur
+$(LIBCONT)/sendFunction.o:	$(LIBCONT)/sendFunction.cpp $(LIB)/utility.o
+							echo creation sendFunction.o
+							$(CC) -c $(LIBCONT)/sendFunction.cpp
+							mv sendFunction.o $(LIBCONT)
 													
