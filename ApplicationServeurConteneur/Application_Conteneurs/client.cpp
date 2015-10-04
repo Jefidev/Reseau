@@ -74,7 +74,7 @@ void login(SocketClient* sock)
 
         cout << "mot de passe : ";
         cin >> sc.motDePasse;
-        cout << endl;
+        cout << endl << "Tentative de connexion au serveur ..." << endl << endl;
 
         sock->sendChar(composeConnexion(LOGIN, sc));
         

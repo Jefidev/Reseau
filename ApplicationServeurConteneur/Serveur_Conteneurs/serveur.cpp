@@ -32,7 +32,7 @@ Socket* socketOuverte[MAXCLIENT];
 
 void* threadClient(void* p);
 void finConnexion(int cTraite, Socket* s);
-void login(Socket* s, int clientTraite);
+int login(Socket* s, int clientTraite);
 
 int main()
 {
@@ -84,7 +84,7 @@ int main()
             cout << er.getErrorCode() << "------" << er.getMessage() << endl;
             exit(-1);
         }
-
+        cout << threadsLibres << endl;
         pthread_mutex_lock(&mutexThreadsLibres);
         while(threadsLibres == 0)
             pthread_cond_wait(&condThreadsLibres, &mutexThreadsLibres);
@@ -124,9 +124,10 @@ void* threadClient(void* p)
         Socket* socketService = socketOuverte[clientTraite];
         pthread_mutex_unlock(&mutexIndiceCourant);
 
-        login(socketService, clientTraite);
+        if(!login(socketService, clientTraite))
+            continue;
 
-        finConnexion(clientTraite, socketService);
+        
 
     }
 }
@@ -152,13 +153,10 @@ void finConnexion(int cTraite, Socket* s)
 }
 
 
-void login(Socket* s, int clientTraite)
+int login(Socket* s, int clientTraite)
 {
     string str;
-    int requestType, nbrReq = 0;
-
-    FichierProp fp("login.csv", ';');
-
+    int requestType;
     while(1)
     {
         str = typeRequestParse(s->receiveChar(), &requestType);
@@ -168,11 +166,14 @@ void login(Socket* s, int clientTraite)
             s->sendChar(composeAckErr(ERREUR, "INVALIDE"));
 
             finConnexion(clientTraite, s);
+            return 0;
         }
 
         if(requestType == LOGIN)
         {   
             StructConnexion sc;
+            FichierProp fp("login.csv", ';');
+
 
             sc = parseConnexion(str);
 
@@ -181,7 +182,6 @@ void login(Socket* s, int clientTraite)
             if(!test.compare("#"))
             {
                 s->sendChar(composeAckErr(ERREUR, "LOGERR"));
-                nbrReq++;
             }
             else
             {
@@ -189,18 +189,17 @@ void login(Socket* s, int clientTraite)
                 if(!test.compare(sc.motDePasse))
                 {
                     s->sendChar(composeAckErr(ACK, "ALLRIGHT"));
-                    return;
+                    return 1;
                 }
                 else
-                {
                     s->sendChar(composeAckErr(ERREUR, "LOGERR"));
-                    nbrReq++;
-                }
+                
             }
         }
         else if(requestType == LOGOUT)
         {
             finConnexion(clientTraite, s);
+            return 0;
         }
     }
 }

@@ -69,6 +69,7 @@ int Socket::getSocketHandle() const
 
 void Socket::finConnexion()
 {
+	shutdown(socketHandle, SHUT_RDWR);
 	close(socketHandle);
 	socketHandle = -1;
 }
@@ -87,8 +88,6 @@ void Socket::sendChar(string message)
 	stringSend = Utility::intToString(messageLength) + '#' + message;
 
 	nbrByteSend = send(socketHandle, (void*)stringSend.c_str(), stringSend.size(), 0);	// c_str() : string vers char*
-
-	cout << nbrByteSend << "------" << stringSend.c_str() << endl;
 
 	if(nbrByteSend == -1)
     {
@@ -187,7 +186,6 @@ string Socket::receiveChar()
 			{
 				throw CommunicationException("Erreur : la chaine recue est invalide");
 			}
-			cout << bytesReceived << "-----" << strlen(buff) << endl;
 			totBytesReceives += bytesReceived;	// On met à jour la longueur
 			retString += buff;
 		}
@@ -197,8 +195,6 @@ string Socket::receiveChar()
 	{
 		throw CommunicationException("Erreur : la chaine recue est invalide");
 	}
-
-	cout << retString << endl;
 
 	return retString.erase(0, strlen(messageSize) + 1);	// On retourne la chaine composée sans les caractères devant 
 }
