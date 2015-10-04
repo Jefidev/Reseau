@@ -15,6 +15,7 @@ using namespace std;
 #include "../LibrairieConteneur/protocole.ini"
 #include "../Librairie/exceptions/errnoException.h"
 #include "../LibrairieConteneur/sendFunction.h"
+#include "../Librairie/log/log.h"
 
 #define MAXCLIENT 2
 
@@ -26,6 +27,9 @@ int indiceCourant = -1;
 pthread_mutex_t mutexThreadsLibres;
 pthread_cond_t condThreadsLibres;
 int threadsLibres = MAXCLIENT;
+
+pthread_mutex_t mutexLog;
+Log logFile("logServeur.txt");
 
 pthread_t threadsLances[MAXCLIENT];
 Socket* socketOuverte[MAXCLIENT];
@@ -47,6 +51,7 @@ int main()
 
     pthread_cond_init(&condIndiceCourant, NULL);
     pthread_mutex_init(&mutexIndiceCourant, NULL);
+    pthread_mutex_init(&mutexLog, NULL);
 
     SocketServeur* sock = NULL;
 
@@ -118,8 +123,6 @@ void* threadClient(void* p)
         pthread_mutex_lock(&mutexIndiceCourant);
         while(indiceCourant == -1)
             pthread_cond_wait(&condIndiceCourant, &mutexIndiceCourant);
-
-        cout << "Au boulot" << endl;
 
         int clientTraite = indiceCourant;
         indiceCourant = -1;

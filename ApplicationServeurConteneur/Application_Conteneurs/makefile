@@ -5,8 +5,9 @@ LIBESOCK = ../Librairie/socket
 LIBPROP = ../Librairie/fichierProp
 LIBEX = ../Librairie/exceptions
 LIBCONT =  ../LibrairieConteneur
+LIBLOG = ../Librairie/log
 
-OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o
+OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o $(LIBLOG)/log.o
 
 
 client:	client.cpp $(OBJ)
@@ -49,4 +50,10 @@ $(LIBCONT)/sendFunction.o:	$(LIBCONT)/sendFunction.cpp $(LIB)/utility.o
 							echo creation sendFunction.o
 							$(CC) -c $(LIBCONT)/sendFunction.cpp
 							mv sendFunction.o $(LIBCONT)
+
+$(LIBLOG)/log.o:	$(LIBLOG)/log.cpp
+					echo creation du log
+					$(CC) -c $(LIBLOG)/log.cpp
+					mv log.o $(LIBLOG)
+
 													
