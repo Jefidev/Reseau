@@ -59,11 +59,11 @@ int main()
     login(sock);
 
     int action = menu();
-
+    cout << action << endl;
     switch(action)//Choix de l'action à faire selon le menu
     {
         case 1://INPUT READY
-
+            inputTruck(sock);
             break;
         case 2: //OUTPUT READY
             break;
@@ -147,7 +147,7 @@ void logout(SocketClient* sock)// on envoit la demande de LOGOUT au serveur qui 
 
 int menu()//Bon la si tu comprend pas ... :p
 {   
-    int choix;
+    int choix = 0;
 
     do
     {
@@ -162,7 +162,7 @@ int menu()//Bon la si tu comprend pas ... :p
         cout << "choix : ";
         cin >> choix;
 
-        if(choix < 1  && choix > 3)
+        if(choix < 1  || choix > 3)
             cout << endl << endl << "Choix invalide (choisissez un nombre entre 1 et 3" << endl << endl;
 
     }while(choix < 1 || choix > 3);
@@ -180,6 +180,38 @@ void inputTruck(SocketClient* sock)
     cout << "Immatriculation du camion : ";
     cin >> sit.immatriculation;
 
+    bool continuer = true;
+    string containersList, c;
+
+    do
+    {
+        cout << endl << endl << endl << "ID du container : ";
+        cin >> c;
+
+        containersList = containersList + c;
+
+        int choix = 0;
+
+        do{
+            cout << endl << endl << "Ajouter un container ? (1 oui / 0 non) : ";
+            cin >> choix;
+
+            if(choix < 0 || choix > 1)
+                cout << "choix invalide" << endl << endl;
+
+        }while (choix < 0 || choix > 1);
+
+        if(choix == 0)
+            continuer = false;
+        else
+            containersList = containersList + CONTAINER_SEPARATION;
+
+    }while(continuer);
+
+    sock->sendChar(composeInputTruck(INPUT_TRUCK, sit));
+
+    int reponseType;
+    string str = typeRequestParse(sock->receiveChar(), &reponseType);
 }
 
 

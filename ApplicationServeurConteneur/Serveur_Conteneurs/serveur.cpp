@@ -34,6 +34,8 @@ void* threadClient(void* p);
 void finConnexion(int cTraite, Socket* s);
 int login(Socket* s, int clientTraite);
 
+void inputTruck(Socket*s, int clientTraite, string requete);
+
 int main()
 {
 
@@ -133,6 +135,7 @@ void* threadClient(void* p)
         switch(requestType)
         {
             case INPUT_TRUCK:
+                inputTruck(socketService, clientTraite, str);
                 break;
             case OUTPUT_READY:
                 break;
@@ -216,3 +219,10 @@ int login(Socket* s, int clientTraite)
     }
 }
 
+
+void inputTruck(Socket*s, int clientTraite, string requete)
+{
+    StructInputTruck sit = parseInputTruck(requete);
+
+    cout << "youpie ---- " << sit.immatriculation << endl;
+}
