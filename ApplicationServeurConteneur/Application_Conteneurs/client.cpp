@@ -20,7 +20,7 @@ using namespace std;
 void login(SocketClient* sock);
 void logout(SocketClient* sock);
 void inputTruck(SocketClient* sock);
-void inputDone(SocketClient* sock, string listContainer);
+void inputDone(SocketClient* sock, string listContainer, string listePosition);
 int menu();
 
 int main()
@@ -224,12 +224,12 @@ void inputTruck(SocketClient* sock)
         return;
     }
     
-    inputTruck(sock, containersList);
+    inputDone(sock, containersList, str);
 
 }
 
 
-void inputDone(SocketClient* sock, string listContainer)
+void inputDone(SocketClient* sock, string listContainer, string listePosition)
 {
     
 }

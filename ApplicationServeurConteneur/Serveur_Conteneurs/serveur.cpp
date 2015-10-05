@@ -43,11 +43,11 @@ void finConnexion(int cTraite, Socket* s);
 int login(Socket* s, int clientTraite);
 
 void inputTruck(Socket*s, int clientTraite, string requete);
-void inputDone(Socket*s, int clientTraite, string requete, string listContainer, string listPosition);
+void inputDone(Socket*s, int clientTraite, string listContainer, string listPosition);
 
 int main()
 {
-
+    //Lecture des informations dans le dossier properties
     FichierProp fp = FichierProp("properties.txt");
 
     string host = fp.getValue("HOST");
@@ -59,15 +59,15 @@ int main()
     pthread_mutex_init(&mutexLog, NULL);
     pthread_mutex_init(&mutexParc, NULL);
 
-    SocketServeur* sock = NULL;
+    SocketServeur* sock = NULL; //On prépare une socket qui sera utilisée pour établir la connection.
 
     try
     {
 
         if(isip == "1")
-            sock = new SocketServeur(host , atoi(port.c_str()), true);
+            sock = new SocketServeur(host , atoi(port.c_str()), true); //Si dans le fichier prop on a une IP
         else
-            sock = new SocketServeur(host , atoi(port.c_str()), false);
+            sock = new SocketServeur(host , atoi(port.c_str()), false); // Si dans le fichier prop on a un hostname
     }
     catch(ErrnoException er)
     {
@@ -75,7 +75,7 @@ int main()
         exit(-1);
     }
 
-    for(int i = 0; i < MAXCLIENT; i++)
+    for(int i = 0; i < MAXCLIENT; i++)//On met la liste des sockets ouvertes à NULL
         socketOuverte[i] = NULL; 
 
     //LANCEMENT DES THREADS
@@ -86,54 +86,56 @@ int main()
         pthread_detach(threadsLances[i]);
     }
 
+    //Choses sérieuses
     while(1)
     {   
         try
         {
-            sock->ecouter();
+            sock->ecouter(); //On se met à l'écoute d'une requête cliente
         }
         catch(ErrnoException er)
         {
             cout << er.getErrorCode() << "------" << er.getMessage() << endl;
             exit(-1);
         }
-        cout << threadsLibres << endl;
-        pthread_mutex_lock(&mutexThreadsLibres);
+
+        pthread_mutex_lock(&mutexThreadsLibres);//On se met en attente sur une variable de condition : pas d'accept si pas de thread libre
         while(threadsLibres == 0)
             pthread_cond_wait(&condThreadsLibres, &mutexThreadsLibres);
 
-        int service = sock->accepter();
+        int service = sock->accepter(); //On a un thread libre donc on peut accept
 
         int j;
 
-        for(j = 0; j < MAXCLIENT && socketOuverte[j] != NULL; j++);
+        for(j = 0; j < MAXCLIENT && socketOuverte[j] != NULL; j++); //On parcours nos thread pour trouver un libre
 
         threadsLibres--;
         pthread_mutex_unlock(&mutexThreadsLibres);
 
+        //section critique. On peut pas avoir deux threads qui lisent ces données en meme temps
         pthread_mutex_lock(&mutexIndiceCourant);
-        socketOuverte[j] = new Socket(service);
-        indiceCourant=j;
+        socketOuverte[j] = new Socket(service); //creation d'une nouvelle socket service
+        indiceCourant=j; //on met la variable indice courant à la position de la socket créée pour que le thread puisse savoir laquelle prendre
         pthread_mutex_unlock(&mutexIndiceCourant);
-        pthread_cond_signal(&condIndiceCourant);
+        pthread_cond_signal(&condIndiceCourant); //On réveil le thread au chômage
         
     }
 
 }
 
-void* threadClient(void* p)
+void* threadClient(void* p) //le thread lancé
 {
     int requestType;
     while(1)
     {
-        pthread_mutex_lock(&mutexIndiceCourant);
+        pthread_mutex_lock(&mutexIndiceCourant);//On reste bloqué ici tant qu'il n'y a pas de nouveau client (indice courant à -1)
         while(indiceCourant == -1)
             pthread_cond_wait(&condIndiceCourant, &mutexIndiceCourant);
 
-        int clientTraite = indiceCourant;
-        indiceCourant = -1;
+        int clientTraite = indiceCourant; //on récupère l'indice de notre client dans le tableau de socket ouverte pour pas le perdre
+        indiceCourant = -1;//On remet à -1 pour éviter qu'un concurrent nous le pique.
 
-        Socket* socketService = socketOuverte[clientTraite];
+        Socket* socketService = socketOuverte[clientTraite]; //recuperation de la socket du tableau
         pthread_mutex_unlock(&mutexIndiceCourant);
 
         if(!login(socketService, clientTraite))
@@ -141,7 +143,7 @@ void* threadClient(void* p)
 
         bool cont = true;
 
-        while(cont)
+        while(cont) //boucle sur les demandes du client
         {
 
             string str = typeRequestParse(socketService->receiveChar(), &requestType);
@@ -162,10 +164,8 @@ void* threadClient(void* p)
     }
 }
 
-void finConnexion(int cTraite, Socket* s)
+void finConnexion(int cTraite, Socket* s) //On déconnecte le client (on le fait pour LOGOUT ou en cas de problème)
 {
-    cout << "degage" << endl;
-
     StructConnexion sc;
 
     s->sendChar(composeConnexion(LOGOUT, sc));
@@ -285,15 +285,38 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     else
     {
         s->sendChar(composeAckErr(ACK, retPosition));
+        inputDone(s, clientTraite, sit.idContainers, retPosition);
+    }
 
+}
+
+
+void inputDone(Socket*s, int clientTraite, string listContainer, string listPosition)
+{
+    char *lecContainer, *tokContainer, *saveptrContainer, *lecPosition, *tokPosition, *saveptrPosition;
+    char sep = CONTAINER_SEPARATION;
+
+    lecContainer =  new char [sit.idContainers.length()+1];
+    strcpy(lecContainer, sit.idContainers.c_str());
+
+    lecPosition =  new char [sit.idContainers.length()+1];
+    strcpy(lecPosition, sit.idContainers.c_str());
+
+
+    tokContainer = strtok_r(lecContainer, &sep, &saveptrContainer);
+    tokPosition = strtok_r(lecPosition, &sep, &saveptrPosition);
+
+    while(tokContainer != NULL)
+    {
         string str;
         int requestType;
+        StructInputDone sid;
 
         str = typeRequestParse(s->receiveChar(), &requestType);
 
         if(requestType == INPUT_DONE)
         {
-            inputDone(s, clientTraite, str, requete, retPosition);
+            
         }
         else
         {
@@ -305,19 +328,6 @@ void inputTruck(Socket*s, int clientTraite, string requete)
         }
     }
 
-}
-
-
-void inputDone(Socket*s, int clientTraite, string requete, string listContainer, string listPosition)
-{
-    char *lec, *tok, *saveptr;
-    char sep = CONTAINER_SEPARATION;
-
-    tok = strtok_r(lec, &sep, &saveptr);
-
-    while(tok != NULL)
-    {
         
-    }
 }
 
