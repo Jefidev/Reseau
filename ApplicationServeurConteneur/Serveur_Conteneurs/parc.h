@@ -10,7 +10,7 @@ class Parc
 
 		Parc(string n);
 
-		void getFirstFree(int* x, int* y);
+		string getFirstFree();
 		
 };
 

@@ -57,7 +57,7 @@ $(LIBLOG)/log.o:	$(LIBLOG)/log.cpp
 					$(CC) -c $(LIBLOG)/log.cpp
 					mv log.o $(LIBLOG)
 
-parc.o:	parc.cpp
+parc.o:	parc.cpp $(LIB)/utility.o
 		echo creation du log
 		$(CC) -c parc.cpp
 

@@ -8,6 +8,7 @@ using namespace std;
 
 #include "parc.h"
 #include "../LibrairieConteneur/protocole.ini"
+#include "../Librairie/utility.h";
 
 Parc::Parc(string n)
 {
@@ -44,13 +45,13 @@ Parc::Parc(string n)
 	nomFichier = n;
 }
 
-void Parc::getFirstFree(int* x, int* y)
+string Parc::getFirstFree()
 {
 	char * nomFichierChar = new char [nomFichier.length()+1];
   	strcpy (nomFichierChar, nomFichier.c_str());
   	FILE* f;
 
-	f = fopen(nomFichierChar, "r");
+	f = fopen(nomFichierChar, "r+");
 
 	if(f == (FILE*) NULL)
 	{
@@ -59,7 +60,6 @@ void Parc::getFirstFree(int* x, int* y)
 	}
 
 	RECORD r;
-
 	while(fread(&r, 1, sizeof(RECORD), f) == sizeof(RECORD))
 	{
 		if(r.flagEtat == 0)
@@ -68,12 +68,17 @@ void Parc::getFirstFree(int* x, int* y)
 
 	if(r.flagEtat == 0)
 	{
-		*x = r.x;
-		*y = r.y;
-		return;
+		string ret = Utility::intToString(r.x) + ";" + Utility::intToString(r.y);
+		r.flagEtat = 1;
+		
+		fseek(f, -(long)sizeof(RECORD), SEEK_CUR);
+		fwrite(&r, 1, sizeof(RECORD), f);
+
+		fclose(f);
+		return ret;
 	}
 
-	*x = -1;
-	*y = -1;
+	fclose(f);
+	return "";
 }
 

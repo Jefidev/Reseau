@@ -60,10 +60,6 @@ int main()
 
     SocketServeur* sock = NULL;
 
-    int x, y;
-    parcFile.getFirstFree(&x, &y);
-    cout << x << " ----- " << y << endl;
-
     try
     {
 
@@ -142,20 +138,26 @@ void* threadClient(void* p)
         if(!login(socketService, clientTraite))
             continue;
 
-        string str = typeRequestParse(socketService->receiveChar(), &requestType);
+        bool cont = true;
 
-        switch(requestType)
+        while(cont)
         {
-            case INPUT_TRUCK:
-                inputTruck(socketService, clientTraite, str);
-                break;
-            case OUTPUT_READY:
-                break;
-            case LOGOUT:
-                finConnexion(clientTraite, socketService);
-                break;
-        }
 
+            string str = typeRequestParse(socketService->receiveChar(), &requestType);
+
+            switch(requestType)
+            {
+                case INPUT_TRUCK:
+                    inputTruck(socketService, clientTraite, str);
+                    break;
+                case OUTPUT_READY:
+                    break;
+                case LOGOUT:
+                    cont = false;
+                    finConnexion(clientTraite, socketService);
+                    break;
+            }
+        }
     }
 }
 
@@ -235,6 +237,44 @@ int login(Socket* s, int clientTraite)
 void inputTruck(Socket*s, int clientTraite, string requete)
 {
     StructInputTruck sit = parseInputTruck(requete);
+    char *lec, *tok;
+    char sep = CONTAINER_SEPARATION;
+    char* saveptr;
+    string retPosition = "";
+    bool erreur = false, cont = true;
 
-    cout << "youpie ---- " << sit.immatriculation << endl;
+    lec =  new char [sit.idContainers.length()+1];
+    strcpy(lec, sit.idContainers.c_str());
+
+    tok = strtok_r(lec, &sep, &saveptr);
+
+    while(tok != NULL)
+    {
+        pthread_mutex_lock(&mutexParc);
+        retPosition = retPosition + parcFile.getFirstFree(); //Renvois les coord du premier emplacement libre sous forme x;y
+        pthread_mutex_unlock(&mutexParc);
+
+        if(!retPosition.compare(""))
+        {
+            erreur = true;
+            break;
+        }
+
+        tok = strtok_r(NULL, &sep, &saveptr);
+
+        if(tok != NULL)
+            retPosition = retPosition + CONTAINER_SEPARATION;
+
+    }
+
+    if(erreur)
+    {
+        s->sendChar(composeAckErr(ERREUR, "Plus de place"));
+        return;
+    }
+    else
+    {
+        s->sendChar(composeAckErr(ACK, retPosition));
+    }
+
 }

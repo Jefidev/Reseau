@@ -58,20 +58,23 @@ int main()
 
     login(sock);
 
-    int action = menu();
-    cout << action << endl;
-    switch(action)//Choix de l'action à faire selon le menu
+    while(1)
     {
-        case 1://INPUT READY
-            inputTruck(sock);
-            break;
-        case 2: //OUTPUT READY
-            break;
-        case 3: //LOGOUT
-            logout(sock);
-            break;
-    }
 
+        int action = menu();
+        
+        switch(action)//Choix de l'action à faire selon le menu
+        {
+            case 1://INPUT READY
+                inputTruck(sock);
+                break;
+            case 2: //OUTPUT READY
+                break;
+            case 3: //LOGOUT
+                logout(sock);
+                break;
+        }
+    }
 } 
 
 
@@ -151,7 +154,6 @@ int menu()//Bon la si tu comprend pas ... :p
 
     do
     {
-
         cout << endl << endl << "\tMENU" << endl;
         cout << "\t----" << endl << endl;
 
@@ -208,10 +210,17 @@ void inputTruck(SocketClient* sock)
 
     }while(continuer);
 
+    sit.idContainers = containersList;
+
     sock->sendChar(composeInputTruck(INPUT_TRUCK, sit));
 
     int reponseType;
     string str = typeRequestParse(sock->receiveChar(), &reponseType);
+
+    if(reponseType == ERREUR)
+        return;
+    else
+        return;
 }
 
 
