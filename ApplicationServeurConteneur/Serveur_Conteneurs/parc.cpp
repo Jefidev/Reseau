@@ -75,10 +75,65 @@ string Parc::getFirstFree()
 		fwrite(&r, 1, sizeof(RECORD), f);
 
 		fclose(f);
+		delete nomFichierChar;
 		return ret;
 	}
 
 	fclose(f);
+	delete nomFichierChar;
 	return "";
+}
+
+
+void Parc::freeSpace(string str)
+{
+	char * nomFichierChar = new char [nomFichier.length()+1];
+  	strcpy (nomFichierChar, nomFichier.c_str());
+  	FILE* f;
+
+  	f = fopen(nomFichierChar, "r+");
+
+  	if(f == (FILE*) NULL)
+	{
+		cout << "erreur lecture " << endl;
+		exit(0);
+	}
+
+	char *lec, *tok, *saveptrAllChar, *saveptrx;
+	char sep = CONTAINER_SEPARATION, sep2 = ';';
+
+	lec = new char [str.length()+1];
+	strcpy (lec, str.c_str());
+
+	tok = strtok_r(lec, &sep, &saveptrAllChar);
+
+	while(tok != NULL)
+	{
+		
+		int x, y;
+
+		x = atoi(strtok_r(tok, &sep2, &saveptrx));
+		y = atoi(strtok_r(NULL, &sep2, &saveptrx));
+		RECORD r;
+
+		while(fread(&r, 1, sizeof(RECORD), f) == sizeof(RECORD))
+		{
+			if(r.x == x && r.y == y)
+				break;
+		}
+
+		if(r.x == x && r.y == y)
+		{
+			r.flagEtat = 0;
+			fseek(f, -(long)sizeof(RECORD), SEEK_CUR);
+			fwrite(&r, 1, sizeof(RECORD), f);
+		}
+
+		fseek(f, 0, SEEK_SET);
+
+		tok = strtok_r(NULL, &sep, &saveptrAllChar);
+	}
+	delete lec;
+	fclose(f);
 }
 

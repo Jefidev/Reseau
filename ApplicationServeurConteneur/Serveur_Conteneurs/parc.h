@@ -11,6 +11,7 @@ class Parc
 		Parc(string n);
 
 		string getFirstFree();
+		void freeSpace(string str);
 		
 };
 

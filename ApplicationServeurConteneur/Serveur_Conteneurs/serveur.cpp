@@ -43,6 +43,7 @@ void finConnexion(int cTraite, Socket* s);
 int login(Socket* s, int clientTraite);
 
 void inputTruck(Socket*s, int clientTraite, string requete);
+void inputDone(Socket*s, int clientTraite, string requete, string listContainer, string listPosition);
 
 int main()
 {
@@ -240,7 +241,7 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     char *lec, *tok;
     char sep = CONTAINER_SEPARATION;
     char* saveptr;
-    string retPosition = "";
+    string retPosition = "", ret = "";
     bool erreur = false, cont = true;
 
     lec =  new char [sit.idContainers.length()+1];
@@ -251,14 +252,16 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     while(tok != NULL)
     {
         pthread_mutex_lock(&mutexParc);
-        retPosition = retPosition + parcFile.getFirstFree(); //Renvois les coord du premier emplacement libre sous forme x;y
+        ret = parcFile.getFirstFree(); //Renvois les coord du premier emplacement libre sous forme x;y
         pthread_mutex_unlock(&mutexParc);
 
-        if(!retPosition.compare(""))
+        if(!ret.compare(""))
         {
             erreur = true;
             break;
         }
+
+        retPosition = retPosition + ret;
 
         tok = strtok_r(NULL, &sep, &saveptr);
 
@@ -269,12 +272,52 @@ void inputTruck(Socket*s, int clientTraite, string requete)
 
     if(erreur)
     {
-        s->sendChar(composeAckErr(ERREUR, "Plus de place"));
+        s->sendChar(composeAckErr(ERREUR, "Pas assez de place dans le parc"));
+
+        if(retPosition.compare(""))
+        {
+            pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
+            parcFile.freeSpace(retPosition);
+            pthread_mutex_unlock(&mutexParc);
+        }
         return;
     }
     else
     {
         s->sendChar(composeAckErr(ACK, retPosition));
+
+        string str;
+        int requestType;
+
+        str = typeRequestParse(s->receiveChar(), &requestType);
+
+        if(requestType == INPUT_DONE)
+        {
+            inputDone(s, clientTraite, str, requete, retPosition);
+        }
+        else
+        {
+            pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
+            parcFile.freeSpace(retPosition);
+            pthread_mutex_unlock(&mutexParc);
+            finConnexion(clientTraite, s);
+            return;
+        }
     }
 
 }
+
+
+void inputDone(Socket*s, int clientTraite, string requete, string listContainer, string listPosition)
+{
+    char *lec, *tok, *saveptr;
+    char sep = CONTAINER_SEPARATION;
+
+    tok = strtok_r(lec, &sep, &saveptr);
+
+    while(tok != NULL)
+    {
+        
+    }
+}
+

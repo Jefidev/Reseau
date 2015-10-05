@@ -20,6 +20,7 @@ using namespace std;
 void login(SocketClient* sock);
 void logout(SocketClient* sock);
 void inputTruck(SocketClient* sock);
+void inputDone(SocketClient* sock, string listContainer);
 int menu();
 
 int main()
@@ -218,9 +219,18 @@ void inputTruck(SocketClient* sock)
     string str = typeRequestParse(sock->receiveChar(), &reponseType);
 
     if(reponseType == ERREUR)
+    {
+        cout << endl << str << endl;
         return;
-    else
-        return;
+    }
+    
+    inputTruck(sock, containersList);
+
 }
 
+
+void inputDone(SocketClient* sock, string listContainer)
+{
+    
+}
 

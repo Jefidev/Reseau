@@ -89,12 +89,8 @@ string composeInputDone(int l, StructInputDone sc)
 {
 	string retour;
 
-	ostringstream ss;
-	ss << sc.poids;
-	string s(ss.str());
-
 	retour = Utility::intToString(l);
-	retour = retour + SEPARATION + sc.etat + SEPARATION + s;
+	retour = retour + SEPARATION + sc.poids;
 
 	return retour;
 }
@@ -103,14 +99,7 @@ StructInputDone parseInputDone(string s)
 {
 	StructInputDone si;
 
-	istringstream iss(s);
-	string token;
-
-	getline(iss, token, SEPARATION);
-	si.etat = token;
-
-	getline(iss, token, SEPARATION);
-	si.poids = atof(token.c_str());
+	si.poids = s;
 
 	return si;
 }
