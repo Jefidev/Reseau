@@ -254,11 +254,28 @@ void inputDone(SocketClient* sock)
         }while(sid.transport != 0 && sid.transport != 1);
 
 
-        sock->sendChar(composeInputDone(ACK, sid));
+        sock->sendChar(composeInputDone(INPUT_DONE, sid));
 
+        cout << "avant envoi input" << endl;
+
+        lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
+
+        cout << "apres envois input" << endl;
+
+        if(reponseType == ACK)
+            cout << endl << lecRecus;
+        else if(reponseType == ERREUR)
+            cout << endl << lecRecus;
+        else //On a reçus des trucs pas cool on coupe
+            logout(sock);
+
+        sock->sendChar(composeAckErr(NEXT, ""));
+
+        lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
         
     }
 
-    cout << "mince" << endl;
+
+    cout << endl << endl << lecRecus;
 }
 

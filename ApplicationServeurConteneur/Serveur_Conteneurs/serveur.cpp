@@ -320,7 +320,23 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
 
         if(requestType == INPUT_DONE)
         {
-            
+
+            sid = parseInputDone(str);
+
+            if(sid.poids > 100)
+            {   
+                pthread_mutex_lock(&mutexParc);
+                parcFile.freeSpace(sid.coord);
+                pthread_mutex_unlock(&mutexParc);
+                s->sendChar(composeAckErr(ERREUR, "Le container est trop lourd : enregistrement annule"));
+            }
+            else
+            {
+                pthread_mutex_lock(&mutexParc);
+                parcFile.placeContainer(sid);
+                pthread_mutex_unlock(&mutexParc);
+                s->sendChar(composeAckErr(ACK, "Le container a ete enregistre"));
+            }
             
         }
         else
@@ -331,7 +347,21 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
             finConnexion(clientTraite, s);
             return;
         }
+
+        str = typeRequestParse(s->receiveChar(), &requestType);
+
+        if(requestType != NEXT)
+        {
+            finConnexion(clientTraite, s);
+            return;
+        }
+
+        tokContainer = strtok_r(NULL, &sep, &saveptrContainer);
+        tokPosition = strtok_r(NULL, &sep, &saveptrPosition);
+
     }
+
+    s->sendChar(composeAckErr(ACK, "Tous les containers ont ete traites"));
         
 }
 

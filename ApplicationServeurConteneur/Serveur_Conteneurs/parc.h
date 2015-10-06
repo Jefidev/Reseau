@@ -1,8 +1,6 @@
 #ifndef PARC_H_INCLUDED
 #define PARC_H_INCLUDED
 
-#include "../LibrairieConteneur/protocole.ini"
-
 class Parc
 {
 	private :

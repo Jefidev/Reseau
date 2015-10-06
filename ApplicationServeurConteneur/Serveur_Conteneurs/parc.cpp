@@ -133,6 +133,7 @@ void Parc::freeSpace(string str)
 		tok = strtok_r(NULL, &sep, &saveptrAllChar);
 	}
 	delete lec;
+	delete nomFichierChar;
 	fclose(f);
 }
 
@@ -161,6 +162,8 @@ void Parc::placeContainer(StructInputDone sid)
 		exit(0);
 	}
 
+	RECORD r;
+
 	while(fread(&r, 1, sizeof(RECORD), f) == sizeof(RECORD))
 	{
 		if(r.x == x && r.y == y)
@@ -170,10 +173,24 @@ void Parc::placeContainer(StructInputDone sid)
 	if(r.x == x && r.y == y)
 	{
 		r.flagEtat = 2;
-		strcpy(r.IDcontainer, sid.id);
+		strcpy(r.IDcontainer, sid.id.c_str());
+		strcpy(r.destination, sid.destination.c_str());
+		r.moyenTransport = sid.transport;
 
 		fseek(f, -(long)sizeof(RECORD), SEEK_CUR);
 		fwrite(&r, 1, sizeof(RECORD), f);
 	}
+
+	fseek(f, 0, SEEK_SET);
+
+	while(fread(&r, 1, sizeof(RECORD), f) == sizeof(RECORD))
+	{
+		cout << r.flagEtat << endl;
+	}
+
+
+	fclose(f);
+	delete lec;
+	delete nomFichierChar;
 }
 

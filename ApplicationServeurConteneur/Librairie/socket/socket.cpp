@@ -164,7 +164,7 @@ string Socket::receiveChar()
 
 	memset(buff, '\0', sizeof(buff));
 	memset(buff, '\0', sizeof(cpBuff));
-
+	
 	do
 	{
 		if((bytesReceived = recv(socketHandle, buff, 500, 0)) == -1)
