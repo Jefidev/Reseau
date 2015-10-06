@@ -20,7 +20,7 @@ using namespace std;
 void login(SocketClient* sock);
 void logout(SocketClient* sock);
 void inputTruck(SocketClient* sock);
-void inputDone(SocketClient* sock, string listContainer, string listePosition);
+void inputDone(SocketClient* sock);
 int menu();
 
 int main()
@@ -224,13 +224,41 @@ void inputTruck(SocketClient* sock)
         return;
     }
     
-    inputDone(sock, containersList, str);
+    inputDone(sock);
 
 }
 
 
-void inputDone(SocketClient* sock, string listContainer, string listePosition)
+void inputDone(SocketClient* sock)
 {
-    
+    int reponseType;
+    string lecRecus;
+
+    lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
+
+    while(reponseType == INPUT_DONE)
+    {
+        StructInputDone sid = parseInputDone(lecRecus);
+
+        cout << endl << endl << "Container ID : " << sid.id << endl;
+        cout << "Emplacement : " << sid.coord << endl;
+        cout << "poids : ";
+        cin >> sid.poids;
+        cout << endl << "Destination : ";
+        cin >> sid.destination;
+
+        do
+        {
+            cout << endl << "Moyent de transport (1 = train 0 = bateau) : ";
+            cin >> sid.transport;
+        }while(sid.transport != 0 && sid.transport != 1);
+
+
+        sock->sendChar(composeInputDone(ACK, sid));
+
+        
+    }
+
+    cout << "mince" << endl;
 }
 

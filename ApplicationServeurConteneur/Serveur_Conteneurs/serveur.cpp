@@ -287,7 +287,6 @@ void inputTruck(Socket*s, int clientTraite, string requete)
         s->sendChar(composeAckErr(ACK, retPosition));
         inputDone(s, clientTraite, sit.idContainers, retPosition);
     }
-
 }
 
 
@@ -296,11 +295,11 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
     char *lecContainer, *tokContainer, *saveptrContainer, *lecPosition, *tokPosition, *saveptrPosition;
     char sep = CONTAINER_SEPARATION;
 
-    lecContainer =  new char [sit.idContainers.length()+1];
-    strcpy(lecContainer, sit.idContainers.c_str());
+    lecContainer =  new char [listContainer.length()+1];
+    strcpy(lecContainer, listContainer.c_str());
 
-    lecPosition =  new char [sit.idContainers.length()+1];
-    strcpy(lecPosition, sit.idContainers.c_str());
+    lecPosition =  new char [listPosition.length()+1];
+    strcpy(lecPosition, listPosition.c_str());
 
 
     tokContainer = strtok_r(lecContainer, &sep, &saveptrContainer);
@@ -312,22 +311,27 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
         int requestType;
         StructInputDone sid;
 
+        sid.coord = tokPosition;
+        sid.id = tokContainer;
+
+        s->sendChar(composeInputDone(INPUT_DONE, sid));
+
         str = typeRequestParse(s->receiveChar(), &requestType);
 
         if(requestType == INPUT_DONE)
         {
             
+            
         }
         else
         {
             pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
-            parcFile.freeSpace(retPosition);
+            parcFile.freeSpace(listPosition);
             pthread_mutex_unlock(&mutexParc);
             finConnexion(clientTraite, s);
             return;
         }
     }
-
         
 }
 

@@ -1,6 +1,8 @@
 #ifndef PARC_H_INCLUDED
 #define PARC_H_INCLUDED
 
+#include "../LibrairieConteneur/protocole.ini"
+
 class Parc
 {
 	private :
@@ -12,6 +14,7 @@ class Parc
 
 		string getFirstFree();
 		void freeSpace(string str);
+		void placeContainer(StructInputDone sid);
 		
 };
 

@@ -7,8 +7,7 @@
 using namespace std;
 
 #include "parc.h"
-#include "../LibrairieConteneur/protocole.ini"
-#include "../Librairie/utility.h";
+#include "../Librairie/utility.h"
 
 Parc::Parc(string n)
 {
@@ -135,5 +134,46 @@ void Parc::freeSpace(string str)
 	}
 	delete lec;
 	fclose(f);
+}
+
+void Parc::placeContainer(StructInputDone sid)
+{
+
+	char *lec, sep = ';', *saveptr;
+
+	lec = new char [sid.coord.length()+1];
+	strcpy (lec, sid.coord.c_str());
+
+	int x, y;
+
+	x = atoi(strtok_r(lec, &sep, &saveptr));
+	y = atoi(strtok_r(NULL, &sep, &saveptr));
+
+	char * nomFichierChar = new char [nomFichier.length()+1];
+  	strcpy (nomFichierChar, nomFichier.c_str());
+  	FILE* f;
+
+  	f = fopen(nomFichierChar, "r+");
+
+  	if(f == (FILE*) NULL)
+	{
+		cout << "erreur lecture " << endl;
+		exit(0);
+	}
+
+	while(fread(&r, 1, sizeof(RECORD), f) == sizeof(RECORD))
+	{
+		if(r.x == x && r.y == y)
+			break;
+	}
+
+	if(r.x == x && r.y == y)
+	{
+		r.flagEtat = 2;
+		strcpy(r.IDcontainer, sid.id);
+
+		fseek(f, -(long)sizeof(RECORD), SEEK_CUR);
+		fwrite(&r, 1, sizeof(RECORD), f);
+	}
 }
 
