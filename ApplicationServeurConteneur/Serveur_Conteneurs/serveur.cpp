@@ -45,6 +45,8 @@ int login(Socket* s, int clientTraite);
 void inputTruck(Socket*s, int clientTraite, string requete);
 void inputDone(Socket*s, int clientTraite, string listContainer, string listPosition);
 
+void outputReady(Socket* s, int clientTraite, string requete);
+
 int main()
 {
     //Lecture des informations dans le dossier properties
@@ -154,6 +156,7 @@ void* threadClient(void* p) //le thread lancé
                     inputTruck(socketService, clientTraite, str);
                     break;
                 case OUTPUT_READY:
+                    outputReady(socketService, clientTraite, str);
                     break;
                 case LOGOUT:
                     cont = false;
@@ -365,3 +368,10 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
         
 }
 
+
+void outputReady(Socket* s, int clientTraite, string requete)
+{
+    //StructOuputReady sor = parseOutputReady(requete);
+
+    cout << requete << endl;
+}

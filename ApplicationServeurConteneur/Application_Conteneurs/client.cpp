@@ -21,6 +21,7 @@ void login(SocketClient* sock);
 void logout(SocketClient* sock);
 void inputTruck(SocketClient* sock);
 void inputDone(SocketClient* sock);
+void outputReady(SocketClient* sock);
 int menu();
 
 int main()
@@ -70,6 +71,7 @@ int main()
                 inputTruck(sock);
                 break;
             case 2: //OUTPUT READY
+                outputReady(sock);
                 break;
             case 3: //LOGOUT
                 logout(sock);
@@ -242,14 +244,14 @@ void inputDone(SocketClient* sock)
 
         cout << endl << endl << "Container ID : " << sid.id << endl;
         cout << "Emplacement : " << sid.coord << endl;
-        cout << "poids : ";
+        cout << "poids (en tonne): ";
         cin >> sid.poids;
         cout << endl << "Destination : ";
         cin >> sid.destination;
 
         do
         {
-            cout << endl << "Moyent de transport (1 = train 0 = bateau) : ";
+            cout << endl << "Moyen de transport (1 = train 0 = bateau) : ";
             cin >> sid.transport;
         }while(sid.transport != 0 && sid.transport != 1);
 
@@ -275,7 +277,33 @@ void inputDone(SocketClient* sock)
         
     }
 
-
     cout << endl << endl << lecRecus;
 }
+
+
+void outputReady(SocketClient* sock)
+{
+    StructOuputReady sor;
+
+    cout << endl << endl << endl << endl << "Sortie de container" << endl;
+    cout << "-------------------" << endl << endl;
+
+    do
+    {
+        cout << endl << "Moyen de transport (1 = train 0 = bateau) : ";
+        cin >> sor.type;
+    }while(sor.type != 0 && sor.type != 1);
+
+    cout << endl << endl << "ID du moyen de transport : ";
+    cin >> sor.idTrainBateau;
+
+    do
+    {
+        cout << endl << "Capacite maximale (en container) : ";
+        cin >> sor.capaciteMax;
+    }while(sor.capaciteMax < 1);
+
+    sock->sendChar(composeOutputReady(OUTPUT_READY, sor));
+}
+
 
