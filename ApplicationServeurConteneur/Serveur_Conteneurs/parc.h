@@ -13,6 +13,7 @@ class Parc
 		string getFirstFree();
 		void freeSpace(string str);
 		void placeContainer(StructInputDone sid);
+		string outputList(StructOuputReady sor);
 		
 };
 

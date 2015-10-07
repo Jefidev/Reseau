@@ -3,9 +3,11 @@
 #include <string.h>
 #include <string>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
+#include "../LibrairieConteneur/protocole.ini"
 #include "parc.h"
 #include "../Librairie/utility.h"
 
@@ -192,5 +194,39 @@ void Parc::placeContainer(StructInputDone sid)
 	fclose(f);
 	delete lec;
 	delete nomFichierChar;
+}
+
+string Parc::outputList(StructOuputReady sor)
+{
+	char * nomFichierChar = new char [nomFichier.length()+1];
+  	strcpy (nomFichierChar, nomFichier.c_str());
+  	FILE* f;
+  	string retour;
+  	RECORD r;
+
+  	f = fopen(nomFichierChar, "r");
+
+  	if(f == (FILE*) NULL)
+	{
+		cout << "erreur lecture " << endl;
+		exit(0);
+	}
+
+	while(fread(&r, 1, sizeof(RECORD), f) == sizeof(RECORD))
+	{
+		if(!strcmp(sor.destination.c_str(), r.destination) && sor.type == r.moyenTransport)
+		{
+			ostringstream convert;
+			convert << r.IDcontainer << CONTAINER_SEPARATION << r.x << ";" << r.y;
+
+			retour = retour + convert.str() + SEPARATION;
+		}
+	}
+
+
+	fclose(f);
+	delete nomFichierChar;
+	return retour;
+
 }
 

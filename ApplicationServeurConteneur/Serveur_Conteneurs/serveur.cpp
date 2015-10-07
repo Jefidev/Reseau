@@ -13,8 +13,8 @@ using namespace std;
 #include "../Librairie/socket/socketServeur.h"
 #include "../Librairie/fichierProp/fichierProp.h"
 #include "../LibrairieConteneur/protocole.ini"
-#include "../Librairie/exceptions/errnoException.h"
 #include "../LibrairieConteneur/sendFunction.h"
+#include "../Librairie/exceptions/errnoException.h"
 #include "../Librairie/log/log.h"
 #include "parc.h"
 
@@ -46,6 +46,7 @@ void inputTruck(Socket*s, int clientTraite, string requete);
 void inputDone(Socket*s, int clientTraite, string listContainer, string listPosition);
 
 void outputReady(Socket* s, int clientTraite, string requete);
+void outputOne(Socket* s, int clientTraite);
 
 int main()
 {
@@ -371,7 +372,52 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
 
 void outputReady(Socket* s, int clientTraite, string requete)
 {
-    //StructOuputReady sor = parseOutputReady(requete);
+    StructOuputReady sor  = parseOutputReady(requete);
 
-    cout << requete << endl;
+    pthread_mutex_lock(&mutexParc); 
+    string listeContainer = parcFile.outputList(sor);
+    pthread_mutex_unlock(&mutexParc);
+
+    if(listeContainer.compare(""))
+    {
+        s->sendChar(composeAckErr(ACK, listeContainer));
+        outputOne(s, clientTraite);
+    }
+    else
+        s->sendChar(composeAckErr(ERREUR, "Aucun containers pour cette destination"));
+
+
+
+}
+
+void outputOne(Socket* s, int clientTraite)
+{
+    int requestType;
+    string reponse = typeRequestParse(s->receiveChar(), &requestType);
+    cout << "je recois un truc" << endl;
+    while(requestType == OUTPUT_ONE)
+    {
+        StructOutputOne soo = parseOutputOne(reponse);
+
+        cout << "parsing" << endl;
+
+        pthread_mutex_lock(&mutexParc); 
+        parcFile.freeSpace(soo.emplacement);
+        pthread_mutex_unlock(&mutexParc);
+
+        cout << "retire du fichier" << endl;
+
+        s->sendChar(composeAckErr(ACK, "container retire"));
+
+        cout << "apressend" << endl;
+
+        reponse = typeRequestParse(s->receiveChar(), &requestType);
+    }
+
+    if(requestType != OUTPUT_DONE)
+    {
+        finConnexion(clientTraite, s);
+    }
+
+    s->sendChar(composeAckErr(ACK, "les containers ont bien ete retires"));
 }

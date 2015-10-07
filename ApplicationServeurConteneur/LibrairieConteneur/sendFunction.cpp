@@ -129,10 +129,10 @@ string composeOutputReady(int l, StructOuputReady sc)
 	string retour;
 	ostringstream convert;
 
-	convert << sc.capaciteMax << SEPARATION << sc.type;
+	convert << sc.capaciteMax << SEPARATION << sc.type << SEPARATION;
 
 	retour = Utility::intToString(l);
-	retour = retour + SEPARATION + sc.idTrainBateau + SEPARATION + convert.str();
+	retour = retour + SEPARATION + sc.idTrainBateau + SEPARATION + convert.str() + sc.destination;
 	
 	return retour;
 }
@@ -152,6 +152,9 @@ StructOuputReady parseOutputReady(string s)
 
 	getline(iss, token, SEPARATION);
 	si.type = atoi((char*)token.c_str());
+
+	getline(iss, token, SEPARATION);
+	si.destination = token;
 
 	return si;
 }

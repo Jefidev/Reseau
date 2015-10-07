@@ -22,6 +22,7 @@ void logout(SocketClient* sock);
 void inputTruck(SocketClient* sock);
 void inputDone(SocketClient* sock);
 void outputReady(SocketClient* sock);
+void outputOne(SocketClient* sock, int capaMax, string idTransport);
 int menu();
 
 int main()
@@ -297,13 +298,124 @@ void outputReady(SocketClient* sock)
     cout << endl << endl << "ID du moyen de transport : ";
     cin >> sor.idTrainBateau;
 
+    cout << endl << endl << "Destination : ";
+    cin >> sor.destination;
+
     do
     {
         cout << endl << "Capacite maximale (en container) : ";
         cin >> sor.capaciteMax;
     }while(sor.capaciteMax < 1);
 
+    cout << endl << endl << endl;
+
     sock->sendChar(composeOutputReady(OUTPUT_READY, sor));
+
+    outputOne(sock, sor.capaciteMax, sor.idTrainBateau);
+}
+
+void outputOne(SocketClient* sock, int capaMax, string idTransport)
+{
+    int reponseType;
+    string reponse = typeRequestParse(sock->receiveChar(), &reponseType);
+
+    if(reponseType == ERREUR)
+    {
+        cout << reponse << endl;
+        return;
+    }
+
+    if(reponseType != ACK)
+        logout(sock);
+
+    char *lecContainer, sep = SEPARATION, *saveptr, sepaContainer = CONTAINER_SEPARATION;
+    char* copieReponse =  new char [reponse.length()+1];
+    strcpy (copieReponse, reponse.c_str());
+
+    lecContainer = strtok_r(copieReponse, &sep, &saveptr);
+    int nbrCharge = 0;
+    bool finChargement = false;
+
+    while(lecContainer != NULL)
+    {
+
+        cout << endl <<"ID container : " << strtok(lecContainer, &sepaContainer) << endl << endl;
+
+        char* emplacement = strtok(NULL, &sepaContainer);
+
+        cout << "Emplacement : " << emplacement << endl << endl;
+
+        int tmp = 0;
+
+        do
+        {
+            cout <<endl << "Charger ce container ? (1 oui / 0 non)";
+            cin >> tmp;
+        }while(tmp !=0 && tmp != 1);
+
+        if(tmp == 1)
+        {
+            StructOutputOne soo;
+            soo.emplacement = emplacement;
+
+            sock->sendChar(composeOutputOne(OUTPUT_ONE, soo));
+            cout << "after send" << endl;
+            string lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
+            cout << "after rcv" << endl;
+
+            if(reponseType ==  ACK)
+            {
+                nbrCharge++;
+                cout << endl <<"Le container a ete sortis du parc" << endl;
+            }
+            else
+                cout << endl << lecRecus << endl;
+        }
+
+        if(nbrCharge == capaMax)
+            break;
+
+        do
+        {
+            cout << endl << endl << "Charger un autre container ? (1 oui / 0 non)";
+            cin >> tmp;
+        }while(tmp !=0 && tmp != 1);
+
+        if(tmp == 0)
+        {
+            finChargement = true;
+            break;
+        }
+
+        lecContainer = strtok_r(NULL, &sep, &saveptr);
+    }
+
+    if(nbrCharge == capaMax)
+        cout << endl << endl <<"Plus de place pour d'autre container sur le transport " << endl << endl;
+
+    if(finChargement == true)
+        cout << endl << endl <<"Chargement termine" << endl << endl;
+
+    if(lecContainer == NULL)
+        cout << endl << endl << "Plus de container en attente pour la destination " << endl << endl;
+
+
+    StructOutputDone sod;
+
+    sod.nbrContainers = nbrCharge;
+    sod.idTrainBateau = idTransport;
+
+    sock->sendChar(composeOutputDone(OUTPUT_DONE, sod));
+
+    string lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
+
+    if(reponseType ==  ACK)
+        cout << "Les container ont ete retire du parc" << endl << endl;
+
+    else
+        cout << "Erreur lors de la sortie des containers" << endl << endl;
+
+    delete copieReponse;
 }
 
 
