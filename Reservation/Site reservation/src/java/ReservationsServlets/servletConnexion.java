@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -32,16 +33,18 @@ public class servletConnexion extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        boolean ok = true;
+        HttpSession session = request.getSession(true);
         
         if(request.getParameter("nouveau") == null)
         {
             //Vérification dans la BDD 
             if(0 != request.getParameter("login").compareTo("admin") || 0!= request.getParameter("mdp").compareTo("admin"))
             {
+                session.setAttribute("erreur", "Login ou nom d'utilisateur inconnus");
                 response.sendRedirect(request.getScheme() + "://" +request.getServerName()+":"+request.getServerPort()+"/reservation");
             }
         }
+        
         
         response.setContentType("text/html;charset=UTF-8");
     
@@ -53,7 +56,7 @@ public class servletConnexion extends HttpServlet {
             out.println("<title>Servlet servletConnexion</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1> Login : " + ok+ "</h1>");
+            out.println("<h1> Login : </h1>");
             out.println("</body>");
             out.println("</html>");
         }

@@ -1,9 +1,11 @@
+<%-- 
+    Document   : index
+    Created on : Oct 8, 2015, 7:54:10 PM
+    Author     : Jerome
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <title>Réservation : connexion</title>
@@ -11,6 +13,7 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
+        <body>
         <h1>Connexion</h1>
             <form method = "POST" action = "formulaire">
 		<label for = "login">Login </label><input type = "text" name = "login" id = "login" required/></br>
@@ -18,5 +21,11 @@ and open the template in the editor.
 		<input type = "checkbox" name = "nouveau" id = "nouveau"/><label for = "nouveau">Je suis un nouvel utilisateur</label></br>
 		<input type = "submit" value = "Connexion"/>
             </form>
+            <%
+                if(session.getAttribute("erreur") != null)
+                {
+            %>
+            <p><%=session.getAttribute("erreur")%></p>
+            <%}%>
     </body>
 </html>
