@@ -12,16 +12,11 @@ import java.io.Serializable;
  *
  * @author Utilisateur
  */
-public class BeanDBAccess implements Serializable {
-    
-    public static final String PROP_SAMPLE_PROPERTY = "sampleProperty";
+public abstract class BeanDBAccess implements Serializable {
     
     private String sampleProperty;
     
-    private PropertyChangeSupport propertySupport;
-    
     public BeanDBAccess() {
-        propertySupport = new PropertyChangeSupport(this);
     }
     
     public String getSampleProperty() {
@@ -29,17 +24,7 @@ public class BeanDBAccess implements Serializable {
     }
     
     public void setSampleProperty(String value) {
-        String oldValue = sampleProperty;
+        //String oldValue = sampleProperty;
         sampleProperty = value;
-        propertySupport.firePropertyChange(PROP_SAMPLE_PROPERTY, oldValue, sampleProperty);
-    }
-    
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertySupport.addPropertyChangeListener(listener);
-    }
-    
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertySupport.removePropertyChangeListener(listener);
-    }
-    
+    }   
 }
