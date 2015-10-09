@@ -45,6 +45,7 @@ public class servletConnexion extends HttpServlet {
             }
         }
         
+        session.setAttribute("login", request.getParameter("login"));
         
         response.setContentType("text/html;charset=UTF-8");
     
@@ -53,10 +54,21 @@ public class servletConnexion extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet servletConnexion</title>");            
+            out.println("<title>Formulaire de réservation</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1> Login : </h1>");
+            out.println("<h1>Demande de réservation</h1>");
+            out.println("<form method = \"POST\" action=\"testificate\"></br>");
+            out.println("<label for=\"dateArrivee\">Date d'arrivee du container : </label><input type=\"date\" name=\"dateArrivee>\" id=\"dateArrivee\"></br>");
+            out.println("<label for=\"dateArrivee\">Destination : </label></br>");
+            out.println("<label for=\"destination\">Destination : </label></br>");
+            out.println("<select name=\"destination\" id=\"destination\">");
+            out.println("<option value=\"Verviers\">Verviers</option>");
+            out.println("<option value=\"Liege\">Liege</option>");
+            out.println("<option value=\"Strasbourg\">Strasbourg</option>");
+            out.println("</select></br>");
+            out.println("<input type = \"submit\" value = \"Réserver\"/>");
+            out.println("</form>");
             out.println("</body>");
             out.println("</html>");
         }
