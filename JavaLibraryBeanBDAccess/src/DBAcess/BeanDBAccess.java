@@ -5,26 +5,26 @@
  */
 package DBAcess;
 
-import java.beans.*;
-import java.io.Serializable;
+//import java.beans.*;
+//import java.io.Serializable;
 
 /**
  *
  * @author Utilisateur
  */
-public abstract class BeanDBAccess implements Serializable {
+public interface BeanDBAccess { //abstract class BeanDBAccess implements Serializable {
     
-    private String sampleProperty;
+//    private String sampleProperty;
     
-    public BeanDBAccess() {
-    }
+//    public BeanDBAccess() {
+//    }
     
-    public String getSampleProperty() {
-        return sampleProperty;
-    }
+//    public String getSampleProperty() {
+//        return sampleProperty;
+//    }
     
-    public void setSampleProperty(String value) {
+//    public void setSampleProperty(String value) {
         //String oldValue = sampleProperty;
-        sampleProperty = value;
-    }   
+//        sampleProperty = value;
+//    }   
 }

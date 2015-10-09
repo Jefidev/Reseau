@@ -12,7 +12,7 @@ import java.io.Serializable;
  *
  * @author Utilisateur
  */
-public class BeanDBAccessOracle extends BeanDBAccess implements Serializable {
+public class BeanDBAccessOracle implements Serializable, BeanDBAccess { //extends BeanDBAccess implements Serializable {
     
     private String sampleProperty;
     
