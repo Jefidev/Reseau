@@ -145,6 +145,9 @@ void Socket::receiveStruct(void* r, int size)
 
 	if(totBytesReceives > size)
 	{
+		char buff [500];
+		while(recv(socketHandle, buff, 500, MSG_DONTWAIT) > 0);
+
 		throw CommunicationException("Erreur : la structure recue est invalide");
 	}
 }
@@ -192,6 +195,8 @@ string Socket::receiveChar()
 
 	if(totBytesReceives > stringLength)
 	{
+		while(recv(socketHandle, buff, 500, MSG_DONTWAIT) > 0);
+
 		throw CommunicationException("Erreur : la chaine recue est invalide");
 	}
 

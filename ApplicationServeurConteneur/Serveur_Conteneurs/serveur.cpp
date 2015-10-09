@@ -108,6 +108,8 @@ int main()
 
         int service = sock->accepter(); //On a un thread libre donc on peut accept
 
+        cout << "Nouveau client accepte " << endl;
+
         int j;
 
         for(j = 0; j < MAXCLIENT && socketOuverte[j] != NULL; j++); //On parcours nos thread pour trouver un libre
@@ -208,7 +210,7 @@ int login(Socket* s, int clientTraite)
             StructConnexion sc;
             FichierProp fp("login.csv", ';');
 
-
+            cout << "trame recue : " << str;
             sc = parseConnexion(str);
 
             string test = fp.getValue(sc.nom);

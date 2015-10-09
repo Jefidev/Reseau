@@ -16,8 +16,6 @@ string typeRequestParse(string s, int* type)
 	istringstream iss(s);
 	string token;
 
-	cout << s << endl;
-
 	getline(iss, token, SEPARATION);
 	*type = atoi((char*)token.c_str());
 
@@ -164,7 +162,7 @@ string composeOutputOne(int l, StructOutputOne sc)
 	string retour;
 
 	retour = Utility::intToString(l);
-	retour = retour + SEPARATION + sc.idContainer;
+	retour = retour + SEPARATION + sc.emplacement;
 
 	return retour;
 }
@@ -177,7 +175,7 @@ StructOutputOne parseOutputOne(string s)
 	string token;
 
 	getline(iss, token, SEPARATION);
-	si.idContainer = token;
+	si.emplacement = token;
 
 	return si;
 }

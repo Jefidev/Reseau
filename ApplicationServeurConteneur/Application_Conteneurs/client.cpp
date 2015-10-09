@@ -5,6 +5,7 @@
 #include <netdb.h>
 #include <cstdlib>
 #include <cstring>
+#include <unistd.h>
 
 #define FICHIER_PROP "properties.txt"
 
