@@ -13,8 +13,8 @@ interface InterfaceBeansDBAccess {
     
     public String getIp();
     public void setIp(String value);
-    public String getPort();
-    public void setPort(String value);
+    public int getPort();
+    public void setPort(int value);
     public String getBd();
     public void setBd(String value);
     public String getUser();

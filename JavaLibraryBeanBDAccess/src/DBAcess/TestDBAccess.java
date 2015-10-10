@@ -16,7 +16,14 @@ public class TestDBAccess extends javax.swing.JFrame {
      */
     public TestDBAccess() {
         initComponents();
-        new BeanDBAccessOracle();
+        BeanDBAccessOracle b = new BeanDBAccessOracle();
+        b.setIp("localhost");
+        b.setPort(1521);
+        b.setUser("TRAFIC");
+        b.setPassword("TRAFIC");
+        b.setBd("XE");
+        System.out.println("url test :" + b.getIp() + b.getPort() + b.getUser() + b.getPassword() + b.getBd());
+        b.main();
         // Il va falloir lui envoyer :
         // Pour connexion : IP, Port, bd (XE), login, pwd
         // Pour requête : type de requête, charge utile

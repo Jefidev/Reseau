@@ -16,13 +16,12 @@ import java.sql.*; // A TIRER QUAND THREAD
 public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess {
     
     private String ip;
-    private String port;
+    private int port;
     private String bd;
     private String user;
     private String pwd;
     
     public BeanDBAccessOracle() {
-        main();
     }
     
     
@@ -38,11 +37,11 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     }
     
     @Override
-    public String getPort() {
+    public int getPort() {
         return port;
     }
     @Override
-    public void setPort(String value) {
+    public void setPort(int value) {
         port = value;
     }
     
@@ -82,7 +81,9 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
             Class.forName("oracle.jdbc.driver.OracleDriver");
 
             System.out.println("2");
-            Connection con = DriverManager.getConnection("jdbc:oracle:thin:TRAFIC/TRAFIC@localhost:1521:XE");
+            String url = "jdbc:oracle:thin:" + getUser() + "/" + getPassword() + "@" + getIp() + ":" + getPort() + ":" + getBd();
+            System.out.println("url = " + url);
+            Connection con = DriverManager.getConnection(url);
             System.out.println("Connexion à la BDD trafic réalisée");
             PreparedStatement pStmt = con.prepareStatement("select * from UTILISATEURS");
             System.out.println("3");

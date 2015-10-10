@@ -16,7 +16,7 @@ import java.sql.*; // A TIRER QUAND THREAD
 public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
     
     private String ip;
-    private String port;
+    private int port;
     private String bd;
     private String user;
     private String pwd;
@@ -38,11 +38,11 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
     }
     
     @Override
-    public String getPort() {
+    public int getPort() {
         return port;
     }
     @Override
-    public void setPort(String value) {
+    public void setPort(int value) {
         port = value;
     }
     
