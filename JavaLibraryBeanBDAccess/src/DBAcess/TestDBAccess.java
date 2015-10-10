@@ -12,7 +12,8 @@ import java.util.ArrayList;
  * @author Utilisateur
  */
 public class TestDBAccess extends javax.swing.JFrame {
-
+    
+    InterfaceBeansDBAccess beanBDD;
     /**
      * Creates new form TestDBAccess
      */

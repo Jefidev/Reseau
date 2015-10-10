@@ -5,12 +5,18 @@
  */
 package testbeanaccess;
 
+import DBAcess.BeanDBAccessOracle;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
+
 /**
  *
  * @author Jerome
  */
 public class guiTest extends javax.swing.JFrame {
-
+    
+    DBAcess.InterfaceBeansDBAccess beanBDD;
+    
     /**
      * Creates new form guiTest
      */
@@ -40,6 +46,14 @@ public class guiTest extends javax.swing.JFrame {
         deconnexionButton = new javax.swing.JButton();
         ajoutLabel = new javax.swing.JLabel();
         lectureLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        resultTable = new javax.swing.JTable();
+        tableComboBox = new javax.swing.JComboBox();
+        tableLabel = new javax.swing.JLabel();
+        typeLabel = new javax.swing.JLabel();
+        typeComboBox = new javax.swing.JComboBox();
+        conditionLabel = new javax.swing.JLabel();
+        whereTextField = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -62,6 +76,11 @@ public class guiTest extends javax.swing.JFrame {
         typeBdCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Oracle", "MySQL" }));
 
         connexionButton.setText("Connexion");
+        connexionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connexionButtonActionPerformed(evt);
+            }
+        });
 
         deconnexionButton.setText("Déconnexion");
 
@@ -69,37 +88,80 @@ public class guiTest extends javax.swing.JFrame {
 
         lectureLabel.setText("Lecture d'une table : ");
 
+        resultTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(resultTable);
+
+        tableComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        tableLabel.setText("Table : ");
+
+        typeLabel.setText("Type requete :");
+
+        typeComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "*", "count(*)" }));
+
+        conditionLabel.setText("WHERE :");
+
+        whereTextField.setText("condition ...");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(ipLabel)
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ipLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ipTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(portLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(loginLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(loginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(passwordLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(typeBdCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(connexionButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(deconnexionButton))
+                            .addComponent(ajoutLabel)
+                            .addComponent(lectureLabel)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(95, 95, 95)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 745, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(tableLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ipTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(tableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(29, 29, 29)
+                        .addComponent(typeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(portLabel)
+                        .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(conditionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(loginLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(loginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(passwordLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(typeBdCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(connexionButton)
-                        .addGap(18, 18, 18)
-                        .addComponent(deconnexionButton))
-                    .addComponent(ajoutLabel)
-                    .addComponent(lectureLabel))
+                        .addComponent(whereTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -120,13 +182,45 @@ public class guiTest extends javax.swing.JFrame {
                     .addComponent(deconnexionButton))
                 .addGap(18, 18, 18)
                 .addComponent(ajoutLabel)
-                .addGap(57, 57, 57)
+                .addGap(89, 89, 89)
                 .addComponent(lectureLabel)
-                .addContainerGap(440, Short.MAX_VALUE))
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(tableComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(tableLabel)
+                    .addComponent(typeLabel)
+                    .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(conditionLabel)
+                    .addComponent(whereTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
+        
+        if(0 == typeBdCombo.getSelectedItem().toString().compareTo("Oracle"))
+        {
+            beanBDD =  new BeanDBAccessOracle();
+            beanBDD.setIp(ipTextField.getText());
+            beanBDD.setPort(Integer.parseInt(portTextField.getText()));
+            beanBDD.setUser(loginTextField.getText());
+            beanBDD.setPassword(passwordField.getText());
+            beanBDD.setBd("XE");
+        }
+        
+        beanBDD.connexion();
+        
+        ArrayList<String> monArray = new ArrayList<>(); 
+        beanBDD.tablesDisponibles(monArray);
+        
+        tableComboBox.setModel(new DefaultComboBoxModel(monArray.toArray()));
+        
+        
+    }//GEN-LAST:event_connexionButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -165,10 +259,12 @@ public class guiTest extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ajoutLabel;
+    private javax.swing.JLabel conditionLabel;
     private javax.swing.JButton connexionButton;
     private javax.swing.JButton deconnexionButton;
     private javax.swing.JLabel ipLabel;
     private javax.swing.JTextField ipTextField;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lectureLabel;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JTextField loginTextField;
@@ -176,6 +272,12 @@ public class guiTest extends javax.swing.JFrame {
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JLabel portLabel;
     private javax.swing.JTextField portTextField;
+    private javax.swing.JTable resultTable;
+    private javax.swing.JComboBox tableComboBox;
+    private javax.swing.JLabel tableLabel;
     private javax.swing.JComboBox typeBdCombo;
+    private javax.swing.JComboBox typeComboBox;
+    private javax.swing.JLabel typeLabel;
+    private javax.swing.JTextField whereTextField;
     // End of variables declaration//GEN-END:variables
 }
