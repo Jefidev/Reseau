@@ -28,7 +28,9 @@ public class TestDBAccess extends javax.swing.JFrame {
         b.connection();
         
         ArrayList<String> l = new ArrayList<>();
-        b.tablesDisponibles(l);       
+        b.tablesDisponibles(l);
+        
+        b.selection("*", "utilisateurs", "1=1");
         
         // Il va falloir lui envoyer :
         // Pour connexion : IP, Port, bd (XE), login, pwd
