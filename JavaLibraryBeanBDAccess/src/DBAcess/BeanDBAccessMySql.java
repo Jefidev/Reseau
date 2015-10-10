@@ -13,18 +13,51 @@ import java.io.Serializable;
  * @author Utilisateur
  */
 public class BeanDBAccessMySql implements Serializable, BeanDBAccess { //extends BeanDBAccess implements Serializable {
-
-    private String sampleProperty;
+    
+    private String ip;
+    private String port;
+    private String bd;
+    private String user;
+    private String pwd;
     
     public BeanDBAccessMySql() {
     }
     
-    public String getSampleProperty() {
-        return sampleProperty;
+    
+    /* GETTERS ET SETTERS */
+    
+    public String getIp() {
+        return ip;
+    }
+    public void setIp(String value) {
+        ip = value;
     }
     
-    public void setSampleProperty(String value) {
-        //String oldValue = sampleProperty;
-        sampleProperty = value;
+    public String getPort() {
+        return port;
+    }
+    public void setPort(String value) {
+        port = value;
+    }
+    
+    public String getBd() {
+        return bd;
+    }
+    public void setBd(String value) {
+        bd = value;
+    }
+    
+    public String getUser() {
+        return user;
+    }
+    public void setUser(String value) {
+        user = value;
+    }
+    
+    public String getPassword() {
+        return pwd;
+    }
+    public void setPassword(String value) {
+        pwd = value;
     }
 }

@@ -8,7 +8,6 @@ package DBAcess;
 import java.beans.*;
 import java.io.Serializable;
 import java.sql.*; // A TIRER QUAND THREAD
-import java.lang.reflect.*; // Pour introspection pas nécessaire pour JDBC ?
 
 /**
  *
@@ -16,19 +15,52 @@ import java.lang.reflect.*; // Pour introspection pas nécessaire pour JDBC ?
  */
 public class BeanDBAccessOracle implements Serializable, BeanDBAccess { //extends BeanDBAccess implements Serializable {
     
-    private String sampleProperty;
+    private String ip;
+    private String port;
+    private String bd;
+    private String user;
+    private String pwd;
     
     public BeanDBAccessOracle() {
         main();
     }
     
-    public String getSampleProperty() {
-        return sampleProperty;
+    
+    /* GETTERS ET SETTERS */
+    
+    public String getIp() {
+        return ip;
+    }
+    public void setIp(String value) {
+        ip = value;
     }
     
-    public void setSampleProperty(String value) {
-        //String oldValue = sampleProperty;
-        sampleProperty = value;
+    public String getPort() {
+        return port;
+    }
+    public void setPort(String value) {
+        port = value;
+    }
+    
+    public String getBd() {
+        return bd;
+    }
+    public void setBd(String value) {
+        bd = value;
+    }
+    
+    public String getUser() {
+        return user;
+    }
+    public void setUser(String value) {
+        user = value;
+    }
+    
+    public String getPassword() {
+        return pwd;
+    }
+    public void setPassword(String value) {
+        pwd = value;
     }
     
     public void main()
