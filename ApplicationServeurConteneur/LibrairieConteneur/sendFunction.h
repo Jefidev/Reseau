@@ -23,5 +23,8 @@
 	string composeOutputDone(int l, StructOutputDone sc);
 	StructOutputDone parseOutputDone(string s);
 
+	string composeContPos(int l, StructContainerPosition sc);
+	StructContainerPosition parseContPos(string s);
+
 #endif
 

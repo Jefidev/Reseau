@@ -316,11 +316,12 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
         string str;
         int requestType;
         StructInputDone sid;
+        StructContainerPosition scp;
 
-        sid.coord = tokPosition;
-        sid.id = tokContainer;
+        scp.coord = tokPosition;
+        scp.id = tokContainer;
 
-        s->sendChar(composeInputDone(INPUT_DONE, sid));
+        s->sendChar(composeContPos(CONT_POS, scp));
 
         str = typeRequestParse(s->receiveChar(), &requestType);
 

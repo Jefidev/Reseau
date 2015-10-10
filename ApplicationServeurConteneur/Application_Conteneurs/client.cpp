@@ -240,9 +240,13 @@ void inputDone(SocketClient* sock)
 
     lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
 
-    while(reponseType == INPUT_DONE)
+    while(reponseType == CONT_POS)
     {
-        StructInputDone sid = parseInputDone(lecRecus);
+
+        StructContainerPosition scp = parseContPos(lecRecus);
+        StructInputDone sid;
+        sid.coord = scp.coord;
+        sid.id = scp.id;
 
         cout << endl << endl << "Container ID : " << sid.id << endl;
         cout << "Emplacement : " << sid.coord << endl;

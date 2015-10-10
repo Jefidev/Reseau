@@ -122,6 +122,32 @@ StructInputDone parseInputDone(string s)
 	return si;
 }
 
+string composeContPos(int l, StructContainerPosition sc)
+{
+	string retour;
+
+	retour = Utility::intToString(l);
+	retour = retour + SEPARATION + sc.coord + SEPARATION + sc.id;
+
+	return retour;
+}
+
+StructContainerPosition parseContPos(string s)
+{
+	StructContainerPosition si;
+
+	istringstream iss(s);
+	string token;
+
+	getline(iss, token, SEPARATION);
+	si.coord = token;
+
+	getline(iss, token, SEPARATION);
+	si.id = token;
+
+	return si;
+}
+
 string composeOutputReady(int l, StructOuputReady sc)
 {
 	string retour;
