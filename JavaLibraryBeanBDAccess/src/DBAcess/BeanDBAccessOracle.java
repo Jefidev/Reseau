@@ -9,6 +9,8 @@ import java.beans.*;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -75,14 +77,17 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     }
     
     
+    /* BASE DE DONNEES */
+    
     @Override
-    public void connection()
+    public void connexion()
     {
         try
         {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             String url = "jdbc:oracle:thin:" + getUser() + "/" + getPassword() + "@" + getIp() + ":" + getPort() + ":" + getBd();
             con = DriverManager.getConnection(url);
+            con.setAutoCommit(false);
         }
         catch (SQLException ex)
         {
@@ -121,51 +126,26 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         rt.start();
     }
     
+    public void ecriture()
+    {
+       //commit ! 
+    }
     
-    public void main()
+    public void miseAJour ()
+    {
+        //commit !
+    }
+    
+    @Override
+    public void finConnexion()
     {
         try
         {
-            System.out.println("Essai de connexion JDBC");
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-
-            System.out.println("2");
-            String url = "jdbc:oracle:thin:" + getUser() + "/" + getPassword() + "@" + getIp() + ":" + getPort() + ":" + getBd();
-            System.out.println("url = " + url);
-            Connection con = DriverManager.getConnection(url);
-            System.out.println("Connexion à la BDD trafic réalisée");
-            PreparedStatement pStmt = con.prepareStatement("select * from UTILISATEURS");
-            System.out.println("3");
-            ResultSet rs = pStmt.executeQuery();
-            System.out.println("Instruction SELECT sur utilisateurs envoyée à la BDD trafic");
-
-            int cpt = 0;
-            if (!rs.next())
-            {
-                System.out.println("Aucun tuple trouvé !");
-                return;
-            }
-
-            do
-            {
-                if (cpt == 0) System.out.println("Parcours du curseur");
-                System.out.println("5");
-                cpt++;
-                System.out.println("6");
-                String l = rs.getString(1);
-                System.out.println("col 1 ok");
-                String p = rs.getString(2);
-                System.out.println("col 2 ok");
-                System.out.println(cpt + " => " + l + " " + p);
-            } while (rs.next());
+            con.close();
         }
         catch (SQLException ex)
         {
-            System.out.println("Erreur SQL : " + ex.getMessage());
-        }
-        catch (ClassNotFoundException ex)
-        {
-            System.out.println("Driver adéquat non trouvable : " + ex.getMessage());
+            Logger.getLogger(BeanDBAccessOracle.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

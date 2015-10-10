@@ -24,7 +24,8 @@ interface InterfaceBeansDBAccess {
     public String getPassword();
     public void setPassword(String value);
     
-    public void connection();
+    public void connexion();
     public void tablesDisponibles(ArrayList<String> l);
     public void selection(String s, String f, String w);
+    public void finConnexion();
 }

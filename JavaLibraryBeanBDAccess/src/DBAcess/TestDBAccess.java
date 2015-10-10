@@ -25,7 +25,7 @@ public class TestDBAccess extends javax.swing.JFrame {
         b.setPassword("TRAFIC");
         b.setBd("XE");
         
-        b.connection();
+        b.connexion();
         
         ArrayList<String> l = new ArrayList<>();
         b.tablesDisponibles(l);
@@ -33,8 +33,8 @@ public class TestDBAccess extends javax.swing.JFrame {
         b.selection("*", "utilisateurs", "1=1");
         
         // Il va falloir lui envoyer :
+        // Attention : il faut un bean constructeur par défaut.. !
         // Pour connexion : IP, Port, bd (XE), login, pwd
-        // Pour requête : type de requête, charge utile
         // Tout ca dans les BOUTONS du GUI quand ca sera fait
     }
 
