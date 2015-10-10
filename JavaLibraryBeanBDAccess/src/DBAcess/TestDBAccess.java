@@ -5,6 +5,8 @@
  */
 package DBAcess;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Utilisateur
@@ -22,8 +24,12 @@ public class TestDBAccess extends javax.swing.JFrame {
         b.setUser("TRAFIC");
         b.setPassword("TRAFIC");
         b.setBd("XE");
-        System.out.println("url test :" + b.getIp() + b.getPort() + b.getUser() + b.getPassword() + b.getBd());
+        
         b.connection();
+        
+        ArrayList<String> l = new ArrayList<>();
+        b.tablesDisponibles(l);       
+        
         // Il va falloir lui envoyer :
         // Pour connexion : IP, Port, bd (XE), login, pwd
         // Pour requête : type de requête, charge utile

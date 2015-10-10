@@ -8,6 +8,7 @@ package DBAcess;
 import java.beans.*;
 import java.io.Serializable;
 import java.sql.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,6 +21,7 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     private String bd;
     private String user;
     private String pwd;
+    private Connection con;
     
     public BeanDBAccessOracle() {
     }
@@ -79,9 +81,9 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         {
             Class.forName("oracle.jdbc.driver.OracleDriver");
             String url = "jdbc:oracle:thin:" + getUser() + "/" + getPassword() + "@" + getIp() + ":" + getPort() + ":" + getBd();
-            Connection con = DriverManager.getConnection(url);
-            ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con);
-            rt.start();
+            con = DriverManager.getConnection(url);
+            //ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con);
+            //rt.start();
         }
         catch (SQLException ex)
         {
@@ -91,6 +93,25 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         {
             System.out.println("Driver adéquat non trouvable : " + ex.getMessage());
         }
+    }
+    
+    public void tablesDisponibles(ArrayList<String> l)
+    {
+        try
+        {
+            DatabaseMetaData m = con.getMetaData();
+            ResultSet tables = m.getTables(con.getCatalog(), "TRAFIC", null, null);
+
+            while (tables.next())
+            {
+                String t = tables.getString(3);
+                l.add(t);
+            }
+        }
+        catch (SQLException ex)
+        {
+            System.out.println("Erreur SQL : " + ex.getMessage());
+        } 
     }
     
     
