@@ -290,7 +290,7 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     }
     else
     {
-        s->sendChar(composeAckErr(ACK, retPosition));
+        s->sendChar(composeAckErr(ACK, ""));
         inputDone(s, clientTraite, sit.idContainers, retPosition);
     }
 }
@@ -397,12 +397,11 @@ void outputOne(Socket* s, int clientTraite)
 {
     int requestType;
     string reponse = typeRequestParse(s->receiveChar(), &requestType);
-    cout << "je recois un truc" << endl;
+    
     while(requestType == OUTPUT_ONE)
     {
         StructOutputOne soo = parseOutputOne(reponse);
 
-        cout << "parsing" << endl;
 
         pthread_mutex_lock(&mutexParc); 
         parcFile.freeSpace(soo.emplacement);
@@ -411,8 +410,6 @@ void outputOne(Socket* s, int clientTraite)
         cout << "retire du fichier" << endl;
 
         s->sendChar(composeAckErr(ACK, "container retire"));
-
-        cout << "apressend" << endl;
 
         reponse = typeRequestParse(s->receiveChar(), &requestType);
     }
