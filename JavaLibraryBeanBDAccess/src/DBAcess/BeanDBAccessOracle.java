@@ -31,46 +31,48 @@ public class BeanDBAccessOracle implements Serializable, BeanDBAccess { //extend
         sampleProperty = value;
     }
     
-    public void main() throws Exception
+    public void main()
     {
-        System.out.println("Essai de connexion JDBC");
-        Class leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
-        
-        // JUSTE POUR VOIR - A TIRER
-        System.out.println("Driver JDBC-OBDC chargé -- Méthodes :");
-        Method lesMethodesDuDriver[] = leDriver.getDeclaredMethods();
-        for (int i=0; i< lesMethodesDuDriver.length; i++)
-        System.out.println("méthode[" + i + "] = " + lesMethodesDuDriver[i]);
-        
-        Connection con = DriverManager.getConnection("jdbc:oracle:thin@localhost1521:TRAFIC");
-        System.out.println("Connexion à la BDD trafic réalisée");
-        PreparedStatement pStmt = con.prepareStatement("select * from ?");
-        pStmt.setString(1, "UTILISATEURS");
-        ResultSet rs = pStmt.executeQuery();
-        System.out.println("Instruction SELECT sur utilisateurs envoyée à la BDD trafic");
-        int cpt = 0;
-        while (rs.next())
+        try
         {
-        if (cpt==0) System.out.println("Parcours du curseur"); cpt++;
-        String cs = rs.getString("codeSto");
-        System.out.println(" Récupération de codeSto");
-        int x = rs.getInt("x"); int y = rs.getInt("y");
-        System.out.println(" Récupération de x et y");
-        double q = rs.getDouble("quantite");
-        System.out.println(" Récupération de quantite");
-        System.out.println(cpt + ". " + cs + " : " + x + "/" + y + " -> " +q);
+            System.out.println("Essai de connexion JDBC");
+            Class leDriver = Class.forName("oracle.jdbc.driver.OracleDriver");
+
+            // JUSTE POUR VOIR - A TIRER
+            System.out.println("Driver JDBC-OBDC chargé -- Méthodes :");
+            Method lesMethodesDuDriver[] = leDriver.getDeclaredMethods();
+            for (int i=0; i< lesMethodesDuDriver.length; i++)
+            System.out.println("méthode[" + i + "] = " + lesMethodesDuDriver[i]);
+
+            Connection con = DriverManager.getConnection("jdbc:oracle:thin@localhost1521:TRAFIC");
+            System.out.println("Connexion à la BDD trafic réalisée");
+            PreparedStatement pStmt = con.prepareStatement("select * from ?");
+            pStmt.setString(1, "UTILISATEURS");
+            ResultSet rs = pStmt.executeQuery();
+            System.out.println("Instruction SELECT sur utilisateurs envoyée à la BDD trafic");
+
+            int cpt = 0;
+            if (!rs.next())
+            {
+                System.out.println("Aucun tuple trouvé !");
+                return;
+            }
+
+            do
+            {
+                if (cpt == 0) System.out.println("Parcours du curseur"); cpt++;
+                String l = rs.getString("LOGIN");
+                String p = rs.getString("PASSWORD");
+                System.out.println(cpt + " => " + l + " " + p);
+            } while (rs.next());
         }
-        instruc.executeUpdate("update produitsFinis " +
-        "set prixRev =prixRev+10" );
-        System.out.println("Instruction UPDATE sur produitsFinis envoyée à la BDD marie");
-        rs = instruc.executeQuery("select * from produitsFinis");
-        System.out.println("Instruction SELECT sur produitsFinis envoyée à la BDD marie");
-        
-        while (rs.next())
+        catch (SQLException ex)
         {
-        String cpf = rs.getString(1);
-        double pr = rs.getDouble("prixRev");
-        System.out.println(cpf + " : " + pr);
+            System.out.println("Erreur SQL : " + ex.getMessage());
+        }
+        catch (ClassNotFoundException ex)
+        {
+            System.out.println("Driver adéquat non trouvable : " + ex.getMessage());
         }
     }
 }
