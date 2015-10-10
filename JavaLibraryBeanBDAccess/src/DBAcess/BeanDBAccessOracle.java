@@ -134,12 +134,11 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     
     public void ecriture()
     {
-        WritingThreadDBAccess wt = new WritingThreadDBAccess();
+        WritingThreadDBAccess wt = new WritingThreadDBAccess("INSERT", con);
         wt.start();
-       //commit ! 
     }
     
-    public void miseAJour ()
+    public void miseAJour ()    // hashtable ?
     {
         //commit !
     }

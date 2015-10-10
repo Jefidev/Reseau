@@ -5,18 +5,40 @@
  */
 package DBAcess;
 
+import java.sql.*;
+
 /**
  *
  * @author Utilisateur
  */
 public class WritingThreadDBAccess extends Thread {
     
-    public WritingThreadDBAccess() {
-        
+    private String type;
+    private Connection con;
+    
+    public WritingThreadDBAccess(String t, Connection c/*, String s, String f, String w*/) {
+        type = t;
+        con = c;
+        /*select = s;
+        from = f;
+        where = w;*/
     }
     
     public void run()
     {
+        //commit ! 
         
+        switch(type)
+        {
+            case "INSERT" :
+                break;
+                
+            case "UPDATE" :
+                
+                break;
+                
+            default :
+                break;
+        }
     }
 }
