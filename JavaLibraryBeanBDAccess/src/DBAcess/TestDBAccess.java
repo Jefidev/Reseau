@@ -29,8 +29,7 @@ public class TestDBAccess extends javax.swing.JFrame {
         
         b.connexion();
         
-        ArrayList<String> l = new ArrayList<>();
-        b.tablesDisponibles(l);
+        ArrayList<String> l = new ArrayList<>(b.tablesDisponibles());
         
         b.selection("*", "utilisateurs", "1=1");
         

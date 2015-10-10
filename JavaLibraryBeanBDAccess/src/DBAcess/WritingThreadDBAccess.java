@@ -9,11 +9,14 @@ package DBAcess;
  *
  * @author Utilisateur
  */
-public class WritingThreadDBAccess {
+public class WritingThreadDBAccess extends Thread {
+    
+    public WritingThreadDBAccess() {
+        
+    }
     
     public void run()
     {
         
     }
-    
 }

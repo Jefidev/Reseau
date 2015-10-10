@@ -126,7 +126,7 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
     }
 
     @Override
-    public void tablesDisponibles(ArrayList<String> l) {
+    public ArrayList<String> tablesDisponibles() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

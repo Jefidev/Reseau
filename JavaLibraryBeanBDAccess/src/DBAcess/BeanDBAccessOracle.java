@@ -100,8 +100,10 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     }
     
     @Override
-    public void tablesDisponibles(ArrayList<String> l)
+    public ArrayList<String> tablesDisponibles()
     {
+        ArrayList<String> l = new ArrayList<String>();
+        
         try
         {
             DatabaseMetaData m = con.getMetaData();
@@ -112,11 +114,15 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
                 String t = tables.getString(3);
                 l.add(t);
             }
+
+            return l;
         }
         catch (SQLException ex)
         {
             System.out.println("Erreur SQL : " + ex.getMessage());
-        } 
+        }
+        
+        return null;
     }
     
     @Override
@@ -128,6 +134,8 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     
     public void ecriture()
     {
+        WritingThreadDBAccess wt = new WritingThreadDBAccess();
+        wt.start();
        //commit ! 
     }
     
