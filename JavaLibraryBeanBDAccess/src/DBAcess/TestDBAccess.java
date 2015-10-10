@@ -17,6 +17,10 @@ public class TestDBAccess extends javax.swing.JFrame {
     public TestDBAccess() {
         initComponents();
         BeanDBAccessOracle bean = new BeanDBAccessOracle();
+        // Il va falloir lui envoyer :
+        // Pour connexion : IP, Port, bd (XE), login, pwd
+        // Pour requête : type de requête, charge utile
+        // Tout ca dans les BOUTONS du GUI quand ca sera fait
     }
 
     /**
