@@ -5,6 +5,8 @@
  */
 package DBAcess;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Utilisateur
@@ -20,5 +22,9 @@ interface InterfaceBeansDBAccess {
     public String getUser();
     public void setUser(String value);
     public String getPassword();
-    public void setPassword(String value);  
+    public void setPassword(String value);
+    
+    public void connection();
+    public void tablesDisponibles(ArrayList<String> l);
+    public void selection(String s, String f, String w);
 }

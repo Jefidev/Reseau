@@ -75,6 +75,7 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     }
     
     
+    @Override
     public void connection()
     {
         try
@@ -82,8 +83,6 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
             Class.forName("oracle.jdbc.driver.OracleDriver");
             String url = "jdbc:oracle:thin:" + getUser() + "/" + getPassword() + "@" + getIp() + ":" + getPort() + ":" + getBd();
             con = DriverManager.getConnection(url);
-            //ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con);
-            //rt.start();
         }
         catch (SQLException ex)
         {
@@ -95,6 +94,7 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         }
     }
     
+    @Override
     public void tablesDisponibles(ArrayList<String> l)
     {
         try
@@ -112,6 +112,13 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         {
             System.out.println("Erreur SQL : " + ex.getMessage());
         } 
+    }
+    
+    @Override
+    public void selection(String s, String f, String w)
+    {
+        ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con, s, f, w);
+        rt.start();
     }
     
     

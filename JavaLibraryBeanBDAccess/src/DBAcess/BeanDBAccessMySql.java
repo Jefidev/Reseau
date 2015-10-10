@@ -7,7 +7,8 @@ package DBAcess;
 
 import java.beans.*;
 import java.io.Serializable;
-import java.sql.*; // A TIRER QUAND THREAD
+import java.sql.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -117,5 +118,20 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
         {
             System.out.println("Driver adéquat non trouvable : " + ex.getMessage());
         }
+    }
+
+    @Override
+    public void connection() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void tablesDisponibles(ArrayList<String> l) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void selection(String s, String f, String w) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

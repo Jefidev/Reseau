@@ -14,16 +14,23 @@ import java.sql.*;
 public class ReadingThreadDBAccess extends Thread {
 
     private Connection con;
+    private String select;
+    private String from;
+    private String where;
     
-    public ReadingThreadDBAccess(Connection c) {
+    public ReadingThreadDBAccess(Connection c, String s, String f, String w) {
         con = c;
+        select = s;
+        from = f;
+        where = w;
     }
     
     public void run()
     {
         try
         {
-            PreparedStatement pStmt = con.prepareStatement("select * from UTILISATEURS");
+            String url = "select " + select + " from " + from + " where " + where;
+            PreparedStatement pStmt = con.prepareStatement(url);
             ResultSet rs = pStmt.executeQuery();
 
             int cpt = 0;
@@ -35,6 +42,7 @@ public class ReadingThreadDBAccess extends Thread {
 
             do
             {
+                System.out.println("ReadingThread");
                 cpt++;
                 String l = rs.getString(1);
                 String p = rs.getString(2);
