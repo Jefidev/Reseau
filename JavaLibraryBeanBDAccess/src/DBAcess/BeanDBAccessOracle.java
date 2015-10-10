@@ -7,7 +7,7 @@ package DBAcess;
 
 import java.beans.*;
 import java.io.Serializable;
-import java.sql.*; // A TIRER QUAND THREAD
+import java.sql.*;
 
 /**
  *
@@ -70,6 +70,27 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     @Override
     public void setPassword(String value) {
         pwd = value;
+    }
+    
+    
+    public void connection()
+    {
+        try
+        {
+            Class.forName("oracle.jdbc.driver.OracleDriver");
+            String url = "jdbc:oracle:thin:" + getUser() + "/" + getPassword() + "@" + getIp() + ":" + getPort() + ":" + getBd();
+            Connection con = DriverManager.getConnection(url);
+            ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con);
+            rt.start();
+        }
+        catch (SQLException ex)
+        {
+            System.out.println("Erreur SQL : " + ex.getMessage());
+        }
+        catch (ClassNotFoundException ex)
+        {
+            System.out.println("Driver adéquat non trouvable : " + ex.getMessage());
+        }
     }
     
     

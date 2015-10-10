@@ -23,7 +23,7 @@ public class TestDBAccess extends javax.swing.JFrame {
         b.setPassword("TRAFIC");
         b.setBd("XE");
         System.out.println("url test :" + b.getIp() + b.getPort() + b.getUser() + b.getPassword() + b.getBd());
-        b.main();
+        b.connection();
         // Il va falloir lui envoyer :
         // Pour connexion : IP, Port, bd (XE), login, pwd
         // Pour requête : type de requête, charge utile
