@@ -54,6 +54,7 @@ public class guiTest extends javax.swing.JFrame {
         typeComboBox = new javax.swing.JComboBox();
         conditionLabel = new javax.swing.JLabel();
         whereTextField = new javax.swing.JTextField();
+        performSelectButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -83,6 +84,11 @@ public class guiTest extends javax.swing.JFrame {
         });
 
         deconnexionButton.setText("Déconnexion");
+        deconnexionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deconnexionButtonActionPerformed(evt);
+            }
+        });
 
         ajoutLabel.setText("Ajout/modification d'un tuple :");
 
@@ -112,6 +118,8 @@ public class guiTest extends javax.swing.JFrame {
         conditionLabel.setText("WHERE :");
 
         whereTextField.setText("condition ...");
+
+        performSelectButton.setText("SELECT");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -161,7 +169,10 @@ public class guiTest extends javax.swing.JFrame {
                         .addGap(33, 33, 33)
                         .addComponent(conditionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(whereTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(whereTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(performSelectButton)))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -192,7 +203,9 @@ public class guiTest extends javax.swing.JFrame {
                     .addComponent(typeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(conditionLabel)
                     .addComponent(whereTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(performSelectButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(30, 30, 30))
         );
@@ -214,13 +227,14 @@ public class guiTest extends javax.swing.JFrame {
         
         beanBDD.connexion();
         
-        ArrayList<String> monArray = new ArrayList<>(); 
-        beanBDD.tablesDisponibles(monArray);
-        
-        tableComboBox.setModel(new DefaultComboBoxModel(monArray.toArray()));
+        tableComboBox.setModel(new DefaultComboBoxModel(beanBDD.tablesDisponibles().toArray()));
         
         
     }//GEN-LAST:event_connexionButtonActionPerformed
+
+    private void deconnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deconnexionButtonActionPerformed
+        beanBDD.finConnexion();
+    }//GEN-LAST:event_deconnexionButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -270,6 +284,7 @@ public class guiTest extends javax.swing.JFrame {
     private javax.swing.JTextField loginTextField;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
+    private javax.swing.JButton performSelectButton;
     private javax.swing.JLabel portLabel;
     private javax.swing.JTextField portTextField;
     private javax.swing.JTable resultTable;
