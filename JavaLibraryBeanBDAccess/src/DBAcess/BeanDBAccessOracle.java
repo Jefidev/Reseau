@@ -13,7 +13,7 @@ import java.sql.*; // A TIRER QUAND THREAD
  *
  * @author Utilisateur
  */
-public class BeanDBAccessOracle implements Serializable, BeanDBAccess { //extends BeanDBAccess implements Serializable {
+public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess {
     
     private String ip;
     private String port;
@@ -28,40 +28,51 @@ public class BeanDBAccessOracle implements Serializable, BeanDBAccess { //extend
     
     /* GETTERS ET SETTERS */
     
+    @Override
     public String getIp() {
         return ip;
     }
+    @Override
     public void setIp(String value) {
         ip = value;
     }
     
+    @Override
     public String getPort() {
         return port;
     }
+    @Override
     public void setPort(String value) {
         port = value;
     }
     
+    @Override
     public String getBd() {
         return bd;
     }
+    @Override
     public void setBd(String value) {
         bd = value;
     }
     
+    @Override
     public String getUser() {
         return user;
     }
+    @Override
     public void setUser(String value) {
         user = value;
     }
     
+    @Override
     public String getPassword() {
         return pwd;
     }
+    @Override
     public void setPassword(String value) {
         pwd = value;
     }
+    
     
     public void main()
     {

@@ -9,7 +9,7 @@ package DBAcess;
  *
  * @author Utilisateur
  */
-public interface BeanDBAccess {
+interface InterfaceBeansDBAccess {
     
     public String getIp();
     public void setIp(String value);

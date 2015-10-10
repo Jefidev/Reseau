@@ -11,4 +11,9 @@ package DBAcess;
  */
 public class WritingThreadDBAccess {
     
+    public void run()
+    {
+        
+    }
+    
 }
