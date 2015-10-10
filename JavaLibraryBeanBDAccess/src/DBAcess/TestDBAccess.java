@@ -18,6 +18,7 @@ public class TestDBAccess extends javax.swing.JFrame {
      */
     public TestDBAccess() {
         initComponents();
+
         BeanDBAccessOracle b = new BeanDBAccessOracle();
         b.setIp("localhost");
         b.setPort(1521);

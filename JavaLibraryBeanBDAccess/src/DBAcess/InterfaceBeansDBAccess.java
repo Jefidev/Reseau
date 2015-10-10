@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Utilisateur
  */
-interface InterfaceBeansDBAccess {
+public interface InterfaceBeansDBAccess {
     
     public String getIp();
     public void setIp(String value);
