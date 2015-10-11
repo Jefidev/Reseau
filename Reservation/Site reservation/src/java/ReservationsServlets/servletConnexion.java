@@ -29,8 +29,10 @@ import javax.servlet.http.HttpSession;
 public class servletConnexion extends HttpServlet implements InterfaceRequestListener{
     
     
-    ResultSet reponseBean = null;
-    InterfaceBeansDBAccess beanBD;
+    private ResultSet reponseBean = null;
+    private InterfaceBeansDBAccess beanBD;
+    private final Object SYNC = new Object();
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -91,11 +93,14 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
             out.println("<form method = \"POST\" action=\"testificate\"></br>");
             out.println("<label for=\"dateArrivee\">Date d'arrivee du container : </label><input type=\"date\" name=\"dateArrivee>\" id=\"dateArrivee\"></br>");
             
-            while(reponseBean == null)try {
-                    wait();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            synchronized(SYNC)
+            {
+                while(reponseBean == null)try {
+                    SYNC.wait();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
             try {
                 reponseBean.next();
                 out.println("<p>"+ reponseBean.getString(1) +"</p>");
@@ -157,7 +162,12 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
 
     @Override
     public void resultRequest(ResultSet rs) {
-        reponseBean = rs;
+        
+        synchronized(SYNC)
+        {
+            reponseBean = rs;
+            SYNC.notifyAll();
+        }
     }
 
 }
