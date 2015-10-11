@@ -61,7 +61,7 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
         
      
         
-        if(0 == request.getParameter("nouveau").compareTo("on"))
+        if(request.getParameter("nouveau") != null)
         {
             HashMap<String, String> ajoutU = new HashMap<>();
             ajoutU.put("PASSWORD", request.getParameter("mdp"));
@@ -79,15 +79,28 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
                 Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            if(!reponseBean.next())
-            {
-                response.sendRedirect(null);
+            try {
+                if(!reponseBean.next())
+                {
+                    session.setAttribute("erreur", "Login ou mot de passe invalide");
+                    response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
+                }
+                else
+                {
+                    if(0 != request.getParameter("mdp").compareTo(reponseBean.getString("PASSWORD")))
+                    {
+                        session.setAttribute("erreur", "Login ou mot de passe invalide");
+                        response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
+                    }
+                        
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
             
         session.setAttribute("login", request.getParameter("login"));
-        
-        
+        reponseBean = null;
         
         response.setContentType("text/html;charset=UTF-8");
     
@@ -100,24 +113,30 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Demande de réservation</h1>");
-            out.println("<form method = \"POST\" action=\"testificate\"></br>");
-            out.println("<label for=\"dateArrivee\">Date d'arrivee du container : </label><input type=\"date\" name=\"dateArrivee>\" id=\"dateArrivee\"></br>");
-            
-            
-            if(reponseBean != null)
-                out.println("<h1>YES</h1>");
-            /*try {
-                reponseBean.next();
-                out.println("<p>"+ reponseBean.getString(1) +"</p>");
-            } catch (SQLException ex) {
-                out.println(ex);
-            }*/
+            out.println("<form method = \"POST\" action=\"reponse\"></br>");
             out.println("<label for=\"destination\">Destination : </label></br>");
             out.println("<select name=\"destination\" id=\"destination\">");
-            out.println("<option value=\"Verviers\">Verviers</option>");
-            out.println("<option value=\"Liege\">Liege</option>");
-            out.println("<option value=\"Strasbourg\">Strasbourg</option>");
+            
+            curThread = beanBD.selection("VILLE", "DESTINATIONS", null);
+            
+            try {
+                curThread.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            try {
+                while(reponseBean.next())
+                {
+                    out.println("<option value=\"" + reponseBean.getString("VILLE") + "\">"+ reponseBean.getString("VILLE")+"</option>");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            beanBD.finConnexion();
             out.println("</select></br>");
+            out.println("<label for=\"arrivee\">Date d'arrivee du container : </label>");
+            out.println("<input type=\"date\" name=\"arrivee\" id=\"arrivee\"/></br>");
             out.println("<input type = \"submit\" value = \"Réserver\"/>");
             out.println("</form>");
             out.println("</body>");
