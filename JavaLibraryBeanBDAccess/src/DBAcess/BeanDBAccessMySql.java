@@ -9,6 +9,7 @@ import java.beans.*;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -143,6 +144,16 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
 
     @Override
     public void setClient(InterfaceRequestListener c) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void ecriture(String f, HashMap d) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void miseAJour(String f, HashMap d, String w) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

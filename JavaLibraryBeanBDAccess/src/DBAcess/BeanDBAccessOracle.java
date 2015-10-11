@@ -9,6 +9,7 @@ import java.beans.*;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -77,6 +78,11 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         pwd = value;
     }
     
+    @Override
+    public void setClient(InterfaceRequestListener c) {
+        client = c;
+    }
+    
     
     /* BASE DE DONNEES */
     
@@ -107,8 +113,8 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         
         try
         {
-            DatabaseMetaData m = con.getMetaData();
-            ResultSet tables = m.getTables(con.getCatalog(), "TRAFIC", null, null);
+            DatabaseMetaData md = con.getMetaData();
+            ResultSet tables = md.getTables(con.getCatalog(), "TRAFIC", null, null);
 
             while (tables.next())
             {
@@ -133,15 +139,18 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         rt.start();
     }
     
-    public void ecriture()
+    @Override
+    public void ecriture(String f, HashMap d)
     {
-        WritingThreadDBAccess wt = new WritingThreadDBAccess("INSERT", con);
+        WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d);
         wt.start();
     }
     
-    public void miseAJour ()    // hashtable ?
+    @Override
+    public void miseAJour(String f, HashMap d, String w)
     {
-        //commit !
+        WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d, w);
+        wt.start();
     }
     
     @Override
@@ -153,13 +162,7 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
         }
         catch (SQLException ex)
         {
-            Logger.getLogger(BeanDBAccessOracle.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("SQLException : " + ex);
         }
     }
-
-    @Override
-    public void setClient(InterfaceRequestListener c) {
-        client = c;
-    }
-
 }

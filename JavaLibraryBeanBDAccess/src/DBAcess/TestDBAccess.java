@@ -6,6 +6,7 @@
 package DBAcess;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -20,6 +21,7 @@ public class TestDBAccess extends javax.swing.JFrame {
     public TestDBAccess() {
         initComponents();
 
+        System.out.println("Initialisation");
         BeanDBAccessOracle b = new BeanDBAccessOracle();
         b.setIp("localhost");
         b.setPort(1521);
@@ -27,16 +29,67 @@ public class TestDBAccess extends javax.swing.JFrame {
         b.setPassword("TRAFIC");
         b.setBd("XE");
         
+        System.out.println("Connexion");
         b.connexion();
         
+        System.out.println("Tables disponibles");
         ArrayList<String> l = new ArrayList<>(b.tablesDisponibles());
         
+        System.out.println("Selection");
         b.selection("*", "utilisateurs", "1=1");
+        try {
+            Thread.sleep(5000);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
         
-        // Il va falloir lui envoyer :
-        // Attention : il faut un bean constructeur par défaut.. !
-        // Pour connexion : IP, Port, bd (XE), login, pwd
-        // Tout ca dans les BOUTONS du GUI quand ca sera fait
+        System.out.println("Ecriture");
+        HashMap user = new HashMap();
+        user.put("LOGIN", "oce");
+        user.put("PASSWORD", "ocepwd");
+        b.ecriture("utilisateurs", user);
+        try {
+            Thread.sleep(5000);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        
+        System.out.println("Selection");
+        b.selection("*", "utilisateurs", "1=1");
+        try {
+            Thread.sleep(5000);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        
+        System.out.println("Modification");
+        HashMap user2 = new HashMap();
+        user2.put("PASSWORD", "NEWPWD");
+        b.miseAJour("utilisateurs", user2, "LOGIN = 'oce'");
+        try {
+            Thread.sleep(5000);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        
+        System.out.println("Selection");
+        b.selection("*", "utilisateurs", "1=1");
+        try {
+            Thread.sleep(5000);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        
+        System.out.println("Modification");
+        HashMap modif = new HashMap();
+        modif.put("DISTANCE_ROUTE", "30");
+        b.miseAJour("destinations", modif, "VILLE = 'Verviers'");
+        try {
+            Thread.sleep(5000);                 //1000 milliseconds is one second.
+        } catch(InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
+        
     }
 
     /**
