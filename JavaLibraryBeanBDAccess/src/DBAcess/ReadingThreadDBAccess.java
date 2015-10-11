@@ -48,6 +48,7 @@ public class ReadingThreadDBAccess extends Thread {
             
             client.resultRequest(rs);
             
+            notify();
         }
         catch (SQLException ex)
         {
