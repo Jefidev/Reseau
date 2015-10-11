@@ -33,7 +33,13 @@ public class ReadingThreadDBAccess extends Thread {
     {
         try
         {
-            String url = "select " + select + " from " + from + " where " + where;
+            String url;
+                    
+            if(where != null)
+             url = "select " + select + " from " + from + " where " + where;
+            else
+                url = url = "select " + select + " from " + from;
+            
             System.out.println(url);
             PreparedStatement pStmt = con.prepareStatement(url);
             ResultSet rs = pStmt.executeQuery();
