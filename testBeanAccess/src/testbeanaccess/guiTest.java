@@ -5,12 +5,15 @@
  */
 package testbeanaccess;
 
+import DBAcess.BeanDBAccessMySql;
 import DBAcess.BeanDBAccessOracle;
 import DBAcess.InterfaceRequestListener;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
@@ -61,24 +64,25 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
         conditionLabel = new javax.swing.JLabel();
         whereTextField = new javax.swing.JTextField();
         performSelectButton = new javax.swing.JButton();
+        loginUtilisateurLabel = new javax.swing.JLabel();
+        loginUtilisateurTextField = new javax.swing.JTextField();
+        passwordUtilisateurLabel = new javax.swing.JLabel();
+        passwordUtilisateurTextField = new javax.swing.JTextField();
+        updateCheck = new javax.swing.JCheckBox();
+        conditionUpdateTextField = new javax.swing.JTextField();
+        executeInstertUpdate = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        ipTextField.setText("IP...");
+        ipTextField.setToolTipText("");
 
         ipLabel.setText("IP :");
-
-        portTextField.setText("Port ...");
 
         portLabel.setText("Port :");
 
         loginLabel.setText("Login :");
 
-        loginTextField.setText("Login ...");
-
         passwordLabel.setText("mot de passe :");
-
-        passwordField.setText("jPasswordField1");
 
         typeBdCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Oracle", "MySQL" }));
 
@@ -96,7 +100,7 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
             }
         });
 
-        ajoutLabel.setText("Ajout/modification d'un tuple :");
+        ajoutLabel.setText("Ajout/modification utilisateur :");
 
         lectureLabel.setText("Lecture d'une table : ");
 
@@ -123,12 +127,26 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
 
         conditionLabel.setText("WHERE :");
 
-        whereTextField.setText("condition ...");
-
         performSelectButton.setText("SELECT");
         performSelectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 performSelectButtonActionPerformed(evt);
+            }
+        });
+
+        loginUtilisateurLabel.setText("Login :");
+        loginUtilisateurLabel.setToolTipText("");
+
+        passwordUtilisateurLabel.setText("Password : ");
+
+        updateCheck.setText("UPDATE");
+
+        conditionUpdateTextField.setText("condition Update");
+
+        executeInstertUpdate.setText("exécuter");
+        executeInstertUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                executeInstertUpdateActionPerformed(evt);
             }
         });
 
@@ -141,30 +159,49 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ajoutLabel)
+                            .addComponent(lectureLabel)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(ipLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ipTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(portLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(loginLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(loginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(passwordLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addComponent(passwordUtilisateurLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(passwordUtilisateurTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                                .addComponent(loginUtilisateurLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(loginUtilisateurTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 183, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(99, 99, 99)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(updateCheck)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(conditionUpdateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(executeInstertUpdate))))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addComponent(ipLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(ipTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(portLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(portTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(loginLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(loginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(passwordLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(passwordField)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(typeBdCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(connexionButton)
                                 .addGap(18, 18, 18)
-                                .addComponent(deconnexionButton))
-                            .addComponent(ajoutLabel)
-                            .addComponent(lectureLabel)))
+                                .addComponent(deconnexionButton))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(95, 95, 95)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 745, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -184,7 +221,7 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(performSelectButton)))
-                .addContainerGap(32, Short.MAX_VALUE))
+                .addContainerGap(56, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,7 +241,18 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
                     .addComponent(deconnexionButton))
                 .addGap(18, 18, 18)
                 .addComponent(ajoutLabel)
-                .addGap(89, 89, 89)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(loginUtilisateurLabel)
+                    .addComponent(loginUtilisateurTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(updateCheck))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(passwordUtilisateurLabel)
+                    .addComponent(passwordUtilisateurTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(conditionUpdateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(executeInstertUpdate))
+                .addGap(17, 17, 17)
                 .addComponent(lectureLabel)
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -216,8 +264,8 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
                     .addComponent(whereTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(performSelectButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 143, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 267, Short.MAX_VALUE)
                 .addGap(30, 30, 30))
         );
 
@@ -226,9 +274,22 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
         
+        if(beanBDD != null)
+            return;
+            
         if(0 == typeBdCombo.getSelectedItem().toString().compareTo("Oracle"))
         {
             beanBDD =  new BeanDBAccessOracle();
+            beanBDD.setIp(ipTextField.getText());
+            beanBDD.setPort(Integer.parseInt(portTextField.getText()));
+            beanBDD.setUser(loginTextField.getText());
+            beanBDD.setPassword(passwordField.getText());
+            beanBDD.setBd("XE");
+            beanBDD.setClient(this);
+        }
+        else
+        {
+            beanBDD =  new BeanDBAccessMySql();
             beanBDD.setIp(ipTextField.getText());
             beanBDD.setPort(Integer.parseInt(portTextField.getText()));
             beanBDD.setUser(loginTextField.getText());
@@ -246,11 +307,35 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
 
     private void deconnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deconnexionButtonActionPerformed
         beanBDD.finConnexion();
+        beanBDD = null;
     }//GEN-LAST:event_deconnexionButtonActionPerformed
 
     private void performSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_performSelectButtonActionPerformed
-        beanBDD.selection(typeComboBox.getSelectedItem().toString(), tableComboBox.getSelectedItem().toString(), whereTextField.getText());
+        
+        if(beanBDD == null)
+            return;
+        if(whereTextField.getText().isEmpty())
+            beanBDD.selection(typeComboBox.getSelectedItem().toString(), tableComboBox.getSelectedItem().toString(), null);
+        else
+            beanBDD.selection(typeComboBox.getSelectedItem().toString(), tableComboBox.getSelectedItem().toString(), whereTextField.getText());
     }//GEN-LAST:event_performSelectButtonActionPerformed
+
+    private void executeInstertUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_executeInstertUpdateActionPerformed
+        
+        if(beanBDD == null)
+            return;
+        
+        HashMap<String, String> donnee = new HashMap<>();
+        donnee.put("LOGIN", loginUtilisateurTextField.getText());
+        donnee.put("PASSWORD", passwordUtilisateurTextField.getText());
+        
+        if(updateCheck.isSelected())
+            beanBDD.miseAJour("UTILISATEURS", donnee, conditionUpdateTextField.getText());
+        
+        else
+            beanBDD.ecriture("UTILISATEURS", donnee);
+            
+    }//GEN-LAST:event_executeInstertUpdateActionPerformed
 
     /**
      * @param args the command line arguments
@@ -290,16 +375,22 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ajoutLabel;
     private javax.swing.JLabel conditionLabel;
+    private javax.swing.JTextField conditionUpdateTextField;
     private javax.swing.JButton connexionButton;
     private javax.swing.JButton deconnexionButton;
+    private javax.swing.JButton executeInstertUpdate;
     private javax.swing.JLabel ipLabel;
     private javax.swing.JTextField ipTextField;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lectureLabel;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JTextField loginTextField;
+    private javax.swing.JLabel loginUtilisateurLabel;
+    private javax.swing.JTextField loginUtilisateurTextField;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
+    private javax.swing.JLabel passwordUtilisateurLabel;
+    private javax.swing.JTextField passwordUtilisateurTextField;
     private javax.swing.JButton performSelectButton;
     private javax.swing.JLabel portLabel;
     private javax.swing.JTextField portTextField;
@@ -309,6 +400,7 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
     private javax.swing.JComboBox typeBdCombo;
     private javax.swing.JComboBox typeComboBox;
     private javax.swing.JLabel typeLabel;
+    private javax.swing.JCheckBox updateCheck;
     private javax.swing.JTextField whereTextField;
     // End of variables declaration//GEN-END:variables
 
@@ -346,7 +438,8 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
             data.add(vector);
         }
 
-        return(new DefaultTableModel(columnNames, data));
+        return(new DefaultTableModel(data, columnNames));
         
     }
+    
 }

@@ -28,22 +28,51 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="ajoutLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="lectureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="ipLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="ipTextField" min="-2" pref="153" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="portLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="portTextField" min="-2" pref="78" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="loginLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="loginTextField" min="-2" pref="104" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="passwordLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="passwordField" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="passwordUtilisateurLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="passwordUtilisateurTextField" min="-2" pref="159" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="loginUtilisateurLabel" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="loginUtilisateurTextField" min="-2" pref="183" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="updateCheck" min="-2" max="-2" attributes="0"/>
+                                          <Group type="102" attributes="0">
+                                              <Component id="conditionUpdateTextField" min="-2" pref="198" max="-2" attributes="0"/>
+                                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                                              <Component id="executeInstertUpdate" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="ipLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="ipTextField" min="-2" pref="153" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="portLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="portTextField" min="-2" pref="78" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="loginLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="loginTextField" min="-2" pref="104" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="passwordLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="passwordField" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
                               <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="typeBdCombo" min="-2" max="-2" attributes="0"/>
                               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -51,8 +80,6 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="deconnexionButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="ajoutLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="lectureLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -78,7 +105,7 @@
                       <Component id="performSelectButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="32" max="32767" attributes="0"/>
+              <EmptySpace pref="56" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -101,7 +128,20 @@
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="ajoutLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="loginUtilisateurLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="loginUtilisateurTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="updateCheck" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="passwordUtilisateurLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="passwordUtilisateurTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="conditionUpdateTextField" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="executeInstertUpdate" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
               <Component id="lectureLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
@@ -114,8 +154,8 @@
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="performSelectButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="143" max="32767" attributes="0"/>
-              <Component id="jScrollPane1" min="-2" pref="152" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="267" max="32767" attributes="0"/>
               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -124,7 +164,7 @@
   <SubComponents>
     <Component class="javax.swing.JTextField" name="ipTextField">
       <Properties>
-        <Property name="text" type="java.lang.String" value="IP..."/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="ipLabel">
@@ -133,9 +173,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="portTextField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Port ..."/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="portLabel">
       <Properties>
@@ -148,9 +185,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="loginTextField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Login ..."/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="passwordLabel">
       <Properties>
@@ -158,9 +192,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="passwordField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jPasswordField1"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="typeBdCombo">
       <Properties>
@@ -190,7 +221,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="ajoutLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Ajout/modification d&apos;un tuple :"/>
+        <Property name="text" type="java.lang.String" value="Ajout/modification utilisateur :"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lectureLabel">
@@ -257,9 +288,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="whereTextField">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="condition ..."/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="performSelectButton">
       <Properties>
@@ -267,6 +295,39 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="performSelectButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="loginUtilisateurLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Login :"/>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="loginUtilisateurTextField">
+    </Component>
+    <Component class="javax.swing.JLabel" name="passwordUtilisateurLabel">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Password : "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="passwordUtilisateurTextField">
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="updateCheck">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="UPDATE"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="conditionUpdateTextField">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="condition Update"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="executeInstertUpdate">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="ex&#xe9;cuter"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="executeInstertUpdateActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
