@@ -313,8 +313,41 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void resultRequest(DefaultTableModel res) {
-        resultTable.setModel(res);
+    public void resultRequest(ResultSet res) {
+  
+        try
+        {
+            resultTable.setModel(buildTableModel(res));
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex);
+        }
+    }
+    
+    public DefaultTableModel buildTableModel(ResultSet rs) throws SQLException{
+        
+        Vector<String> columnNames = new Vector<String>();
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        
+        ResultSetMetaData metaData = rs.getMetaData();
+
+        int columnCount = metaData.getColumnCount();
+        for (int column = 1; column <= columnCount; column++) {
+            columnNames.add(metaData.getColumnName(column));
+        }
+
+        while (rs.next()) 
+        {
+            Vector<Object> vector = new Vector<Object>();
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                vector.add(rs.getObject(columnIndex));
+            }
+            data.add(vector);
+        }
+
+        return(new DefaultTableModel(columnNames, data));
+        
     }
   
 }

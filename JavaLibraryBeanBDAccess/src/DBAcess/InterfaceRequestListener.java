@@ -14,6 +14,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public interface InterfaceRequestListener {
     
-    public void resultRequest(DefaultTableModel rs);
+    public void resultRequest(ResultSet rs);
     
 }
