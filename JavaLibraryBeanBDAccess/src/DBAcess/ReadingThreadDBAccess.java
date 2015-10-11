@@ -40,7 +40,9 @@ public class ReadingThreadDBAccess extends Thread {
             else
                 url = "select " + select + " from " + from;
             
+            System.out.println("avant le problemes");
             PreparedStatement pStmt = con.prepareStatement(url);
+            System.out.println("après le problemes");
             ResultSet rs = pStmt.executeQuery();
 
             client.resultRequest(rs);

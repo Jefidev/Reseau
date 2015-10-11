@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
@@ -29,9 +30,8 @@ import javax.servlet.http.HttpSession;
 public class servletConnexion extends HttpServlet implements InterfaceRequestListener{
     
     
-    private ResultSet reponseBean = null;
+    private ResultSet reponseBean;
     private InterfaceBeansDBAccess beanBD;
-    private final Object SYNC = new Object();
     private Thread curThread = null;
     
     /**
@@ -54,31 +54,40 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
         beanBD.setPort(1521);
         beanBD.setUser("TRAFIC");
         beanBD.setPassword("TRAFIC");
+        beanBD.setBd("XE");
         beanBD.setClient(this);
         
+        beanBD.connexion();
         
-        if(request.getParameter("nouveau") == null)
+     
+        
+        if(0 == request.getParameter("nouveau").compareTo("on"))
         {
+            HashMap<String, String> ajoutU = new HashMap<>();
+            ajoutU.put("PASSWORD", request.getParameter("mdp"));
+            ajoutU.put("LOGIN", request.getParameter("login"));
             
-            beanBD.selection("PASSWORD", "UTILISATEURS", "LOGIN = "+request.getParameter("login"));
-            
-            /*try
-            {
-                reponseBean.next();
-                //Vérification dans la BDD 
-                if(reponseBean.getString(1))
-                {
-                    session.setAttribute("erreur", "Login ou nom d'utilisateur inconnus");
-                    response.sendRedirect(request.getScheme() + "://" +request.getServerName()+":"+request.getServerPort()+"/reservation");
-                }
-            }
-            catch(SQLException ex)
-            {
-                System.out.println(ex);
-            }*/
+            beanBD.ecriture("UTILISATEURS", ajoutU);
         }
-        
+        else
+        {
+            curThread = beanBD.selection("PASSWORD", "UTILISATEURS", "LOGIN = \'"+request.getParameter("login")+"\'");
+            
+            try {
+                curThread.join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            if(!reponseBean.next())
+            {
+                response.sendRedirect(null);
+            }
+        }
+            
         session.setAttribute("login", request.getParameter("login"));
+        
+        
         
         response.setContentType("text/html;charset=UTF-8");
     
@@ -94,21 +103,15 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
             out.println("<form method = \"POST\" action=\"testificate\"></br>");
             out.println("<label for=\"dateArrivee\">Date d'arrivee du container : </label><input type=\"date\" name=\"dateArrivee>\" id=\"dateArrivee\"></br>");
             
-            synchronized(SYNC)
-            {
-                while(reponseBean == null)try {
-                    SYNC.wait();
-                    } catch (InterruptedException ex) {
-                        Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-            }
-            try {
+            
+            if(reponseBean != null)
+                out.println("<h1>YES</h1>");
+            /*try {
                 reponseBean.next();
                 out.println("<p>"+ reponseBean.getString(1) +"</p>");
             } catch (SQLException ex) {
                 out.println(ex);
-            }
-            
+            }*/
             out.println("<label for=\"destination\">Destination : </label></br>");
             out.println("<select name=\"destination\" id=\"destination\">");
             out.println("<option value=\"Verviers\">Verviers</option>");
@@ -163,12 +166,7 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
 
     @Override
     public void resultRequest(ResultSet rs) {
-        
-        synchronized(SYNC)
-        {
             reponseBean = rs;
-            SYNC.notifyAll();
-        }
     }
 
 }

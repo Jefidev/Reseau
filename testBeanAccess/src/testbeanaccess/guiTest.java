@@ -280,23 +280,19 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
         if(0 == typeBdCombo.getSelectedItem().toString().compareTo("Oracle"))
         {
             beanBDD =  new BeanDBAccessOracle();
-            beanBDD.setIp(ipTextField.getText());
-            beanBDD.setPort(Integer.parseInt(portTextField.getText()));
-            beanBDD.setUser(loginTextField.getText());
-            beanBDD.setPassword(passwordField.getText());
-            beanBDD.setBd("XE");
             beanBDD.setClient(this);
         }
         else
         {
             beanBDD =  new BeanDBAccessMySql();
-            beanBDD.setIp(ipTextField.getText());
-            beanBDD.setPort(Integer.parseInt(portTextField.getText()));
-            beanBDD.setUser(loginTextField.getText());
-            beanBDD.setPassword(passwordField.getText());
-            beanBDD.setBd("XE");
-            beanBDD.setClient(this);
+            beanBDD.setBd("bdtrafic");   
         }
+        
+        beanBDD.setIp(ipTextField.getText());
+        beanBDD.setPort(Integer.parseInt(portTextField.getText()));
+        beanBDD.setUser(loginTextField.getText());
+        beanBDD.setPassword(passwordField.getText());
+        beanBDD.setClient(this);
         
         beanBDD.connexion();
         

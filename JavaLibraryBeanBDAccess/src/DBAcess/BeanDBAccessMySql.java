@@ -112,7 +112,7 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
         try
         {
             DatabaseMetaData md = con.getMetaData();
-            ResultSet tables = md.getTables(con.getCatalog(), "TRAFIC", null, null);
+            ResultSet tables = md.getTables(null, null, null, new String[] {"TABLE"});
 
             while (tables.next())
             {
