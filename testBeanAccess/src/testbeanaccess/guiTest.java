@@ -349,5 +349,4 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
         return(new DefaultTableModel(columnNames, data));
         
     }
-  
 }

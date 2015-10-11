@@ -32,6 +32,7 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
     private ResultSet reponseBean = null;
     private InterfaceBeansDBAccess beanBD;
     private final Object SYNC = new Object();
+    private Thread curThread = null;
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>

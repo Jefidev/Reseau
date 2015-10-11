@@ -29,8 +29,8 @@ public interface InterfaceBeansDBAccess {
     
     public void connexion();
     public ArrayList<String> tablesDisponibles();
-    public void selection(String s, String f, String w);
-    public void ecriture(String f, HashMap d);
-    public void miseAJour(String f, HashMap d, String w);
+    public Thread selection(String s, String f, String w);
+    public Thread ecriture(String f, HashMap d);
+    public Thread miseAJour(String f, HashMap d, String w);
     public void finConnexion();
 }

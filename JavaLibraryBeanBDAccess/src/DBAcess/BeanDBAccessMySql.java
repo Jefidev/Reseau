@@ -131,24 +131,30 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
     }
 
     @Override
-    public void selection(String s, String f, String w)
+    public Thread selection(String s, String f, String w)
     {
         ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con, s, f, w, client);
         rt.start();
+        
+        return rt;
     }
 
     @Override
-    public void ecriture(String f, HashMap d)
+    public Thread ecriture(String f, HashMap d)
     {
         WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d);
         wt.start();
+        
+        return wt;
     }
 
     @Override
-    public void miseAJour(String f, HashMap d, String w)
+    public Thread miseAJour(String f, HashMap d, String w)
     {
         WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d, w);
         wt.start();
+        
+        return wt;
     }
     
     @Override
