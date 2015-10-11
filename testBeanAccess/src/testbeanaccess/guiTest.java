@@ -6,14 +6,20 @@
 package testbeanaccess;
 
 import DBAcess.BeanDBAccessOracle;
+import DBAcess.InterfaceRequestListener;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Jerome
  */
-public class guiTest extends javax.swing.JFrame {
+public class guiTest extends javax.swing.JFrame implements InterfaceRequestListener{
     
     DBAcess.InterfaceBeansDBAccess beanBDD;
     
@@ -120,6 +126,11 @@ public class guiTest extends javax.swing.JFrame {
         whereTextField.setText("condition ...");
 
         performSelectButton.setText("SELECT");
+        performSelectButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                performSelectButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -223,6 +234,7 @@ public class guiTest extends javax.swing.JFrame {
             beanBDD.setUser(loginTextField.getText());
             beanBDD.setPassword(passwordField.getText());
             beanBDD.setBd("XE");
+            beanBDD.setClient(this);
         }
         
         beanBDD.connexion();
@@ -235,6 +247,10 @@ public class guiTest extends javax.swing.JFrame {
     private void deconnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deconnexionButtonActionPerformed
         beanBDD.finConnexion();
     }//GEN-LAST:event_deconnexionButtonActionPerformed
+
+    private void performSelectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_performSelectButtonActionPerformed
+        beanBDD.selection(typeComboBox.getSelectedItem().toString(), tableComboBox.getSelectedItem().toString(), whereTextField.getText());
+    }//GEN-LAST:event_performSelectButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -295,4 +311,10 @@ public class guiTest extends javax.swing.JFrame {
     private javax.swing.JLabel typeLabel;
     private javax.swing.JTextField whereTextField;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void resultRequest(DefaultTableModel res) {
+        resultTable.setModel(res);
+    }
+  
 }

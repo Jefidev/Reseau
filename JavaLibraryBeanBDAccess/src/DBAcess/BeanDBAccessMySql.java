@@ -21,6 +21,7 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
     private String bd;
     private String user;
     private String pwd;
+    private InterfaceBeansDBAccess client;
     
     public BeanDBAccessMySql() {
         main();
@@ -137,6 +138,11 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
 
     @Override
     public void finConnexion() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void setClient(InterfaceRequestListener c) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

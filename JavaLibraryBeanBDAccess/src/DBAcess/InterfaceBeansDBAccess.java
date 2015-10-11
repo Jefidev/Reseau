@@ -23,6 +23,8 @@ public interface InterfaceBeansDBAccess {
     public void setUser(String value);
     public String getPassword();
     public void setPassword(String value);
+
+    public void setClient(InterfaceRequestListener c);
     
     public void connexion();
     public ArrayList<String> tablesDisponibles();

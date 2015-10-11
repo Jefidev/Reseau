@@ -24,6 +24,7 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     private String user;
     private String pwd;
     private Connection con;
+    private InterfaceRequestListener client;
     
     public BeanDBAccessOracle() {
     }
@@ -128,7 +129,7 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     @Override
     public void selection(String s, String f, String w)
     {
-        ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con, s, f, w);
+        ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con, s, f, w, client);
         rt.start();
     }
     
@@ -155,4 +156,10 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
             Logger.getLogger(BeanDBAccessOracle.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    @Override
+    public void setClient(InterfaceRequestListener c) {
+        client = c;
+    }
+
 }

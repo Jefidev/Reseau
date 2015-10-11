@@ -6,6 +6,8 @@
 package DBAcess;
 
 import java.sql.*;
+import java.util.Vector;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -17,12 +19,14 @@ public class ReadingThreadDBAccess extends Thread {
     private String select;
     private String from;
     private String where;
+    private InterfaceRequestListener client;
     
-    public ReadingThreadDBAccess(Connection c, String s, String f, String w) {
+    public ReadingThreadDBAccess(Connection c, String s, String f, String w, InterfaceRequestListener cl) {
         con = c;
         select = s;
         from = f;
         where = w;
+        client = cl;
     }
     
     public void run()
@@ -30,28 +34,48 @@ public class ReadingThreadDBAccess extends Thread {
         try
         {
             String url = "select " + select + " from " + from + " where " + where;
+            System.out.println(url);
             PreparedStatement pStmt = con.prepareStatement(url);
             ResultSet rs = pStmt.executeQuery();
-
-            int cpt = 0;
-            if (!rs.next())
-            {
-                System.out.println("Aucun tuple trouvé !");
-                return;
-            }
-
-            do
-            {
-                System.out.println("ReadingThread");
-                cpt++;
-                String l = rs.getString(1);
-                String p = rs.getString(2);
-                System.out.println(cpt + " => " + l + " " + p);
-            } while (rs.next());
+            
+            
+            
+            client.resultRequest(buildTableModel(rs));
+            
         }
         catch (SQLException ex)
         {
             System.out.println("Erreur SQL : " + ex.getMessage());
         } 
     }
+    
+    public static DefaultTableModel buildTableModel(ResultSet rs){
+        
+        Vector<String> columnNames = new Vector<String>();
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        try
+        {
+            ResultSetMetaData metaData = rs.getMetaData();
+
+            int columnCount = metaData.getColumnCount();
+            for (int column = 1; column <= columnCount; column++) {
+                columnNames.add(metaData.getColumnName(column));
+            }
+
+            while (rs.next()) {
+                Vector<Object> vector = new Vector<Object>();
+                for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                    vector.add(rs.getObject(columnIndex));
+                }
+                data.add(vector);
+            }
+
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex);
+        }
+        return new DefaultTableModel(data, columnNames);
+    }
+    
 }
