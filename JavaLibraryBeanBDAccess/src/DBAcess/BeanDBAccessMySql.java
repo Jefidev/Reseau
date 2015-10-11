@@ -90,8 +90,8 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
         try
         {
             Class.forName("com.mysql.jdbc.driver");
-            String url = "jdbc:mysql://" + getUser() + "/" + getPassword() + "@" + getIp() + ":" + getPort() + ":" + getBd();
-            con = DriverManager.getConnection(url);
+            String url = "jdbc:mysql://" + getIp() + ":" + getPort() + "/" + getBd();
+            con = DriverManager.getConnection(url, getUser(), getPassword());
             con.setAutoCommit(false);
         }
         catch (SQLException ex)
