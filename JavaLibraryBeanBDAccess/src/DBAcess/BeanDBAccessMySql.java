@@ -22,10 +22,10 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
     private String bd;
     private String user;
     private String pwd;
-    private InterfaceBeansDBAccess client;
+    private Connection con;
+    private InterfaceRequestListener client;
     
     public BeanDBAccessMySql() {
-        main();
     }
     
     
@@ -76,41 +76,23 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
         pwd = value;
     }
     
+    @Override
+    public void setClient(InterfaceRequestListener c) {
+        client = c;
+    }
     
-    public void main()
+    
+    /* BASE DE DONNEES */
+
+    @Override
+    public void connexion()
     {
         try
         {
-            System.out.println("Essai de connexion JDBC");
             Class.forName("com.mysql.jdbc.driver");
-
-            System.out.println("2");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/TRAFIC");
-            System.out.println("Connexion à la BDD trafic réalisée");
-            PreparedStatement pStmt = con.prepareStatement("select * from UTILISATEURS");
-            System.out.println("3");
-            ResultSet rs = pStmt.executeQuery();
-            System.out.println("Instruction SELECT sur utilisateurs envoyée à la BDD trafic");
-
-            int cpt = 0;
-            if (!rs.next())
-            {
-                System.out.println("Aucun tuple trouvé !");
-                return;
-            }
-
-            do
-            {
-                if (cpt == 0) System.out.println("Parcours du curseur");
-                System.out.println("5");
-                cpt++;
-                System.out.println("6");
-                String l = rs.getString(1);
-                System.out.println("col 1 ok");
-                String p = rs.getString(2);
-                System.out.println("col 2 ok");
-                System.out.println(cpt + " => " + l + " " + p);
-            } while (rs.next());
+            String url = "jdbc:mysql://" + getUser() + "/" + getPassword() + "@" + getIp() + ":" + getPort() + ":" + getBd();
+            con = DriverManager.getConnection(url);
+            con.setAutoCommit(false);
         }
         catch (SQLException ex)
         {
@@ -123,37 +105,62 @@ public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess {
     }
 
     @Override
-    public void connexion() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public ArrayList<String> tablesDisponibles()
+    {
+        ArrayList<String> l = new ArrayList<String>();
+        
+        try
+        {
+            DatabaseMetaData md = con.getMetaData();
+            ResultSet tables = md.getTables(con.getCatalog(), "TRAFIC", null, null);
+
+            while (tables.next())
+            {
+                String t = tables.getString(3);
+                l.add(t);
+            }
+
+            return l;
+        }
+        catch (SQLException ex)
+        {
+            System.out.println("Erreur SQL : " + ex.getMessage());
+        }
+        
+        return null;
     }
 
     @Override
-    public ArrayList<String> tablesDisponibles() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void selection(String s, String f, String w)
+    {
+        ReadingThreadDBAccess rt = new ReadingThreadDBAccess(con, s, f, w, client);
+        rt.start();
     }
 
     @Override
-    public void selection(String s, String f, String w) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void ecriture(String f, HashMap d)
+    {
+        WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d);
+        wt.start();
     }
 
     @Override
-    public void finConnexion() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void miseAJour(String f, HashMap d, String w)
+    {
+        WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d, w);
+        wt.start();
     }
-
+    
     @Override
-    public void setClient(InterfaceRequestListener c) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void ecriture(String f, HashMap d) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void miseAJour(String f, HashMap d, String w) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void finConnexion()
+    {
+        try
+        {
+            con.close();
+        }
+        catch (SQLException ex)
+        {
+            System.out.println("SQLException : " + ex);
+        }
     }
 }
