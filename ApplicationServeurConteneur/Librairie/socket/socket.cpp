@@ -69,7 +69,6 @@ int Socket::getSocketHandle() const
 void Socket::finConnexion()
 {
 	shutdown(socketHandle, SHUT_RDWR);
-	close(socketHandle);
 	socketHandle = -1;
 }
 
