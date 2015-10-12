@@ -264,11 +264,7 @@ void inputDone(SocketClient* sock)
 
         sock->sendChar(composeInputDone(INPUT_DONE, sid));
 
-        cout << "avant envoi input" << endl;
-
         lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
-
-        cout << "apres envois input" << endl;
 
         if(reponseType == ACK)
             cout << endl << lecRecus;
