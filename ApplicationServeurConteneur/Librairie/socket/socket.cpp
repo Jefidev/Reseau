@@ -189,7 +189,7 @@ string Socket::receiveChar()
 			totBytesReceives += bytesReceived;	// On met à jour la longueur
 			retString += buff;
 		}
-	}while(totBytesReceives < stringLength);
+	} while(totBytesReceives < stringLength);
 
 	if(totBytesReceives > stringLength)
 	{

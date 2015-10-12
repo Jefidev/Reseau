@@ -103,14 +103,13 @@ void Parc::freeSpace(string str)
 	char *lec, *tok, *saveptrAllChar, *saveptrx;
 	char sep = CONTAINER_SEPARATION, sep2 = ';';
 
-	lec = new char [str.length()+1];
+	lec = new char [str.length()+1];	// Convertisseur str (string) vers char* pour strtok
 	strcpy (lec, str.c_str());
 
 	tok = strtok_r(lec, &sep, &saveptrAllChar);
 
 	while(tok != NULL)
 	{
-		
 		int x, y;
 
 		x = atoi(strtok_r(tok, &sep2, &saveptrx));

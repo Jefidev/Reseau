@@ -32,7 +32,7 @@ FichierProp::FichierProp(string n)
 			exit(-1);
 		}
 
-		fputs("HOST=localhost\n", file);
+		fputs("HOST=localhost\n", file);	// Bidonnage de fichier à la première ouverture
 		fputs("PORT=31040\n", file);
 		fputs("ISIP=0\n", file);
 	}
@@ -110,7 +110,7 @@ string FichierProp::getValue(string v)
 	}
 
 	if(sortie == 0)
-	  return "#";
+	  return "";
 	  	
 	p = strtok_r(NULL, &separator, &saveptr);
 

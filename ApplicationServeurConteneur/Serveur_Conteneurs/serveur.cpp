@@ -214,7 +214,7 @@ int login(Socket* s, int clientTraite)
 
             string test = fp.getValue(sc.nom);
 
-            if(!test.compare("#"))
+            if(!test.compare(""))   // Si chaine vide
             {
                 s->sendChar(composeAckErr(ERREUR, "LOGERR"));
             }
@@ -260,7 +260,7 @@ void inputTruck(Socket*s, int clientTraite, string requete)
         ret = parcFile.getFirstFree(); //Renvoie les coord du premier emplacement libre sous forme x;y
         pthread_mutex_unlock(&mutexParc);
 
-        if(!ret.compare(""))
+        if(!ret.compare(""))    // Plus assez de place
         {
             erreur = true;
             break;
@@ -278,7 +278,7 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     {
         s->sendChar(composeAckErr(ERREUR, "Pas assez de place dans le parc"));
 
-        if(retPosition.compare(""))
+        if(retPosition.compare("")) // retPosition non vide
         {
             pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
             parcFile.freeSpace(retPosition);
@@ -319,9 +319,9 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
         scp.coord = tokPosition;
         scp.id = tokContainer;
 
-        s->sendChar(composeContPos(CONT_POS, scp));
+        s->sendChar(composeContPos(CONT_POS, scp)); // Envoi de la position
 
-        str = typeRequestParse(s->receiveChar(), &requestType);
+        str = typeRequestParse(s->receiveChar(), &requestType); // Réception des données du container
 
         if(requestType == INPUT_DONE)
         {
@@ -344,7 +344,7 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
             }
             
         }
-        else
+        else    // On annule tout et on demande au client de se couper car problème sur le réseau
         {
             pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
             parcFile.freeSpace(listPosition);
@@ -353,7 +353,7 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
             return;
         }
 
-        str = typeRequestParse(s->receiveChar(), &requestType);
+        str = typeRequestParse(s->receiveChar(), &requestType); // Attend un NEXT du client (accord)
 
         if(requestType != NEXT)
         {
@@ -363,7 +363,6 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
 
         tokContainer = strtok_r(NULL, &sep, &saveptrContainer);
         tokPosition = strtok_r(NULL, &sep, &saveptrPosition);
-
     }
 
     s->sendChar(composeAckErr(ACK, "Tous les containers ont ete traites"));
@@ -395,7 +394,6 @@ void outputOne(Socket* s, int clientTraite)
     while(requestType == OUTPUT_ONE)
     {
         StructOutputOne soo = parseOutputOne(reponse);
-
 
         pthread_mutex_lock(&mutexParc); 
         parcFile.freeSpace(soo.emplacement);
