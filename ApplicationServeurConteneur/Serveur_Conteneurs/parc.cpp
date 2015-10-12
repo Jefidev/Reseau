@@ -223,10 +223,8 @@ string Parc::outputList(StructOuputReady sor)
 		}
 	}
 
-
 	fclose(f);
 	delete nomFichierChar;
 	return retour;
-
 }
 

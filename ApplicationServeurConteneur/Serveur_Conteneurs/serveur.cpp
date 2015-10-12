@@ -112,7 +112,7 @@ int main()
 
         int j;
 
-        for(j = 0; j < MAXCLIENT && socketOuverte[j] != NULL; j++); //On parcours nos thread pour trouver un libre
+        for(j = 0; j < MAXCLIENT && socketOuverte[j] != NULL; j++); //On parcourt nos threads pour trouver un libre
 
         threadsLibres--;
         pthread_mutex_unlock(&mutexThreadsLibres);
@@ -122,10 +122,8 @@ int main()
         socketOuverte[j] = new Socket(service); //creation d'une nouvelle socket service
         indiceCourant=j; //on met la variable indice courant à la position de la socket créée pour que le thread puisse savoir laquelle prendre
         pthread_mutex_unlock(&mutexIndiceCourant);
-        pthread_cond_signal(&condIndiceCourant); //On réveil le thread au chômage
-        
+        pthread_cond_signal(&condIndiceCourant); //On réveille le thread au chômage
     }
-
 }
 
 void* threadClient(void* p) //le thread lancé
@@ -193,6 +191,7 @@ int login(Socket* s, int clientTraite)
 {
     string str;
     int requestType;
+
     while(1)
     {
         str = typeRequestParse(s->receiveChar(), &requestType);
@@ -258,7 +257,7 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     while(tok != NULL)
     {
         pthread_mutex_lock(&mutexParc);
-        ret = parcFile.getFirstFree(); //Renvois les coord du premier emplacement libre sous forme x;y
+        ret = parcFile.getFirstFree(); //Renvoie les coord du premier emplacement libre sous forme x;y
         pthread_mutex_unlock(&mutexParc);
 
         if(!ret.compare(""))
@@ -273,7 +272,6 @@ void inputTruck(Socket*s, int clientTraite, string requete)
 
         if(tok != NULL)
             retPosition = retPosition + CONTAINER_SEPARATION;
-
     }
 
     if(erreur)
@@ -369,28 +367,24 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
     }
 
     s->sendChar(composeAckErr(ACK, "Tous les containers ont ete traites"));
-        
 }
 
 
 void outputReady(Socket* s, int clientTraite, string requete)
 {
-    StructOuputReady sor  = parseOutputReady(requete);
+    StructOuputReady sor = parseOutputReady(requete);
 
     pthread_mutex_lock(&mutexParc); 
     string listeContainer = parcFile.outputList(sor);
     pthread_mutex_unlock(&mutexParc);
 
-    if(listeContainer.compare(""))
+    if(listeContainer.compare(""))  // Si chaine remplie
     {
         s->sendChar(composeAckErr(ACK, listeContainer));
         outputOne(s, clientTraite);
     }
     else
         s->sendChar(composeAckErr(ERREUR, "Aucun containers pour cette destination"));
-
-
-
 }
 
 void outputOne(Socket* s, int clientTraite)

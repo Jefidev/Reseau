@@ -130,7 +130,6 @@ void Socket::receiveStruct(void* r, int size)
 
 	do
 	{
-
 		if((bytes = recv(socketHandle, r + totBytesReceives, size, 0)) == -1)	// déplacement à l'offset
 			throw ErrnoException(errno, "Erreur receive");
 
@@ -138,10 +137,10 @@ void Socket::receiveStruct(void* r, int size)
 
 		if(totBytesReceives > size)
 		{
-			throw CommunicationException("Erreur : la structure recue n'est pas complete");
+			throw CommunicationException("Erreur : la structure recue est plus grande que celle envoyee");
 		}
-
-	}while(totBytesReceives < size);
+		
+	} while(totBytesReceives < size);
 
 	if(totBytesReceives > size)
 	{
