@@ -280,7 +280,7 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
         if(0 == typeBdCombo.getSelectedItem().toString().compareTo("Oracle"))
         {
             beanBDD =  new BeanDBAccessOracle();
-            beanBDD.setClient(this);
+            beanBDD.setBd("XE");
         }
         else
         {
@@ -297,8 +297,6 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
         beanBDD.connexion();
         
         tableComboBox.setModel(new DefaultComboBoxModel(beanBDD.tablesDisponibles().toArray()));
-        
-        
     }//GEN-LAST:event_connexionButtonActionPerformed
 
     private void deconnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deconnexionButtonActionPerformed
