@@ -47,7 +47,7 @@ public class ReadingThreadDBAccess extends Thread {
         }
         catch (SQLException ex)
         {
-            System.out.println("Erreur SQL : " + ex.getMessage());
+            client.erreurRecue(ex.toString());
         } 
     } 
 }

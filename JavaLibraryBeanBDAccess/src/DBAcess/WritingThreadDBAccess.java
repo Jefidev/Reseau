@@ -22,19 +22,22 @@ public class WritingThreadDBAccess extends Thread {
     private String from;
     private HashMap donnees;
     private String where;
+    private InterfaceRequestListener client;
     
-    public WritingThreadDBAccess(Connection c, String f, HashMap d) {
+    public WritingThreadDBAccess(Connection c, String f, HashMap d, InterfaceRequestListener cl) {
         con = c;
         from = f;
         donnees = d;
         where = null;
+        client = cl;
     }
     
-    public WritingThreadDBAccess(Connection c, String f, HashMap d, String w) {
+    public WritingThreadDBAccess(Connection c, String f, HashMap d, String w, InterfaceRequestListener cl) {
         con = c;
         from = f;
         donnees = d;
         where = w;
+        client = cl;
     }
     
     public void run()
@@ -103,10 +106,10 @@ public class WritingThreadDBAccess extends Thread {
             }
             catch (SQLException ex2)
             {
-                System.out.println("Erreur SQL : " + ex2.getMessage());
+                client.erreurRecue(ex.toString());
             }
             
-            System.out.println("Erreur SQL : " + ex.getMessage());
+            client.erreurRecue(ex.toString());
         }
     }
 }

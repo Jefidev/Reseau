@@ -144,7 +144,7 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     @Override
     public Thread ecriture(String f, HashMap d)
     {
-        WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d);
+        WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d, client);
         wt.start();
         
         return wt;
@@ -153,7 +153,7 @@ public class BeanDBAccessOracle implements Serializable, InterfaceBeansDBAccess 
     @Override
     public Thread miseAJour(String f, HashMap d, String w)
     {
-        WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d, w);
+        WritingThreadDBAccess wt = new WritingThreadDBAccess(con, f, d, w, client);
         wt.start();
         
         return wt;
