@@ -71,6 +71,7 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
         updateCheck = new javax.swing.JCheckBox();
         conditionUpdateTextField = new javax.swing.JTextField();
         executeInstertUpdate = new javax.swing.JButton();
+        erreurLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -150,6 +151,9 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
             }
         });
 
+        erreurLabel.setForeground(new java.awt.Color(255, 0, 0));
+        erreurLabel.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -197,14 +201,22 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(passwordField)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(typeBdCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(connexionButton)
-                                .addGap(18, 18, 18)
-                                .addComponent(deconnexionButton))))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(typeBdCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(connexionButton)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(deconnexionButton))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(erreurLabel)
+                                        .addGap(71, 71, 71))))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(95, 95, 95)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 745, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(performSelectButton))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(tableLabel)
@@ -217,10 +229,7 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
                         .addGap(33, 33, 33)
                         .addComponent(conditionLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(whereTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(performSelectButton)))
+                        .addComponent(whereTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(56, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -251,7 +260,8 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
                     .addComponent(passwordUtilisateurLabel)
                     .addComponent(passwordUtilisateurTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(conditionUpdateTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(executeInstertUpdate))
+                    .addComponent(executeInstertUpdate)
+                    .addComponent(erreurLabel))
                 .addGap(17, 17, 17)
                 .addComponent(lectureLabel)
                 .addGap(33, 33, 33)
@@ -372,6 +382,7 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
     private javax.swing.JTextField conditionUpdateTextField;
     private javax.swing.JButton connexionButton;
     private javax.swing.JButton deconnexionButton;
+    private javax.swing.JLabel erreurLabel;
     private javax.swing.JButton executeInstertUpdate;
     private javax.swing.JLabel ipLabel;
     private javax.swing.JTextField ipTextField;
@@ -434,6 +445,11 @@ public class guiTest extends javax.swing.JFrame implements InterfaceRequestListe
 
         return(new DefaultTableModel(data, columnNames));
         
+    }
+
+    @Override
+    public void erreurRecue(String erreur) {
+        erreurLabel.setText(erreur);
     }
     
 }
