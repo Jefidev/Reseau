@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -32,6 +35,9 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
     private ResultSet reponseBean;
     private InterfaceBeansDBAccess beanBD;
     private Thread curThread = null;
+    private String errRequest = null;
+    private static int numID = 1;
+    private static final Object lock = new Object();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -79,22 +85,39 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
             }
             else
             {
-                System.err.println(request.getParameter("arrivee"));
-                HashMap<String, String> envois = new HashMap<>();
-                envois.put("ETAT", "1");
-                envois.put("DATE_RESERVATION", request.getParameter("arrivee"));
-                envois.put("DESTINATION", request.getParameter("destination"));
+                synchronized(lock)
+                {
+                   session.setAttribute("ID", reponseBean.getString("X")+reponseBean.getString("Y")+request.getParameter("arrivee")+numID); 
+                   numID++;
+                }
                 
-                beanBD.miseAJour("PARC", envois, "X = " + reponseBean.getString("X") + " AND Y = " + reponseBean.getString("Y"));
-                
-                session.setAttribute("ID", reponseBean.getString("X")+reponseBean.getString("Y")+request.getParameter("destination")+request.getParameter("arrivee"));
                 session.setAttribute("X", reponseBean.getString("X"));
                 session.setAttribute("Y", reponseBean.getString("Y"));
                 
-                response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation/reponseReservation.jsp");
+                HashMap<String, String> envois = new HashMap<>();
+                envois.put("ID_RESERVATION", session.getAttribute("ID").toString());
+                envois.put("X", reponseBean.getString("X"));
+                envois.put("Y", reponseBean.getString("X"));
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                Calendar cal = Calendar.getInstance();
+                envois.put("DATE_RESERVATION", dateFormat.format(cal.getTime()));
+                envois.put("DATE_ARRIVEE", request.getParameter("arrivee"));
+                envois.put("DESTINATION", request.getParameter("destination"));
+                
+                curThread =  beanBD.ecriture("RESERVATIONS", envois);
+                try {
+                curThread.join();
+                } catch (InterruptedException ex) {
+                    System.err.println(ex);
+                }
+                
+                if(errRequest != null)
+                    response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation/reponseReservation.jsp");
+                
+                session.setAttribute("erreurReservation", "La réservation n'a pas pu aboutir.");
             }
         } catch (SQLException ex) {
-            Logger.getLogger(rechercheEmplacement.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println(ex);
         }
        
     }
@@ -141,6 +164,11 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
     @Override
     public void resultRequest(ResultSet rs) {
         reponseBean = rs;
+    }
+
+    @Override
+    public void erreurRecue(String erreur) {
+        errRequest = erreur;
     }
 
 }

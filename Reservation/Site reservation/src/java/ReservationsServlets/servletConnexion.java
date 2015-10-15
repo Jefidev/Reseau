@@ -33,6 +33,7 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
     private ResultSet reponseBean;
     private InterfaceBeansDBAccess beanBD;
     private Thread curThread = null;
+    private String errRequest = null;
     
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -59,43 +60,55 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
         
         beanBD.connexion();
         
-     
-        
-        if(request.getParameter("nouveau") != null)
+        if(session.getAttribute("erreurReservation") == null || session.getAttribute("login") != null)
         {
-            HashMap<String, String> ajoutU = new HashMap<>();
-            ajoutU.put("PASSWORD", request.getParameter("mdp"));
-            ajoutU.put("LOGIN", request.getParameter("login"));
-            
-            beanBD.ecriture("UTILISATEURS", ajoutU);
-        }
-        else
-        {
-            curThread = beanBD.selection("PASSWORD", "UTILISATEURS", "LOGIN = \'"+request.getParameter("login")+"\'");
-            
-            try {
-                curThread.join();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            try {
-                if(!reponseBean.next())
+            if(request.getParameter("nouveau") != null)
+            {   
+                HashMap<String, String> ajoutU = new HashMap<>();
+                ajoutU.put("PASSWORD", request.getParameter("mdp"));
+                ajoutU.put("LOGIN", request.getParameter("login"));
+                
+                curThread = beanBD.ecriture("UTILISATEURS", ajoutU);
+                try {
+                    curThread.join();
+                } catch (InterruptedException ex) {
+                    System.err.println(ex);
+                }
+
+                if(errRequest != null)
                 {
-                    session.setAttribute("erreur", "Login ou mot de passe invalide");
+                    session.setAttribute("erreur", "L'utilisateur existe deja");
                     response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
                 }
-                else
-                {
-                    if(0 != request.getParameter("mdp").compareTo(reponseBean.getString("PASSWORD")))
+            }
+            else
+            {
+                curThread = beanBD.selection("PASSWORD", "UTILISATEURS", "LOGIN = \'"+request.getParameter("login")+"\'");
+
+                try {
+                    curThread.join();
+                } catch (InterruptedException ex) {
+                    System.err.println(ex);
+                }
+
+                try {
+                    if(!reponseBean.next())
                     {
                         session.setAttribute("erreur", "Login ou mot de passe invalide");
                         response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
                     }
-                        
+                    else
+                    {
+                        if(0 != request.getParameter("mdp").compareTo(reponseBean.getString("PASSWORD")))
+                        {
+                            session.setAttribute("erreur", "Login ou mot de passe invalide");
+                            response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
+                        }
+
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(servletConnexion.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
             
@@ -139,6 +152,10 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
             out.println("<input type=\"date\" name=\"arrivee\" id=\"arrivee\"/></br>");
             out.println("<input type = \"submit\" value = \"Réserver\"/>");
             out.println("</form>");
+            if(session.getAttribute("erreurReservation") != null)
+            {
+                out.println("<p>"+session.getAttribute("erreurReservation")+"</p>");
+            }
             out.println("</body>");
             out.println("</html>");
         }
@@ -186,6 +203,11 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
     @Override
     public void resultRequest(ResultSet rs) {
             reponseBean = rs;
+    }
+
+    @Override
+    public void erreurRecue(String erreur) {
+        errRequest = erreur;
     }
 
 }

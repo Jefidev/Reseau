@@ -30,8 +30,9 @@
             <p>Les coordonnées de l'emplacement sont : X = <%=session.getAttribute("X")%> Y = <%=session.getAttribute("Y")%></p>
         <%
             }
-            
             session.invalidate();
         %>
+        
+        <a href="index.jsp">retourner à la connexion</a>
     </body>
 </html>
