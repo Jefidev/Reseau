@@ -78,7 +78,7 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
                 if(errRequest != null)
                 {
                     session.setAttribute("erreur", "L'utilisateur existe deja");
-                    response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
+                    response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/Site_reservation");
                 }
             }
             else
@@ -95,14 +95,14 @@ public class servletConnexion extends HttpServlet implements InterfaceRequestLis
                     if(!reponseBean.next())
                     {
                         session.setAttribute("erreur", "Login ou mot de passe invalide");
-                        response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
+                        response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/Site_reservation");
                     }
                     else
                     {
                         if(0 != request.getParameter("mdp").compareTo(reponseBean.getString("PASSWORD")))
                         {
                             session.setAttribute("erreur", "Login ou mot de passe invalide");
-                            response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
+                            response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/Site_reservation");
                         }
 
                     }

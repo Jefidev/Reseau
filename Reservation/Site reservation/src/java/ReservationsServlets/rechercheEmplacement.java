@@ -55,7 +55,7 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
         HttpSession session = request.getSession(true);
         
         if(session.getAttribute("login") == null)
-            response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation");
+            response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/Site_reservation");
         
         
         beanBD = new BeanDBAccessOracle();
@@ -81,7 +81,7 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
         try {
             if(!reponseBean.next())
             {
-                response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation/reponseReservation.jsp");
+                response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/Site_reservation/reponseReservation.jsp");
             }
             else
             {
@@ -112,7 +112,7 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
                 }
                 
                 if(errRequest != null)
-                    response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/reservation/reponseReservation.jsp");
+                    response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/Site_reservation/reponseReservation.jsp");
                 
                 session.setAttribute("erreurReservation", "La réservation n'a pas pu aboutir.");
             }
