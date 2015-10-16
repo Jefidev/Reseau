@@ -97,13 +97,13 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
                 HashMap<String, String> envois = new HashMap<>();
                 envois.put("ID_RESERVATION", session.getAttribute("ID").toString());
                 envois.put("X", reponseBean.getString("X"));
-                envois.put("Y", reponseBean.getString("X"));
+                envois.put("Y", reponseBean.getString("Y"));
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                 Calendar cal = Calendar.getInstance();
                 envois.put("DATE_RESERVATION", dateFormat.format(cal.getTime()));
                 envois.put("DATE_ARRIVEE", request.getParameter("arrivee"));
                 envois.put("DESTINATION", request.getParameter("destination"));
-                
+                              
                 curThread =  beanBD.ecriture("RESERVATIONS", envois);
                 try {
                 curThread.join();
