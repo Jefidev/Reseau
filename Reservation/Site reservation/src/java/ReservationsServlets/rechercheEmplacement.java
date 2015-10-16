@@ -102,7 +102,7 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
                 Calendar cal = Calendar.getInstance();
                 envois.put("DATE_RESERVATION", dateFormat.format(cal.getTime()));
                 envois.put("DATE_ARRIVEE", request.getParameter("arrivee"));
-                envois.put("DESTINATION", request.getParameter("destination"));
+                envois.put("DESTINATIONS", request.getParameter("destination"));
                               
                 curThread =  beanBD.ecriture("RESERVATIONS", envois);
                 try {
@@ -113,8 +113,11 @@ public class rechercheEmplacement extends HttpServlet implements InterfaceReques
                 
                 if(errRequest != null)
                     response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/Site_reservation/reponseReservation.jsp");
-                
-                session.setAttribute("erreurReservation", "La réservation n'a pas pu aboutir.");
+                else
+                {
+                    session.setAttribute("erreurReservation", "La réservation n'a pas pu aboutir.");
+                    response.sendRedirect(request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+ "/Site_reservation/formulaire");
+                }
             }
         } catch (SQLException ex) {
             System.err.println(ex);
