@@ -1,8 +1,6 @@
 package DBAcess;
 
 import java.sql.*;
-//import java.util.Vector;
-//import javax.swing.table.DefaultTableModel;
 
 
 public class ReadingThreadDBAccess extends Thread

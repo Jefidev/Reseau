@@ -1,11 +1,9 @@
 package DBAcess;
 
-//import java.beans.*;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-//import com.mysql.jdbc.Driver;
 
 
 public class BeanDBAccessMySql implements Serializable, InterfaceBeansDBAccess

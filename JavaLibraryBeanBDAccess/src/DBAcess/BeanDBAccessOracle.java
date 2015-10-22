@@ -1,6 +1,5 @@
 package DBAcess;
 
-//import java.beans.*;
 import java.io.Serializable;
 import java.sql.*;
 import java.util.ArrayList;
