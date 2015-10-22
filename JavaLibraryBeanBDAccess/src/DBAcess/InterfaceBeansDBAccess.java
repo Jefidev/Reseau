@@ -1,19 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package DBAcess;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/**
- *
- * @author Utilisateur
- */
-public interface InterfaceBeansDBAccess {
-    
+
+public interface InterfaceBeansDBAccess
+{    
     public String getIp();
     public void setIp(String value);
     public int getPort();
