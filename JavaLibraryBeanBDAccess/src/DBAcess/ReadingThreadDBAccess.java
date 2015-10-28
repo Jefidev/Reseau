@@ -24,7 +24,6 @@ public class ReadingThreadDBAccess extends Thread
         try
         {
             String url;
-                    
             if(where != null)
                 url = "select " + select + " from " + from + " where " + where;
             else
@@ -32,7 +31,7 @@ public class ReadingThreadDBAccess extends Thread
             
             PreparedStatement pStmt = con.prepareStatement(url);
             ResultSet rs = pStmt.executeQuery();
-
+            
             client.resultRequest(rs);
         }
         catch (SQLException ex)

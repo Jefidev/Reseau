@@ -85,7 +85,7 @@ public class WritingThreadDBAccess extends Thread
         try
         {
             PreparedStatement pStmt = con.prepareStatement(url);
-            pStmt.executeQuery();
+            pStmt.execute();
             con.commit();
         }
         catch (SQLException ex)
