@@ -6,8 +6,9 @@ LIBPROP = ../Librairie/fichierProp
 LIBEX = ../Librairie/exceptions
 LIBCONT =  ../LibrairieConteneur
 LIBLOG = ../Librairie/log
+LIBADMIN = threadAdmin
 
-OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o $(LIBLOG)/log.o parc.o
+OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o $(LIBLOG)/log.o parc.o $(LIBADMIN)/threadAdmin.o
 
 serveur:	serveur.cpp $(OBJ)
 			echo creation serveur
@@ -61,5 +62,8 @@ parc.o:	parc.cpp $(LIB)/utility.o
 		echo creation du log
 		$(CC) -c parc.cpp
 
-
+$(LIBADMIN)/threadAdmin.o:	$(LIBADMIN)/threadAdmin.cpp $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o $(LIBPROP)/fichierProp.o $(LIBEX)/errnoException.o
+							echo creation threadAdmin
+							$(CC) -c $(LIBADMIN)/threadAdmin.cpp
+							mv threadAdmin.o $(LIBADMIN)
 

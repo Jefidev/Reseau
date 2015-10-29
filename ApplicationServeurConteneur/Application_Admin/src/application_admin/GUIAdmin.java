@@ -5,10 +5,9 @@
  */
 package application_admin;
 
-import java.io.DataInputStream;
-import java.io.DataOutput;
-import java.io.DataOutputStream;
+import java.io.*;
 import java.net.Socket;
+
 
 /**
  *
@@ -60,6 +59,11 @@ public class GUIAdmin extends javax.swing.JFrame {
         passwordTextField.setText("Mot de passe");
 
         connexionButton.setText("Connexion");
+        connexionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connexionButtonActionPerformed(evt);
+            }
+        });
 
         stopButton.setText("STOP");
 
@@ -132,7 +136,6 @@ public class GUIAdmin extends javax.swing.JFrame {
                     .addComponent(passwordTextField)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(connexionButton))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -150,6 +153,86 @@ public class GUIAdmin extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
+        try
+        {
+            cliSocket = new Socket(ipTextField.getText(), Integer.parseInt(portTextField.getText()));
+            dis = new DataInputStream(new BufferedInputStream(cliSocket.getInputStream()));
+            dos = new DataOutputStream(new BufferedOutputStream(cliSocket.getOutputStream()));
+        } 
+        catch (IOException ex) 
+        {
+            System.err.println("Erreur gui admin connexion : " + ex);
+        }
+        
+        String message = "1#"+LoginTextField.getText()+"#"+passwordField.getText();
+        
+        SendMsg(message);
+        
+        deconnexion();
+    }//GEN-LAST:event_connexionButtonActionPerformed
+    
+    public void deconnexion()
+    {
+        try
+        {
+            dos.close();
+            dis.close();
+            cliSocket.close();
+            System.out.println("ClientServeurBateau : Client déconnecté");
+        }
+        catch(IOException e)
+        {
+            System.err.println("ClientServeurBateau : Erreur de déconnexion : " + e);
+        }
+    }
+    
+    
+    public void SendMsg(String chargeUtile)
+    {
+        int taille = chargeUtile.length();
+        String message = String.valueOf(taille) + "#" + chargeUtile;
+            
+        try
+        {           
+            dos.write(message.getBytes());
+            dos.flush();
+        }
+        catch(IOException e)
+        {
+            System.err.println("ClientServeurBateu : Erreur d'envoi de msg (IO) : " + e);
+        }
+    }
+        
+    public String ReceiveMsg()
+    {
+        byte b;
+        StringBuffer taille = new StringBuffer();
+        StringBuffer message = new StringBuffer();
+        
+        try
+        {
+            while ((b = dis.readByte()) != (byte)'#')
+            {                   
+                if (b != (byte)'#')
+                    taille.append((char)b);
+            }
+                
+            for (int i = 0; i < Integer.parseInt(taille.toString()); i++)
+            {
+                b = dis.readByte();
+                message.append((char)b);
+            }    
+        }
+        catch(IOException e)
+        {
+            System.err.println("ClientServeurBateau : Erreur de reception de msg (IO) : " + e);
+        }
+            
+        return message.toString();
+    }
+    
+    
     /**
      * @param args the command line arguments
      */

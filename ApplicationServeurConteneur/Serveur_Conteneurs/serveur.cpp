@@ -16,6 +16,7 @@ using namespace std;
 #include "../LibrairieConteneur/sendFunction.h"
 #include "../Librairie/exceptions/errnoException.h"
 #include "../Librairie/log/log.h"
+#include "threadAdmin/threadAdmin.h"
 #include "parc.h"
 
 #define MAXCLIENT 2
@@ -80,6 +81,10 @@ int main()
 
     for(int i = 0; i < MAXCLIENT; i++)//On met la liste des sockets ouvertes à NULL
         socketOuverte[i] = NULL; 
+
+    //LANCEMENT THREAD ADMIN
+    pthread_t admin;
+    int testificate = pthread_create(&admin, NULL, threadAdmin, NULL);
 
     //LANCEMENT DES THREADS
     for(int i = 0; i < MAXCLIENT; i++)

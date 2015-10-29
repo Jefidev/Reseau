@@ -35,6 +35,7 @@ FichierProp::FichierProp(string n)
 		fputs("HOST=localhost\n", file);	// Bidonnage de fichier à la première ouverture
 		fputs("PORT=31040\n", file);
 		fputs("ISIP=0\n", file);
+		fputs("PORT_ADMIN=31042\n", file);
 	}
 
 	fclose(file);
