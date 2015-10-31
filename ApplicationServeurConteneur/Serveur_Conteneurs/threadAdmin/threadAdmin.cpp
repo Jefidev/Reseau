@@ -54,11 +54,11 @@ void* threadAdmin(void* p)
 
     Socket s = Socket(service);
 
-   	loginAdmin(s.receiveChar());
+   	cout << s.receiveChar() << endl;
+
+    s.sendChar("coucou");
+
+    s.finConnexion();
 }
 
 
-void loginAdmin()
-{
-	
-}
