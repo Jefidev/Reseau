@@ -15,7 +15,7 @@ OBJEXCEPTION = $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
 
 client:	client.cpp $(OBJ) $(OBJSOCKET) $(OBJUTILITY) $(OBJEXCEPTION)
 		echo creation client
-		$(CC) -o client client.cpp $(OBJ)
+		$(CC) -o client client.cpp $(OBJ) $(OBJSOCKET) $(OBJUTILITY) $(OBJEXCEPTION)
 
 $(LIBESOCK)/socketClient.o:		$(LIBESOCK)/socketClient.cpp $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o
 								echo creation socketClient

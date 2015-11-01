@@ -8,6 +8,7 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <pthread.h>
 
 using namespace std;
 
@@ -17,12 +18,22 @@ using namespace std;
 #include "../../Librairie/exceptions/errnoException.h"
 #include "../../LibrairieCSA/CSA.ini"
 #include "../../LibrairieCSA/sendCSAFunction.h"
+#include "traitementAdmin.h"
 #include "threadAdmin.h"
+
+pthread_t threadsAdminLances[MAXADMIN];
+Socket* socketAdminOuverte[MAXADMIN];
+int threadsAdminLibres = MAXADMIN;
+
+pthread_mutex_t mutexJobAdminDispo;
+pthread_cond_t condJobAdminDispo;
+int indiceThreadAdmin = -1;
 
 
 void* threadAdmin(void* p)
 {
-	cout << "testificate" <<endl;
+	pthread_cond_init(&condJobAdminDispo, NULL);
+    pthread_mutex_init(&mutexJobAdminDispo, NULL);
 
 	FichierProp fp = FichierProp("properties.txt");
 
@@ -48,26 +59,44 @@ void* threadAdmin(void* p)
         exit(-1);
     }
 
-    cout << "mise en attente " << endl;
-
-    sock->ecouter();
-
-    int service = sock->accepter();
-
-    Socket s = Socket(service);
-
-    int requestType;
-   	string messageCorps = typeRequestParse(s.receiveChar(), &requestType);
-
-    if(requestType == LOGIN)
+    /**LANCEMENT DES THREADS TRAITEMENT ADMIN**/
+    for(int i = 0; i < MAXADMIN; i++)
     {
-        cout << messageCorps << endl;
-        s.sendChar("ok");
+        int ret = pthread_create(&threadsAdminLances[i], NULL, traitementAdmin, (void*) i);
+        pthread_detach(threadsAdminLances[i]);
     }
+    //initialisation du tableau de socket à NULL
+    for(int i = 0; i < MAXADMIN; i++)//On met la liste des sockets ouvertes à NULL
+        socketAdminOuverte[i] = NULL; 
 
-    s.sendChar("err");
 
-    s.finConnexion();
+    while(1)
+    {
+        try
+        {
+            sock->ecouter(); //On se met à l'écoute d'une requête cliente
+        }
+        catch(ErrnoException er)
+        {
+            cout << er.getErrorCode() << "THREAD ADMIN------>" << er.getMessage() << endl;
+            exit(-1);
+        }
+
+        int service = sock->accepter(); //On attend qu'un admin se connecte
+
+        //On va toucher à des variables manipulées par plusieurs threads. On sécurise avec mutex
+        pthread_mutex_lock(&mutexJobAdminDispo);
+
+        int j;
+        for(j = 0; j < MAXADMIN && socketAdminOuverte[j] != NULL; j++); //On parcourt le tableau de socket pour trouver un emplacement libre
+
+        threadsAdminLibres--;
+
+        socketAdminOuverte[j] = new Socket(service); //creation d'une nouvelle socket service
+        indiceThreadAdmin=j; //on met la variable indice courant à la position de la socket créée pour que le thread puisse savoir laquelle prendre
+        pthread_mutex_unlock(&mutexJobAdminDispo);
+        pthread_cond_signal(&condJobAdminDispo); //On réveille un traitement admin
+    }
 }
 
 

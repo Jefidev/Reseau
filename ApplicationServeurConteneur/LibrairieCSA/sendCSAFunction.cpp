@@ -38,4 +38,12 @@ StructLogin parseLogin(string s)
 	return sc;
 }
 
+string composeRequest(int l, string r)
+{
+	string retour;
+	retour = Utility::intToString(l);
+	retour = retour + SEPARATION + r;
+	return retour;
+}
+
 

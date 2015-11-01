@@ -10,7 +10,7 @@ LIBADMIN = threadAdmin
 LIBCSA = ../LibrairieCSA
 LIBCOMMON = ../CommonProtocolFunction
 
-OBJ =  $(LIBCONT)/sendFunction.o  $(LIBADMIN)/threadAdmin.o $(LIBCSA)/sendCSAFunction.o $(LIBCOMMON)/commonFunction.o
+OBJ =  $(LIBCONT)/sendFunction.o  $(LIBADMIN)/threadAdmin.o $(LIBCSA)/sendCSAFunction.o $(LIBCOMMON)/commonFunction.o $(LIBADMIN)/traitementAdmin.o
 OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o
 OBJUTILITY = $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBLOG)/log.o parc.o
 OBJEXCEPTION = $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
@@ -67,7 +67,7 @@ parc.o:	parc.cpp $(LIB)/utility.o
 		echo creation du log
 		$(CC) -c parc.cpp
 
-$(LIBADMIN)/threadAdmin.o:	$(LIBADMIN)/threadAdmin.cpp $(OBJSOCKET) $(LIBPROP)/fichierProp.o $(LIBEX)/errnoException.o
+$(LIBADMIN)/threadAdmin.o:	$(LIBADMIN)/threadAdmin.cpp $(OBJSOCKET) $(LIBPROP)/fichierProp.o $(LIBEX)/errnoException.o $(LIBADMIN)/traitementAdmin.o
 							echo creation threadAdmin
 							$(CC) -c $(LIBADMIN)/threadAdmin.cpp
 							mv threadAdmin.o $(LIBADMIN)
@@ -81,3 +81,9 @@ $(LIBCOMMON)/commonFunction.o:	$(LIBCOMMON)/commonFunction.cpp $(LIB)/utility.o
 								echo creation commonFunction
 								$(CC) -c $(LIBCOMMON)/commonFunction.cpp
 								mv commonFunction.o $(LIBCOMMON)
+
+$(LIBADMIN)traitementAdmin.o:	$(LIBADMIN)/traitementAdmin.cpp $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o
+								echo creation traitementAdmin
+								$(CC) -c $(LIBADMIN)/traitementAdmin.cpp
+								mv traitementAdmin.o $(LIBADMIN)
+
