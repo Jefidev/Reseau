@@ -7,12 +7,17 @@ LIBEX = ../Librairie/exceptions
 LIBCONT =  ../LibrairieConteneur
 LIBLOG = ../Librairie/log
 LIBADMIN = threadAdmin
+LIBCSA = ../LibrairieCSA
+LIBCOMMON = ../CommonProtocolFunction
 
-OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o $(LIBLOG)/log.o parc.o $(LIBADMIN)/threadAdmin.o
+OBJ =  $(LIBCONT)/sendFunction.o  $(LIBADMIN)/threadAdmin.o $(LIBCSA)/sendCSAFunction.o $(LIBCOMMON)/commonFunction.o
+OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o
+OBJUTILITY = $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBLOG)/log.o parc.o
+OBJEXCEPTION = $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
 
-serveur:	serveur.cpp $(OBJ)
+serveur:	serveur.cpp $(OBJ) $(OBJSOCKET) $(OBJUTILITY) $(OBJEXCEPTION)
 			echo creation serveur
-			$(CC) -o serveur serveur.cpp $(OBJ)
+			$(CC) -o serveur serveur.cpp $(OBJ) $(OBJSOCKET) $(OBJUTILITY) $(OBJEXCEPTION)
 
 
 $(LIBESOCK)/socketServeur.o:	$(LIBESOCK)/socketServeur.cpp $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o
@@ -21,7 +26,7 @@ $(LIBESOCK)/socketServeur.o:	$(LIBESOCK)/socketServeur.cpp $(LIBESOCK)/socket.o 
 								mv socketServeur.o $(LIBESOCK)
 
 
-$(LIBESOCK)/socket.o:	$(LIBESOCK)/socket.cpp $(LIBESOCK)/socket.h $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
+$(LIBESOCK)/socket.o:	$(LIBESOCK)/socket.cpp $(LIBESOCK)/socket.h $(LIB)/utility.o $(OBJEXCEPTION)
 						echo creation socket.o
 						$(CC) -c $(LIBESOCK)/socket.cpp
 						mv socket.o $(LIBESOCK)
@@ -48,7 +53,7 @@ $(LIBEX)/communicationException.o:	$(LIBEX)/communicationException.cpp
 									$(CC) -c $(LIBEX)/communicationException.cpp
 									mv communicationException.o $(LIBEX)
 
-$(LIBCONT)/sendFunction.o:	$(LIBCONT)/sendFunction.cpp $(LIB)/utility.o
+$(LIBCONT)/sendFunction.o:	$(LIBCONT)/sendFunction.cpp $(LIB)/utility.o $(LIBCOMMON)/commonFunction.o
 							echo creation sendFunction.o
 							$(CC) -c $(LIBCONT)/sendFunction.cpp
 							mv sendFunction.o $(LIBCONT)
@@ -62,8 +67,17 @@ parc.o:	parc.cpp $(LIB)/utility.o
 		echo creation du log
 		$(CC) -c parc.cpp
 
-$(LIBADMIN)/threadAdmin.o:	$(LIBADMIN)/threadAdmin.cpp $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o $(LIBPROP)/fichierProp.o $(LIBEX)/errnoException.o
+$(LIBADMIN)/threadAdmin.o:	$(LIBADMIN)/threadAdmin.cpp $(OBJSOCKET) $(LIBPROP)/fichierProp.o $(LIBEX)/errnoException.o
 							echo creation threadAdmin
 							$(CC) -c $(LIBADMIN)/threadAdmin.cpp
 							mv threadAdmin.o $(LIBADMIN)
 
+$(LIBCSA)/sendCSAFunction.o: 	$(LIBCSA)/sendCSAFunction.cpp  $(LIB)/utility.o $(LIBCOMMON)/commonFunction.o
+								echo creation sendCSAFuncion
+								$(CC) -c $(LIBCSA)/sendCSAFunction.cpp
+								mv sendCSAFunction.o $(LIBCSA)
+
+$(LIBCOMMON)/commonFunction.o:	$(LIBCOMMON)/commonFunction.cpp $(LIB)/utility.o
+								echo creation commonFunction
+								$(CC) -c $(LIBCOMMON)/commonFunction.cpp
+								mv commonFunction.o $(LIBCOMMON)

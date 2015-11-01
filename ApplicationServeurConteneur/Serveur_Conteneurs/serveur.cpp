@@ -16,6 +16,7 @@ using namespace std;
 #include "../LibrairieConteneur/sendFunction.h"
 #include "../Librairie/exceptions/errnoException.h"
 #include "../Librairie/log/log.h"
+#include "../CommonProtocolFunction/commonFunction.h"
 #include "threadAdmin/threadAdmin.h"
 #include "parc.h"
 

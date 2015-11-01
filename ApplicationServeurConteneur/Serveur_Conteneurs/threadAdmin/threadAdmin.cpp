@@ -15,6 +15,8 @@ using namespace std;
 #include "../../Librairie/socket/socketServeur.h"
 #include "../../Librairie/fichierProp/fichierProp.h"
 #include "../../Librairie/exceptions/errnoException.h"
+#include "../../LibrairieCSA/CSA.ini"
+#include "../../LibrairieCSA/sendCSAFunction.h"
 #include "threadAdmin.h"
 
 
@@ -54,9 +56,16 @@ void* threadAdmin(void* p)
 
     Socket s = Socket(service);
 
-   	cout << s.receiveChar() << endl;
+    int requestType;
+   	string messageCorps = typeRequestParse(s.receiveChar(), &requestType);
 
-    s.sendChar("coucou");
+    if(requestType == LOGIN)
+    {
+        cout << messageCorps << endl;
+        s.sendChar("ok");
+    }
+
+    s.sendChar("err");
 
     s.finConnexion();
 }

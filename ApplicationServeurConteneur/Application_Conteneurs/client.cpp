@@ -16,6 +16,7 @@ using namespace std;
 #include "../Librairie/fichierProp/fichierProp.h"
 #include "../LibrairieConteneur/protocole.ini"
 #include "../Librairie/exceptions/errnoException.h"
+#include "../CommonProtocolFunction/commonFunction.h"
 #include "../LibrairieConteneur/sendFunction.h"
 
 void login(SocketClient* sock);

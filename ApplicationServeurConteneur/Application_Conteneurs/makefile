@@ -6,11 +6,14 @@ LIBPROP = ../Librairie/fichierProp
 LIBEX = ../Librairie/exceptions
 LIBCONT =  ../LibrairieConteneur
 LIBLOG = ../Librairie/log
+LIBCOMMON = ../CommonProtocolFunction
 
-OBJ = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o $(LIBCONT)/sendFunction.o $(LIBLOG)/log.o
+OBJ = $(LIBCONT)/sendFunction.o $(LIBCOMMON)/commonFunction.o
+OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o
+OBJUTILITY = $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBLOG)/log.o
+OBJEXCEPTION = $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
 
-
-client:	client.cpp $(OBJ)
+client:	client.cpp $(OBJ) $(OBJSOCKET) $(OBJUTILITY) $(OBJEXCEPTION)
 		echo creation client
 		$(CC) -o client client.cpp $(OBJ)
 
@@ -20,7 +23,7 @@ $(LIBESOCK)/socketClient.o:		$(LIBESOCK)/socketClient.cpp $(LIBESOCK)/socket.o $
 								mv socketClient.o $(LIBESOCK)
 
 
-$(LIBESOCK)/socket.o:	$(LIBESOCK)/socket.cpp $(LIBESOCK)/socket.h $(LIB)/utility.o $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
+$(LIBESOCK)/socket.o:	$(LIBESOCK)/socket.cpp $(LIBESOCK)/socket.h $(LIB)/utility.o $(OBJEXCEPTION)
 						echo creation socket.o
 						$(CC) -c $(LIBESOCK)/socket.cpp
 						mv socket.o $(LIBESOCK)
@@ -46,7 +49,7 @@ $(LIBEX)/communicationException.o:	$(LIBEX)/communicationException.cpp
 									$(CC) -c $(LIBEX)/communicationException.cpp
 									mv communicationException.o $(LIBEX)
 
-$(LIBCONT)/sendFunction.o:	$(LIBCONT)/sendFunction.cpp $(LIB)/utility.o
+$(LIBCONT)/sendFunction.o:	$(LIBCONT)/sendFunction.cpp $(LIB)/utility.o $(LIBCOMMON)/commonFunction.o
 							echo creation sendFunction.o
 							$(CC) -c $(LIBCONT)/sendFunction.cpp
 							mv sendFunction.o $(LIBCONT)
@@ -55,5 +58,10 @@ $(LIBLOG)/log.o:	$(LIBLOG)/log.cpp
 					echo creation du log
 					$(CC) -c $(LIBLOG)/log.cpp
 					mv log.o $(LIBLOG)
+
+$(LIBCOMMON)/commonFunction.o:	$(LIBCOMMON)/commonFunction.cpp $(LIB)/utility.o
+								echo creation commonFunction
+								$(CC) -c $(LIBCOMMON)/commonFunction.cpp
+								mv commonFunction.o $(LIBCOMMON)
 
 													

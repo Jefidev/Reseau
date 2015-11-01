@@ -177,7 +177,7 @@ public class GUIAdmin extends javax.swing.JFrame {
             System.err.println("Erreur gui admin connexion : " + ex);
         }
         
-        String message = "1#"+LoginTextField.getText()+"#"+passwordField.getText();
+        String message = protocoleCSA.LOGIN + "#"+LoginTextField.getText()+"#"+passwordField.getText();
         
         SendMsg(message);
         
