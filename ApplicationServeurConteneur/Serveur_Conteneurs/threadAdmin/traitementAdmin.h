@@ -5,5 +5,6 @@
 
 	bool login(StructLogin log, Socket* s);
 	void logout(int cTraite, Socket* s);
+	void listClient(int cTraite, Socket* s);
 
 #endif

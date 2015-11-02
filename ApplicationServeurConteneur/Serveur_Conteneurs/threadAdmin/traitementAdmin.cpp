@@ -17,6 +17,7 @@ using namespace std;
 #include "../../Librairie/fichierProp/fichierProp.h"
 #include "../../LibrairieCSA/sendCSAFunction.h"
 #include "../../CommonProtocolFunction/commonFunction.h"
+#include "../constante.h"
 #include "traitementAdmin.h"
 
 extern pthread_t threadsAdminLances[MAXADMIN];
@@ -30,6 +31,7 @@ extern int indiceThreadAdmin;
 extern string status;
 extern bool pause;
 
+extern string listLoginClient[MAXCLIENT];
 
 void* traitementAdmin(void* p)
 {
@@ -67,12 +69,13 @@ void* traitementAdmin(void* p)
 
         while(cont) //boucle sur les demandes du client
         {
-
+            cout << "imhere" << endl;
             string str = typeRequestParse(socketService->receiveChar(), &requestType);
-
+            cout << requestType << endl;
             switch(requestType)
             {
                 case LISTCLIENT:
+                    listClient(clientTraite, socketService);
                     break;
                 case PAUSE:
                     break;
@@ -92,7 +95,7 @@ void* traitementAdmin(void* p)
 
 bool login(StructLogin log, Socket* s)
 {
-    FichierProp fp("login.csv", ';');
+    FichierProp fp("loginAdmin.csv", ';');
 
     string test = fp.getValue(log.nom);
 
@@ -102,7 +105,6 @@ bool login(StructLogin log, Socket* s)
     }
     else
     {
-        cout << log.motDePasse << endl;
         if(!test.compare(log.motDePasse))
         {
             s->sendChar(composeAckErr(ACK, "ALLRIGHT"));
@@ -116,6 +118,7 @@ bool login(StructLogin log, Socket* s)
 
 void logout(int cTraite, Socket* s) //On déconnecte le client (on le fait pour LOGOUT ou en cas de problème)
 {
+    cout << "testificate"<<endl;
     s->sendChar(composeRequest(LOGOUTCSA, ""));
     s->finConnexion();
     delete s;
@@ -125,5 +128,18 @@ void logout(int cTraite, Socket* s) //On déconnecte le client (on le fait pour 
 
     threadsAdminLibres++;
     pthread_mutex_unlock(&mutexJobAdminDispo);
+}
+
+void listClient(int cTraite, Socket* s)
+{
+    string m = "";
+    cout << "yes" << endl;
+    for(int i = 0; i<MAXCLIENT; i++)
+    {
+        if(listLoginClient[i].compare("")) //Si la chaine n'est pas vide
+            m += listLoginClient[i] + SEPARATION;
+    }
+
+    s->sendChar(composeAckErr(ACK, m));
 }
 

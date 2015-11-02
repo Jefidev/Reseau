@@ -17,4 +17,5 @@ public class protocoleCSA {
     public static final int PAUSE = 3;
     public static final int CONTINUER = 4;
     public static final int STOP = 5;
+    public static final int LOGOUTCSA = 6;
 }

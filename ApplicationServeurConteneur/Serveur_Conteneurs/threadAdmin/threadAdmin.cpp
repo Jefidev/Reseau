@@ -20,6 +20,7 @@ using namespace std;
 #include "../../LibrairieCSA/sendCSAFunction.h"
 #include "traitementAdmin.h"
 #include "threadAdmin.h"
+#include "../constante.h"
 
 pthread_t threadsAdminLances[MAXADMIN];
 Socket* socketAdminOuverte[MAXADMIN];

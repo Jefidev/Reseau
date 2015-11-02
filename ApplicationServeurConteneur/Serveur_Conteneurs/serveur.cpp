@@ -19,9 +19,7 @@ using namespace std;
 #include "../CommonProtocolFunction/commonFunction.h"
 #include "threadAdmin/threadAdmin.h"
 #include "parc.h"
-
-#define MAXCLIENT 2
-
+#include "constante.h"
 
 pthread_mutex_t mutexIndiceCourant;
 pthread_cond_t condIndiceCourant;
@@ -39,6 +37,7 @@ Parc parcFile("parc.dat");
 
 pthread_t threadsLances[MAXCLIENT];
 Socket* socketOuverte[MAXCLIENT];
+string listLoginClient[MAXCLIENT];
 
 void* threadClient(void* p);
 void finConnexion(int cTraite, Socket* s);
@@ -87,12 +86,13 @@ int main()
     pthread_t admin;
     int testificate = pthread_create(&admin, NULL, threadAdmin, NULL);
 
-    //LANCEMENT DES THREADS
+    //LANCEMENT DES THREADS + INIT LIST CLIENT
     for(int i = 0; i < MAXCLIENT; i++)
     {
         int ret = pthread_create(&threadsLances[i], NULL, threadClient, (void*) i);
-        
         pthread_detach(threadsLances[i]);
+
+        listLoginClient[i] = "";
     }
 
     //Choses sérieuses
@@ -184,6 +184,7 @@ void finConnexion(int cTraite, Socket* s) //On déconnecte le client (on le fait
 
     pthread_mutex_lock(&mutexIndiceCourant);
     socketOuverte[cTraite] = NULL;
+    listLoginClient[cTraite] = "";
     pthread_mutex_unlock(&mutexIndiceCourant);
 
     pthread_mutex_lock(&mutexThreadsLibres);
@@ -229,6 +230,7 @@ int login(Socket* s, int clientTraite)
                 cout << sc.motDePasse << endl;
                 if(!test.compare(sc.motDePasse))
                 {
+                    listLoginClient[clientTraite] = sc.nom;
                     s->sendChar(composeAckErr(ACK, "ALLRIGHT"));
                     return 1;
                 }

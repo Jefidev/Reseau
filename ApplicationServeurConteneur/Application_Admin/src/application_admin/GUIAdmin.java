@@ -45,7 +45,7 @@ public class GUIAdmin extends javax.swing.JFrame {
         stopButton = new javax.swing.JButton();
         pauseButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        listTextArea = new javax.swing.JTextArea();
         listerButton = new javax.swing.JButton();
         ipLabel = new javax.swing.JLabel();
         ipTextField = new javax.swing.JTextField();
@@ -54,6 +54,7 @@ public class GUIAdmin extends javax.swing.JFrame {
         ServeurStatusLabel = new javax.swing.JLabel();
         continuerButton = new javax.swing.JButton();
         raffraichierButton = new javax.swing.JButton();
+        reponseLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,9 +73,9 @@ public class GUIAdmin extends javax.swing.JFrame {
 
         pauseButton1.setText("PAUSE");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        listTextArea.setColumns(20);
+        listTextArea.setRows(5);
+        jScrollPane1.setViewportView(listTextArea);
 
         listerButton.setText("LISTER CLIENTS");
         listerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -92,6 +93,8 @@ public class GUIAdmin extends javax.swing.JFrame {
         continuerButton.setText("CONTINUER");
 
         raffraichierButton.setText("STOP");
+
+        reponseLabel.setText("reponse serveur : ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -115,7 +118,8 @@ public class GUIAdmin extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(continuerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(ServeurStatusLabel)
-                                    .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(reponseLabel))))
                         .addGap(0, 5, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -158,18 +162,18 @@ public class GUIAdmin extends javax.swing.JFrame {
                     .addComponent(connexionButton))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(pauseButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(continuerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ServeurStatusLabel)
-                        .addGap(33, 33, 33)))
+                        .addGap(18, 18, 18)
+                        .addComponent(reponseLabel)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(listerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -183,37 +187,61 @@ public class GUIAdmin extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
-        try
+        
+        if(connexionButton.getText().equals("Connexion"))
         {
-            cliSocket = new Socket(ipTextField.getText(), Integer.parseInt(portTextField.getText()));
-            dis = new DataInputStream(new BufferedInputStream(cliSocket.getInputStream()));
-            dos = new DataOutputStream(new BufferedOutputStream(cliSocket.getOutputStream()));
-        } 
-        catch (IOException ex) 
-        {
-            System.err.println("Erreur gui admin connexion : " + ex);
+            try
+            {
+                cliSocket = new Socket(ipTextField.getText(), Integer.parseInt(portTextField.getText()));
+                dis = new DataInputStream(new BufferedInputStream(cliSocket.getInputStream()));
+                dos = new DataOutputStream(new BufferedOutputStream(cliSocket.getOutputStream()));
+            } 
+            catch (IOException ex) 
+            {
+                System.err.println("Erreur gui admin connexion : " + ex);
+            }
+
+            String message = protocoleCSA.LOGIN + "#"+LoginTextField.getText()+"#"+passwordField.getText();
+
+            SendMsg(message);
+
+            System.out.println(ReceiveMsg()); 
+
+            connexionButton.setText("Déconnexion");
         }
-        
-        String message = protocoleCSA.LOGIN + "#"+LoginTextField.getText()+"#"+passwordField.getText();
-        
-        SendMsg(message);
-        
-        System.out.println(ReceiveMsg()); 
-        
-        deconnexion();
+        else
+        {
+            connexionButton.setText("Connexion");
+            deconnexion();
+        }
     }//GEN-LAST:event_connexionButtonActionPerformed
 
     private void listerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listerButtonActionPerformed
-        // TODO add your handling code here:
+        if(cliSocket == null)
+            return;
+        
+        SendMsg(protocoleCSA.LISTCLIENT + "#");
+        
+        String str = ReceiveMsg();
+        
+        String split[] = str.split("#");
+        
+        listTextArea.setText("");
+        for(int i = 1; i < split.length; i++)
+            listTextArea.append(split[i] + "\n");
+         
     }//GEN-LAST:event_listerButtonActionPerformed
     
     public void deconnexion()
     {
+        SendMsg(protocoleCSA.LOGOUTCSA + "#");
+        ReceiveMsg();
         try
         {
             dos.close();
             dis.close();
             cliSocket.close();
+            cliSocket = null;
             System.out.println("ClientServeurBateau : Client déconnecté");
         }
         catch(IOException e)
@@ -263,7 +291,8 @@ public class GUIAdmin extends javax.swing.JFrame {
         {
             System.err.println("ClientServeurBateau : Erreur de reception de msg (IO) : " + e);
         }
-            
+        
+        reponseLabel.setText("reponse serveur : " + message.toString()); // à retirer
         return message.toString();
     }
     
@@ -311,7 +340,7 @@ public class GUIAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel ipLabel;
     private javax.swing.JTextField ipTextField;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea listTextArea;
     private javax.swing.JButton listerButton;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JPasswordField passwordField;
@@ -320,6 +349,7 @@ public class GUIAdmin extends javax.swing.JFrame {
     private javax.swing.JLabel portLabel;
     private javax.swing.JTextField portTextField;
     private javax.swing.JButton raffraichierButton;
+    private javax.swing.JLabel reponseLabel;
     private javax.swing.JButton stopButton;
     // End of variables declaration//GEN-END:variables
 }
