@@ -29,6 +29,9 @@ pthread_mutex_t mutexJobAdminDispo;
 pthread_cond_t condJobAdminDispo;
 int indiceThreadAdmin = -1;
 
+string status;
+bool pause = false;
+
 
 void* threadAdmin(void* p)
 {

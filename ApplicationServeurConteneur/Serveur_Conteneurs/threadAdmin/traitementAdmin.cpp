@@ -27,6 +27,9 @@ extern pthread_mutex_t mutexJobAdminDispo;
 extern pthread_cond_t condJobAdminDispo;
 extern int indiceThreadAdmin;
 
+extern string status;
+extern bool pause;
+
 
 void* traitementAdmin(void* p)
 {
@@ -55,7 +58,10 @@ void* traitementAdmin(void* p)
         StructLogin Slog = parseLogin(str);
 
         if(!login(Slog, socketService))
+        {
             logout(clientTraite, socketService);
+            continue;
+        }
         
         bool cont = true;
 
@@ -75,6 +81,8 @@ void* traitementAdmin(void* p)
                 case STOP:
                     break;
                 case LOGOUTCSA:
+                    logout(clientTraite, socketService);
+                    cont = false;
                     break;
             }
         }
