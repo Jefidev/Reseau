@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <pthread.h>
+#include <signal.h>
 
 using namespace std;
 
@@ -31,13 +32,19 @@ pthread_cond_t condJobAdminDispo;
 int indiceThreadAdmin = -1;
 
 string status;
-bool pause = false;
+bool servInPause = false;
 
 
 void* threadAdmin(void* p)
 {
 	pthread_cond_init(&condJobAdminDispo, NULL);
     pthread_mutex_init(&mutexJobAdminDispo, NULL);
+
+    //Mise en place des masques
+    sigset_t masque;
+
+    sigfillset(&masque); // on masque tout 
+    pthread_sigmask(SIG_SETMASK, &masque, NULL);
 
 	FichierProp fp = FichierProp("properties.txt");
 

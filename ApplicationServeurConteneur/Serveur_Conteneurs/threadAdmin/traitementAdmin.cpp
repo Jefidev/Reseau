@@ -8,6 +8,9 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <netdb.h>
+#include <sys/types.h>
+#include <unistd.h>
+#include <signal.h>
 
 using namespace std;
 
@@ -29,12 +32,18 @@ extern pthread_cond_t condJobAdminDispo;
 extern int indiceThreadAdmin;
 
 extern string status;
-extern bool pause;
+extern bool servInPause;
 
 extern string listLoginClient[MAXCLIENT];
 
 void* traitementAdmin(void* p)
 {
+    //Mise en place des masques
+    sigset_t masque;
+
+    sigfillset(&masque); // on masque tout 
+    pthread_sigmask(SIG_SETMASK, &masque, NULL);
+
 	int requestType;
     while(1)
     {
@@ -75,9 +84,10 @@ void* traitementAdmin(void* p)
             switch(requestType)
             {
                 case LISTCLIENT:
-                    listClient(clientTraite, socketService);
+                    listClient(socketService);
                     break;
                 case PAUSE:
+                    pauseServer(socketService);
                     break;
                 case CONTINUER:
                     break;
@@ -118,7 +128,6 @@ bool login(StructLogin log, Socket* s)
 
 void logout(int cTraite, Socket* s) //On déconnecte le client (on le fait pour LOGOUT ou en cas de problème)
 {
-    cout << "testificate"<<endl;
     s->sendChar(composeRequest(LOGOUTCSA, ""));
     s->finConnexion();
     delete s;
@@ -130,10 +139,9 @@ void logout(int cTraite, Socket* s) //On déconnecte le client (on le fait pour 
     pthread_mutex_unlock(&mutexJobAdminDispo);
 }
 
-void listClient(int cTraite, Socket* s)
+void listClient(Socket* s)
 {
     string m = "";
-    cout << "yes" << endl;
     for(int i = 0; i<MAXCLIENT; i++)
     {
         if(listLoginClient[i].compare("")) //Si la chaine n'est pas vide
@@ -143,3 +151,10 @@ void listClient(int cTraite, Socket* s)
     s->sendChar(composeAckErr(ACK, m));
 }
 
+
+void pauseServer(Socket* s)
+{
+    kill(getpid(), SIGTSTP);
+
+    s->sendChar(composeAckErr(ACK, "rpz"));
+}

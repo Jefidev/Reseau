@@ -72,6 +72,11 @@ public class GUIAdmin extends javax.swing.JFrame {
         stopButton.setText("STOP");
 
         pauseButton1.setText("PAUSE");
+        pauseButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pauseButton1ActionPerformed(evt);
+            }
+        });
 
         listTextArea.setColumns(20);
         listTextArea.setRows(5);
@@ -231,6 +236,12 @@ public class GUIAdmin extends javax.swing.JFrame {
             listTextArea.append(split[i] + "\n");
          
     }//GEN-LAST:event_listerButtonActionPerformed
+
+    private void pauseButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pauseButton1ActionPerformed
+        SendMsg(protocoleCSA.PAUSE + "#");
+        
+        String str = ReceiveMsg();
+    }//GEN-LAST:event_pauseButton1ActionPerformed
     
     public void deconnexion()
     {

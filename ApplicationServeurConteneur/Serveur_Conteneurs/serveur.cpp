@@ -5,6 +5,7 @@
 #include <netdb.h>
 #include <cstdlib>
 #include <cstring>
+#include <signal.h>
 #include <pthread.h>
 
 using namespace std;
@@ -49,8 +50,25 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
 void outputReady(Socket* s, int clientTraite, string requete);
 void outputOne(Socket* s, int clientTraite);
 
+/*HANDLERS*/
+void handlerPause(int);
+
 int main()
 {
+    /*MISE EN PLACE DES SIGNAUX*/
+    struct sigaction hand;
+    sigset_t masque;
+
+    hand.sa_handler = handlerPause;
+    sigemptyset(&hand.sa_mask);
+    hand.sa_flags = 0;
+    sigaction(SIGTSTP, &hand, NULL);
+
+    sigfillset(&masque); // on masque tout 
+    sigdelset(&masque, SIGTSTP); //on demasque le signal de pause
+    sigdelset(&masque, SIGCONT); //on demasque le signal continue (arret de pause)
+    pthread_sigmask(SIG_SETMASK, &masque, NULL);
+
     //Lecture des informations dans le dossier properties
     FichierProp fp = FichierProp("properties.txt");
 
@@ -135,6 +153,15 @@ int main()
 void* threadClient(void* p) //le thread lancé
 {
     int requestType;
+    sigset_t masque;
+
+    //Mise en place des masques
+
+    sigfillset(&masque); // on masque tout 
+    sigdelset(&masque, SIGUSR1); //on demasque le signal sigusr1 (pause)
+    sigdelset(&masque, SIGUSR2); //arret/continue à voir
+    pthread_sigmask(SIG_SETMASK, &masque, NULL);
+
     while(1)
     {
         pthread_mutex_lock(&mutexIndiceCourant);//On reste bloqué ici tant qu'il n'y a pas de nouveau client (indice courant à -1)
@@ -420,4 +447,9 @@ void outputOne(Socket* s, int clientTraite)
     }
 
     s->sendChar(composeAckErr(ACK, "les containers ont bien ete retires"));
+}
+
+void handlerPause(int)
+{
+    cout << "can handle it" << endl;
 }
