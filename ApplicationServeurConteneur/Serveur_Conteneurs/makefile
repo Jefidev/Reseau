@@ -82,7 +82,7 @@ $(LIBCOMMON)/commonFunction.o:	$(LIBCOMMON)/commonFunction.cpp $(LIB)/utility.o
 								$(CC) -c $(LIBCOMMON)/commonFunction.cpp
 								mv commonFunction.o $(LIBCOMMON)
 
-$(LIBADMIN)traitementAdmin.o:	$(LIBADMIN)/traitementAdmin.cpp $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o
+$(LIBADMIN)traitementAdmin.o:	$(LIBADMIN)/traitementAdmin.cpp $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o $(LIBPROP)/fichierProp.o
 								echo creation traitementAdmin
 								$(CC) -c $(LIBADMIN)/traitementAdmin.cpp
 								mv traitementAdmin.o $(LIBADMIN)

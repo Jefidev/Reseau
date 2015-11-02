@@ -3,4 +3,7 @@
 
 	void* traitementAdmin(void* p);
 
+	bool login(StructLogin log, Socket* s);
+	void logout(int cTraite, Socket* s);
+
 #endif
