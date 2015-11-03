@@ -169,8 +169,12 @@ string Socket::receiveChar()
 	do
 	{
 		if((bytesReceived = recv(socketHandle, buff, 500, 0)) == -1)
-			throw ErrnoException(errno, "Erreur receive");
-
+		{
+			if(errno == 4)
+				continue;
+			else
+				throw ErrnoException(errno, "Erreur receive");
+		}
 		else
 		{
 			if(totBytesReceives == 0)	// Si on est au début du message (0 caracteres traités)

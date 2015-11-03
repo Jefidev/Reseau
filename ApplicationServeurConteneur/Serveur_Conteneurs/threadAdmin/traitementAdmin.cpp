@@ -165,6 +165,7 @@ void pauseServer(Socket* s)
     }
     
     kill(getpid(), SIGTSTP);
+    cout << "sig" << endl;
     s->sendChar(composeAckErr(ACK, "sigEnvoye"));
 }
 
@@ -174,6 +175,7 @@ void continueServer(Socket* s)
     {
         kill(getpid(), SIGCONT);
         s->sendChar(composeAckErr(ACK, "sigEnvoye"));
+        cout << "envois" << endl;
         return;
     }
     s->sendChar(composeAckErr(ERREUR, "le serveur est pas en pause"));

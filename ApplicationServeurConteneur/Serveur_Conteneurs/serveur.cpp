@@ -40,6 +40,8 @@ pthread_t threadsLances[MAXCLIENT];
 Socket* socketOuverte[MAXCLIENT];
 string listLoginClient[MAXCLIENT];
 
+int portUrgence[MAXCLIENT];
+
 void* threadClient(void* p);
 void finConnexion(int cTraite, Socket* s);
 int login(Socket* s, int clientTraite);
@@ -55,11 +57,12 @@ void handlerPause(int);
 void handlerCont(int);
 void handlerInt(int);
 void handlerPauseClient(int);
-void handlerContClient(int);
 
 bool servInPause = false;
 bool servShutdown = false;
 int nbrSecBeforeShutdown = 0;
+
+pthread_cond_t condSleepThread;
 
 int main()
 {
@@ -87,11 +90,6 @@ int main()
     hand.sa_flags = 0;
     sigaction(SIGUSR1, &hand, NULL);
 
-    hand.sa_handler = handlerContClient;
-    sigemptyset(&hand.sa_mask);
-    hand.sa_flags = 0;
-    sigaction(SIGUSR2, &hand, NULL);
-
     sigfillset(&masque); // on masque tout 
     sigdelset(&masque, SIGTSTP); //on demasque le signal de pause
     sigdelset(&masque, SIGCONT); //on demasque le signal continue (arret de pause)
@@ -104,6 +102,8 @@ int main()
     string host = fp.getValue("HOST");
     string port = fp.getValue("PORT");
     string isip = fp.getValue("ISIP");
+
+    pthread_cond_init(&condSleepThread, NULL);
 
     pthread_cond_init(&condIndiceCourant, NULL);
     pthread_mutex_init(&mutexIndiceCourant, NULL);
@@ -147,9 +147,7 @@ int main()
     {   
         try
         {
-            cout << "meh" << endl;
             sock->ecouter(); //On se met à l'écoute d'une requête cliente
-            cout << "mehmeh" << endl;
         }
         catch(ErrnoException er)
         {
@@ -188,8 +186,6 @@ int main()
         pthread_mutex_unlock(&mutexIndiceCourant);
         pthread_cond_signal(&condIndiceCourant); //On réveille le thread au chômage
     }
-
-    cout << "fuck" << endl;
 }
 
 void* threadClient(void* p) //le thread lancé
@@ -225,7 +221,6 @@ void* threadClient(void* p) //le thread lancé
 
         while(cont) //boucle sur les demandes du client
         {
-
             string str = typeRequestParse(socketService->receiveChar(), &requestType);
 
             switch(requestType)
@@ -507,12 +502,14 @@ void handlerPause(int)
         pthread_kill(threadsLances[i], SIGUSR1);
 
     sigwait(&masque, &sigRecu);
+
+    cout <<"fini d'attendre"<<endl;
 }
 
 void handlerCont(int)
 {
     for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
-        pthread_kill(threadsLances[i], SIGUSR2);
+        pthread_cond_signal(&condSleepThread);
 
     servInPause = false;
 }
@@ -525,10 +522,5 @@ void handlerInt(int)
 
 void handlerPauseClient(int)
 {
-    cout << "BRETAGNE INDEPENDANTE" << endl;
-}
-
-void handlerContClient(int)
-{
-    cout << "CORSE INDEPENDANTE" << endl;
+    pthread_cond_wait(&condSleepThread, NULL); //NOTE pas tip top à changer si possible.
 }
