@@ -19,6 +19,7 @@ using namespace std;
 #include "../../LibrairieCSA/CSA.ini"
 #include "../../Librairie/fichierProp/fichierProp.h"
 #include "../../LibrairieCSA/sendCSAFunction.h"
+#include "../../Librairie/utility.h"
 #include "../../CommonProtocolFunction/commonFunction.h"
 #include "../constante.h"
 #include "traitementAdmin.h"
@@ -33,8 +34,10 @@ extern int indiceThreadAdmin;
 
 extern string status;
 extern bool servInPause;
+extern bool servShutdown;
 
 extern string listLoginClient[MAXCLIENT];
+extern int nbrSecBeforeShutdown;
 
 void* traitementAdmin(void* p)
 {
@@ -90,8 +93,10 @@ void* traitementAdmin(void* p)
                     pauseServer(socketService);
                     break;
                 case CONTINUER:
+                    continueServer(socketService);
                     break;
                 case STOP:
+                    shutdownServer(socketService, atoi(str.c_str()));
                     break;
                 case LOGOUTCSA:
                     logout(clientTraite, socketService);
@@ -154,7 +159,30 @@ void listClient(Socket* s)
 
 void pauseServer(Socket* s)
 {
+    if(servInPause)
+    {
+        s->sendChar(composeAckErr(ERREUR, "le serveur est deja en pause"));
+        return;
+    }
+    
     kill(getpid(), SIGTSTP);
+    s->sendChar(composeAckErr(ACK, "sigEnvoye"));
+}
 
-    s->sendChar(composeAckErr(ACK, "rpz"));
+void continueServer(Socket* s)
+{
+    if(servInPause)
+    {
+        kill(getpid(), SIGCONT);
+        s->sendChar(composeAckErr(ACK, "sigEnvoye"));
+        return;
+    }
+    s->sendChar(composeAckErr(ERREUR, "le serveur est pas en pause"));
+}
+
+void shutdownServer(Socket* s, int sec)
+{
+    cout << sec << endl;
+
+    s->sendChar(composeAckErr(ACK, "sigEnvoyeStop"));
 }

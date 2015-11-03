@@ -55,6 +55,8 @@ public class GUIAdmin extends javax.swing.JFrame {
         continuerButton = new javax.swing.JButton();
         raffraichierButton = new javax.swing.JButton();
         reponseLabel = new javax.swing.JLabel();
+        secondesTextField = new javax.swing.JTextField();
+        secondesLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -70,6 +72,11 @@ public class GUIAdmin extends javax.swing.JFrame {
         });
 
         stopButton.setText("STOP");
+        stopButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stopButtonActionPerformed(evt);
+            }
+        });
 
         pauseButton1.setText("PAUSE");
         pauseButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -96,10 +103,19 @@ public class GUIAdmin extends javax.swing.JFrame {
         ServeurStatusLabel.setText("Status du serveur : ");
 
         continuerButton.setText("CONTINUER");
+        continuerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                continuerButtonActionPerformed(evt);
+            }
+        });
 
         raffraichierButton.setText("STOP");
 
         reponseLabel.setText("reponse serveur : ");
+
+        secondesTextField.setText("0");
+
+        secondesLabel.setText("nbr secondes");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -118,14 +134,20 @@ public class GUIAdmin extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(pauseButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(continuerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(ServeurStatusLabel)
-                                    .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(reponseLabel))))
-                        .addGap(0, 5, Short.MAX_VALUE))
+                                    .addComponent(reponseLabel)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                            .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(secondesLabel)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(secondesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGroup(layout.createSequentialGroup()
+                                            .addComponent(pauseButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(18, 18, 18)
+                                            .addComponent(continuerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                        .addGap(0, 6, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -173,7 +195,10 @@ public class GUIAdmin extends javax.swing.JFrame {
                             .addComponent(pauseButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(continuerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(secondesLabel)
+                            .addComponent(secondesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(ServeurStatusLabel)
                         .addGap(18, 18, 18)
@@ -242,6 +267,33 @@ public class GUIAdmin extends javax.swing.JFrame {
         
         String str = ReceiveMsg();
     }//GEN-LAST:event_pauseButton1ActionPerformed
+
+    private void continuerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continuerButtonActionPerformed
+        SendMsg(protocoleCSA.CONTINUER + "#");
+        
+        String str = ReceiveMsg();
+    }//GEN-LAST:event_continuerButtonActionPerformed
+
+    private void stopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stopButtonActionPerformed
+        
+        int sec = 0;
+        
+        try
+        {
+            sec = Integer.parseInt(secondesTextField.getText());
+        }
+        catch(NumberFormatException nfe)
+        {
+            sec = 0;
+        }
+        
+        if(sec > 1000 || sec < 0)
+            sec = 0;
+        
+        SendMsg(protocoleCSA.STOP + "#" + sec);
+        
+        String str = ReceiveMsg();
+    }//GEN-LAST:event_stopButtonActionPerformed
     
     public void deconnexion()
     {
@@ -361,6 +413,8 @@ public class GUIAdmin extends javax.swing.JFrame {
     private javax.swing.JTextField portTextField;
     private javax.swing.JButton raffraichierButton;
     private javax.swing.JLabel reponseLabel;
+    private javax.swing.JLabel secondesLabel;
+    private javax.swing.JTextField secondesTextField;
     private javax.swing.JButton stopButton;
     // End of variables declaration//GEN-END:variables
 }

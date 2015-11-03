@@ -8,5 +8,7 @@
 	void listClient(Socket* s);
 
 	void pauseServer(Socket* s);
+	void continueServer(Socket* s);
+	void shutdownServer(Socket* s, int sec);
 
 #endif

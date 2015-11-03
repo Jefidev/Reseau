@@ -52,6 +52,11 @@ void outputOne(Socket* s, int clientTraite);
 
 /*HANDLERS*/
 void handlerPause(int);
+void handlerCont(int);
+
+bool servInPause = false;
+bool servShutdown = false;
+int nbrSecBeforeShutdown = 0;
 
 int main()
 {
@@ -63,6 +68,11 @@ int main()
     sigemptyset(&hand.sa_mask);
     hand.sa_flags = 0;
     sigaction(SIGTSTP, &hand, NULL);
+
+    hand.sa_handler = handlerCont;
+    sigemptyset(&hand.sa_mask);
+    hand.sa_flags = 0;
+    sigaction(SIGCONT, &hand, NULL);
 
     sigfillset(&masque); // on masque tout 
     sigdelset(&masque, SIGTSTP); //on demasque le signal de pause
@@ -451,5 +461,12 @@ void outputOne(Socket* s, int clientTraite)
 
 void handlerPause(int)
 {
+    servInPause = true;
     cout << "can handle it" << endl;
+}
+
+void handlerCont(int)
+{
+    servInPause = false;
+    cout << "je continue" << endl;
 }
