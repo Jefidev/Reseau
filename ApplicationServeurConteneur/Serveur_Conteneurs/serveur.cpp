@@ -54,6 +54,8 @@ void outputOne(Socket* s, int clientTraite);
 void handlerPause(int);
 void handlerCont(int);
 void handlerInt(int);
+void handlerPauseClient(int);
+void handlerContClient(int);
 
 bool servInPause = false;
 bool servShutdown = false;
@@ -79,6 +81,16 @@ int main()
     sigemptyset(&hand.sa_mask);
     hand.sa_flags = 0;
     sigaction(SIGINT, &hand, NULL);
+
+    hand.sa_handler = handlerPauseClient;
+    sigemptyset(&hand.sa_mask);
+    hand.sa_flags = 0;
+    sigaction(SIGUSR1, &hand, NULL);
+
+    hand.sa_handler = handlerContClient;
+    sigemptyset(&hand.sa_mask);
+    hand.sa_flags = 0;
+    sigaction(SIGUSR2, &hand, NULL);
 
     sigfillset(&masque); // on masque tout 
     sigdelset(&masque, SIGTSTP); //on demasque le signal de pause
@@ -135,7 +147,9 @@ int main()
     {   
         try
         {
+            cout << "meh" << endl;
             sock->ecouter(); //On se met à l'écoute d'une requête cliente
+            cout << "mehmeh" << endl;
         }
         catch(ErrnoException er)
         {
@@ -147,7 +161,16 @@ int main()
         while(threadsLibres == 0)
             pthread_cond_wait(&condThreadsLibres, &mutexThreadsLibres);
 
-        int service = sock->accepter(); //On a un thread libre donc on peut accept
+        int service;
+        try
+        {
+            service = sock->accepter(); //On a un thread libre donc on peut accept
+        }
+        catch(ErrnoException er)
+        {
+            if(er.getErrorCode() == 4)
+                continue;
+        }
 
         cout << "Nouveau client accepte " << endl;
 
@@ -165,6 +188,8 @@ int main()
         pthread_mutex_unlock(&mutexIndiceCourant);
         pthread_cond_signal(&condIndiceCourant); //On réveille le thread au chômage
     }
+
+    cout << "fuck" << endl;
 }
 
 void* threadClient(void* p) //le thread lancé
@@ -184,6 +209,8 @@ void* threadClient(void* p) //le thread lancé
         pthread_mutex_lock(&mutexIndiceCourant);//On reste bloqué ici tant qu'il n'y a pas de nouveau client (indice courant à -1)
         while(indiceCourant == -1)
             pthread_cond_wait(&condIndiceCourant, &mutexIndiceCourant);
+
+        cout << "je m'echappe" << endl;
 
         int clientTraite = indiceCourant; //on récupère l'indice de notre client dans le tableau de socket ouverte pour pas le perdre
         indiceCourant = -1;//On remet à -1 pour éviter qu'un concurrent nous le pique.
@@ -468,18 +495,40 @@ void outputOne(Socket* s, int clientTraite)
 
 void handlerPause(int)
 {
+    sigset_t masque;
+    sigfillset(&masque); 
+    sigdelset(&masque, SIGCONT); // on met en place un masque aurorisant les signaux permettant la sortie de pause.
+
+    int sigRecu;
+
     servInPause = true;
-    cout << "can handle it" << endl;
+    
+    for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
+        pthread_kill(threadsLances[i], SIGUSR1);
+
+    sigwait(&masque, &sigRecu);
 }
 
 void handlerCont(int)
 {
+    for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
+        pthread_kill(threadsLances[i], SIGUSR2);
+
     servInPause = false;
-    cout << "je continue" << endl;
 }
 
 void handlerInt(int)
 {
     servShutdown = true;
     cout << nbrSecBeforeShutdown << endl;
+}
+
+void handlerPauseClient(int)
+{
+    cout << "BRETAGNE INDEPENDANTE" << endl;
+}
+
+void handlerContClient(int)
+{
+    cout << "CORSE INDEPENDANTE" << endl;
 }

@@ -81,9 +81,8 @@ void* traitementAdmin(void* p)
 
         while(cont) //boucle sur les demandes du client
         {
-            cout << "imhere" << endl;
             string str = typeRequestParse(socketService->receiveChar(), &requestType);
-            cout << requestType << endl;
+            
             switch(requestType)
             {
                 case LISTCLIENT:
