@@ -53,6 +53,7 @@ void outputOne(Socket* s, int clientTraite);
 /*HANDLERS*/
 void handlerPause(int);
 void handlerCont(int);
+void handlerInt(int);
 
 bool servInPause = false;
 bool servShutdown = false;
@@ -74,9 +75,15 @@ int main()
     hand.sa_flags = 0;
     sigaction(SIGCONT, &hand, NULL);
 
+    hand.sa_handler = handlerInt;
+    sigemptyset(&hand.sa_mask);
+    hand.sa_flags = 0;
+    sigaction(SIGINT, &hand, NULL);
+
     sigfillset(&masque); // on masque tout 
     sigdelset(&masque, SIGTSTP); //on demasque le signal de pause
     sigdelset(&masque, SIGCONT); //on demasque le signal continue (arret de pause)
+    sigdelset(&masque, SIGINT); //on demasque le signal continue (arret de pause)
     pthread_sigmask(SIG_SETMASK, &masque, NULL);
 
     //Lecture des informations dans le dossier properties
@@ -469,4 +476,10 @@ void handlerCont(int)
 {
     servInPause = false;
     cout << "je continue" << endl;
+}
+
+void handlerInt(int)
+{
+    servShutdown = true;
+    cout << nbrSecBeforeShutdown << endl;
 }

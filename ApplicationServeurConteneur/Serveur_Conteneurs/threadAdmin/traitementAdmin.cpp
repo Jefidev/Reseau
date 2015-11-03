@@ -182,7 +182,12 @@ void continueServer(Socket* s)
 
 void shutdownServer(Socket* s, int sec)
 {
-    cout << sec << endl;
+    if(servShutdown)
+    {
+        s->sendChar(composeAckErr(ERREUR, "le serveur est deja en shutdown"));
+        return;
+    }
 
-    s->sendChar(composeAckErr(ACK, "sigEnvoyeStop"));
+    kill(getpid(), SIGINT);
+    s->sendChar(composeAckErr(ACK, "sigEnvoye"));
 }

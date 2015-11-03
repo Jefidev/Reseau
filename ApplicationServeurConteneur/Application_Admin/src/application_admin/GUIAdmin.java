@@ -53,7 +53,6 @@ public class GUIAdmin extends javax.swing.JFrame {
         portTextField = new javax.swing.JTextField();
         ServeurStatusLabel = new javax.swing.JLabel();
         continuerButton = new javax.swing.JButton();
-        raffraichierButton = new javax.swing.JButton();
         reponseLabel = new javax.swing.JLabel();
         secondesTextField = new javax.swing.JTextField();
         secondesLabel = new javax.swing.JLabel();
@@ -109,8 +108,6 @@ public class GUIAdmin extends javax.swing.JFrame {
             }
         });
 
-        raffraichierButton.setText("STOP");
-
         reponseLabel.setText("reponse serveur : ");
 
         secondesTextField.setText("0");
@@ -125,11 +122,8 @@ public class GUIAdmin extends javax.swing.JFrame {
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(listerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(raffraichierButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(listerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
@@ -204,13 +198,8 @@ public class GUIAdmin extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(reponseLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(listerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(raffraichierButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(13, 13, 13))))
+                .addComponent(listerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -411,7 +400,6 @@ public class GUIAdmin extends javax.swing.JFrame {
     private javax.swing.JButton pauseButton1;
     private javax.swing.JLabel portLabel;
     private javax.swing.JTextField portTextField;
-    private javax.swing.JButton raffraichierButton;
     private javax.swing.JLabel reponseLabel;
     private javax.swing.JLabel secondesLabel;
     private javax.swing.JTextField secondesTextField;
