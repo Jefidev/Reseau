@@ -32,6 +32,7 @@ void SocketClient::connecter()
 {
 	unsigned int t = sizeof(struct sockaddr);
 
+
     if((connect(socketHandle, (struct sockaddr*)&socketAdress, t))==-1)
         throw ErrnoException(errno, "Erreur connect");  
 }

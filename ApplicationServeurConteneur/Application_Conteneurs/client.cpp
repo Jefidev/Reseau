@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <unistd.h>
+#include <pthread.h>
 
 #define FICHIER_PROP "properties.txt"
 
@@ -18,6 +19,7 @@ using namespace std;
 #include "../Librairie/exceptions/errnoException.h"
 #include "../CommonProtocolFunction/commonFunction.h"
 #include "../LibrairieConteneur/sendFunction.h"
+#include "threadUrgence.h"
 
 void login(SocketClient* sock);
 void logout(SocketClient* sock);
@@ -27,19 +29,26 @@ void outputReady(SocketClient* sock);
 void outputOne(SocketClient* sock, int capaMax, string idTransport);
 int menu();
 
+string portUrgence;
+string ip;
+
 int main()
 {
     FichierProp fp = FichierProp("properties.txt");//On créer un objet permettant de lire le fichier properties
-
     string host = fp.getValue("HOST");//On peut recuperer une valeur grâce à getValue
     string port = fp.getValue("PORT");
-    string isip = fp.getValue("ISIP");
+    portUrgence = fp.getValue("PORT_URGENCE");
+    ip = fp.getValue("IP_CLIENT");
+
+    //lancement thread urgence
+    pthread_t urg;
+    int ret = pthread_create(&urg, NULL, threadUrgence, NULL);
+    pthread_detach(urg);
 
     SocketClient* sock = NULL;
-
     try
     {
-        if(isip == "1")//On test pour savoir si on doit créer le client avec une IP ou un HostName
+        if(host.compare("localhost"))//On test pour savoir si on doit créer le client avec une IP ou un HostName
             sock = new SocketClient(host , atoi(port.c_str()), true);
         else
             sock = new SocketClient(host , atoi(port.c_str()), false);
@@ -105,6 +114,8 @@ void login(SocketClient* sock)
         cout << "mot de passe : ";
         cin >> sc.motDePasse;
         cout << endl << "Tentative de connexion au serveur ..." << endl << endl;
+
+        sc.port = portUrgence;
 
         sock->sendChar(composeConnexion(LOGIN, sc));
         

@@ -8,8 +8,8 @@ LIBCONT =  ../LibrairieConteneur
 LIBLOG = ../Librairie/log
 LIBCOMMON = ../CommonProtocolFunction
 
-OBJ = $(LIBCONT)/sendFunction.o $(LIBCOMMON)/commonFunction.o
-OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o
+OBJ = $(LIBCONT)/sendFunction.o $(LIBCOMMON)/commonFunction.o threadUrgence.o
+OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o $(LIBESOCK)/socketServeur.o
 OBJUTILITY = $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBLOG)/log.o
 OBJEXCEPTION = $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
 
@@ -64,4 +64,12 @@ $(LIBCOMMON)/commonFunction.o:	$(LIBCOMMON)/commonFunction.cpp $(LIB)/utility.o
 								$(CC) -c $(LIBCOMMON)/commonFunction.cpp
 								mv commonFunction.o $(LIBCOMMON)
 
-													
+$(LIBESOCK)/socketServeur.o:	$(LIBESOCK)/socketServeur.cpp $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o
+								echo creation socketServeur
+								$(CC) -c $(LIBESOCK)/socketServeur.cpp $(LIBESOCK)/socket.o
+								mv socketServeur.o $(LIBESOCK)
+
+threadUrgence.o:	threadUrgence.cpp  $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o $(LIBESOCK)/socketServeur.o
+					echo creation thread urgence
+					$(CC) -c threadUrgence.cpp
+			

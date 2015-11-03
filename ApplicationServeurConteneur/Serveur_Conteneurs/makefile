@@ -11,7 +11,7 @@ LIBCSA = ../LibrairieCSA
 LIBCOMMON = ../CommonProtocolFunction
 
 OBJ =  $(LIBCONT)/sendFunction.o  $(LIBADMIN)/threadAdmin.o $(LIBCSA)/sendCSAFunction.o $(LIBCOMMON)/commonFunction.o $(LIBADMIN)/traitementAdmin.o
-OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o
+OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketServeur.o $(LIBESOCK)/socketClient.o
 OBJUTILITY = $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBLOG)/log.o parc.o
 OBJEXCEPTION = $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
 
@@ -87,3 +87,7 @@ $(LIBADMIN)traitementAdmin.o:	$(LIBADMIN)/traitementAdmin.cpp $(LIBESOCK)/socket
 								$(CC) -c $(LIBADMIN)/traitementAdmin.cpp
 								mv traitementAdmin.o $(LIBADMIN)
 
+$(LIBESOCK)/socketClient.o:		$(LIBESOCK)/socketClient.cpp $(LIBESOCK)/socket.o $(LIBEX)/errnoException.o
+								echo creation socketClient
+								$(CC) -c $(LIBESOCK)/socketClient.cpp
+								mv socketClient.o $(LIBESOCK)

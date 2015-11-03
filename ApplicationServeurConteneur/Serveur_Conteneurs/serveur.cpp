@@ -7,6 +7,7 @@
 #include <cstring>
 #include <signal.h>
 #include <pthread.h>
+#include <arpa/inet.h>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ using namespace std;
 #include "../Librairie/exceptions/errnoException.h"
 #include "../Librairie/log/log.h"
 #include "../CommonProtocolFunction/commonFunction.h"
+#include "../Librairie/socket/socketClient.h"
 #include "threadAdmin/threadAdmin.h"
 #include "parc.h"
 #include "constante.h"
@@ -41,6 +43,7 @@ Socket* socketOuverte[MAXCLIENT];
 string listLoginClient[MAXCLIENT];
 
 int portUrgence[MAXCLIENT];
+SocketClient* socketUrgence[MAXCLIENT];
 
 void* threadClient(void* p);
 void finConnexion(int cTraite, Socket* s);
@@ -140,6 +143,8 @@ int main()
         pthread_detach(threadsLances[i]);
 
         listLoginClient[i] = "";
+        portUrgence[i] = 0;
+        socketUrgence[i] = NULL;
     }
 
     //Choses sérieuses
@@ -251,6 +256,7 @@ void finConnexion(int cTraite, Socket* s) //On déconnecte le client (on le fait
     pthread_mutex_lock(&mutexIndiceCourant);
     socketOuverte[cTraite] = NULL;
     listLoginClient[cTraite] = "";
+    portUrgence[cTraite] =0;
     pthread_mutex_unlock(&mutexIndiceCourant);
 
     pthread_mutex_lock(&mutexThreadsLibres);
@@ -296,7 +302,8 @@ int login(Socket* s, int clientTraite)
                 cout << sc.motDePasse << endl;
                 if(!test.compare(sc.motDePasse))
                 {
-                    listLoginClient[clientTraite] = sc.nom;
+                    listLoginClient[clientTraite] = sc.nom; //on recupere des infos sur le client.
+                    portUrgence[clientTraite] = atoi(sc.port.c_str());
                     s->sendChar(composeAckErr(ACK, "ALLRIGHT"));
                     return 1;
                 }
@@ -517,7 +524,33 @@ void handlerCont(int)
 void handlerInt(int)
 {
     servShutdown = true;
-    cout << nbrSecBeforeShutdown << endl;
+    
+    socklen_t len;
+    struct sockaddr_storage addr;
+    char ipstr[INET6_ADDRSTRLEN];
+
+    len = sizeof addr;
+
+    for(int i =0; i < MAXCLIENT; i++)
+    {
+        if(portUrgence[i] == 0)
+            continue;
+
+        //du bordel pour recupérer l'IP du client
+        getpeername(socketOuverte[i]->getSocketHandle(), (struct sockaddr*)&addr, &len);
+        if (addr.ss_family == AF_INET) 
+        {
+            struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+            inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+        } 
+        else 
+        {
+            struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+            inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+        }
+
+        socketUrgence[i] =  new SocketClient(new string(ipstr), portUrgence[i], true);
+    }
 }
 
 void handlerPauseClient(int)

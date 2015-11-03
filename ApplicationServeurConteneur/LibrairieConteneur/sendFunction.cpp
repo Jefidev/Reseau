@@ -17,7 +17,7 @@ string composeConnexion(int l, StructConnexion sc)
 	string retour;
 
 	retour = Utility::intToString(l);
-	retour = retour + SEPARATION + sc.nom + SEPARATION + sc.motDePasse;
+	retour = retour + SEPARATION + sc.nom + SEPARATION + sc.motDePasse + SEPARATION + sc.port;
 	return retour;
 }
 
@@ -34,6 +34,9 @@ StructConnexion parseConnexion(string s)
 
 	getline(iss, token, SEPARATION);
 	sc.motDePasse = token;
+
+	getline(iss, token, SEPARATION);
+	sc.port = token;
 
 	return sc;
 }
