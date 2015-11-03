@@ -13,13 +13,13 @@ using namespace std;
 
 #include "../Librairie/socket/socket.h"
 #include "../Librairie/socket/socketServeur.h"
+#include "../Librairie/socket/socketClient.h"
 #include "../Librairie/fichierProp/fichierProp.h"
 #include "../LibrairieConteneur/protocole.ini"
 #include "../LibrairieConteneur/sendFunction.h"
 #include "../Librairie/exceptions/errnoException.h"
 #include "../Librairie/log/log.h"
 #include "../CommonProtocolFunction/commonFunction.h"
-#include "../Librairie/socket/socketClient.h"
 #include "threadAdmin/threadAdmin.h"
 #include "parc.h"
 #include "constante.h"
@@ -548,8 +548,10 @@ void handlerInt(int)
             struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
             inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
         }
-
-        socketUrgence[i] =  new SocketClient(new string(ipstr), portUrgence[i], true);
+        string tmp(ipstr);
+        socketUrgence[i] =  new SocketClient(tmp, portUrgence[i], true);
+        socketUrgence[i]->connecter();
+        socketUrgence[i]->sendChar("Le serveur va s'arreter");
     }
 }
 

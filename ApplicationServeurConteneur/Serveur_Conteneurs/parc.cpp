@@ -10,6 +10,7 @@ using namespace std;
 #include "../LibrairieConteneur/protocole.ini"
 #include "parc.h"
 #include "../Librairie/utility.h"
+#include "../CommonProtocolFunction/commonFunction.h"
 
 Parc::Parc(string n)
 {
