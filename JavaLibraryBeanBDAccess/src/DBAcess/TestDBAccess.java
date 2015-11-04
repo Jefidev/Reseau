@@ -5,8 +5,12 @@
  */
 package DBAcess;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import newBean.*;
 
 /**
  *
@@ -22,72 +26,82 @@ public class TestDBAccess extends javax.swing.JFrame {
         initComponents();
 
         System.out.println("Initialisation");
-        BeanDBAccessOracle b = new BeanDBAccessOracle();
-        b.setIp("localhost");
-        b.setPort(1521);
-        b.setUser("TRAFIC");
-        b.setPassword("TRAFIC");
-        b.setBd("XE");
+        BeanBDAccess b = new BeanBDAccess();
         
         System.out.println("Connexion");
-        b.connexion();
+        try {
+            b.connexionOracle("localhost", 1521, "TRAFIC", "TRAFIC", "XE");
+        } catch (ClassNotFoundException ex) {
+            System.err.println("classe not found  : " + ex.getMessage());
+        } catch (SQLException ex) {
+            System.err.println("Exception SQL " + ex.getMessage());
+        } catch (connexionException ex) {
+            System.err.println(ex.getNumException() + "  " + ex.getMessage());
+        }
         
         System.out.println("Tables disponibles");
-        ArrayList<String> l = new ArrayList<>(b.tablesDisponibles());
+        try {
+            ArrayList<String> l = new ArrayList<>(b.tablesDisponibles());
+        } catch (requeteException ex) {
+            System.err.println(ex.getNumErreur() + "  " + ex.getMessage());
+        }
         
         System.out.println("Selection");
-        b.selection("*", "utilisateurs", "1=1");
+        
         try {
-            Thread.sleep(5000);                 //1000 milliseconds is one second.
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
+            b.selection("*", "utilisateurs", null);
+        } catch (SQLException ex) {
+            System.err.println("SQLException : " + ex);
         }
+        
         
         System.out.println("Ecriture");
         HashMap user = new HashMap();
         user.put("LOGIN", "oce");
         user.put("PASSWORD", "ocepwd");
-        b.ecriture("utilisateurs", user);
-        try {
-            Thread.sleep(5000);                 //1000 milliseconds is one second.
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
-        }
         
-        System.out.println("Selection");
-        b.selection("*", "utilisateurs", "1=1");
         try {
-            Thread.sleep(5000);                 //1000 milliseconds is one second.
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
+            b.ecriture("utilisateurs", user);
+        } catch (requeteException ex) {
+            System.err.println(ex.getNumErreur() + "  " + ex.getMessage());
         }
+
+        System.out.println("Selection");
+        
+        try {
+            b.selection("*", "utilisateurs", null);
+        } catch (SQLException ex) {
+            System.err.println("SQLException " + ex.getMessage());
+        }
+         
         
         System.out.println("Modification");
         HashMap user2 = new HashMap();
         user2.put("PASSWORD", "NEWPWD");
-        b.miseAJour("utilisateurs", user2, "LOGIN = 'oce'");
+        
         try {
-            Thread.sleep(5000);                 //1000 milliseconds is one second.
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
+            b.miseAJour("utilisateurs", user2, "LOGIN = 'oce'");
+        } catch (requeteException ex) {
+            System.err.println(ex.getNumErreur() + "  " + ex.getMessage());
         }
         
+        
         System.out.println("Selection");
-        b.selection("*", "utilisateurs", "1=1");
+        
         try {
-            Thread.sleep(5000);                 //1000 milliseconds is one second.
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
+            b.selection("*", "utilisateurs", null);
+        } catch (SQLException ex) {
+            System.err.println("SQL EXCEPTION : " + ex.getMessage());
         }
         
         System.out.println("Modification");
         HashMap modif = new HashMap();
         modif.put("DISTANCE_ROUTE", "30");
-        b.miseAJour("destinations", modif, "VILLE = 'Verviers'");
+        
         try {
-            Thread.sleep(5000);                 //1000 milliseconds is one second.
-        } catch(InterruptedException ex) {
-            Thread.currentThread().interrupt();
+            b.miseAJour("destinations", modif, "VILLE = 'Verviers'");
+        } catch (requeteException ex) {
+            System.err.println(ex.getNumErreur() + "  " + ex.getMessage());
         }
         
     }
