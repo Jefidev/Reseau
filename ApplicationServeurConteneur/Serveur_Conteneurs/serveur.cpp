@@ -8,6 +8,7 @@
 #include <signal.h>
 #include <pthread.h>
 #include <arpa/inet.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -21,6 +22,7 @@ using namespace std;
 #include "../Librairie/log/log.h"
 #include "../CommonProtocolFunction/commonFunction.h"
 #include "threadAdmin/threadAdmin.h"
+#include "../Librairie/utility.h"
 #include "parc.h"
 #include "constante.h"
 
@@ -45,12 +47,15 @@ string listLoginClient[MAXCLIENT];
 int portUrgence[MAXCLIENT];
 SocketClient* socketUrgence[MAXCLIENT];
 
+//Liste des éléments à rollback en cas de coupure
+string listContAdd[MAXCLIENT];
+
 void* threadClient(void* p);
 void finConnexion(int cTraite, Socket* s);
 int login(Socket* s, int clientTraite);
 
 void inputTruck(Socket*s, int clientTraite, string requete);
-void inputDone(Socket*s, int clientTraite, string listContainer, string listPosition);
+void inputDone(Socket*s, int clientTraite, string listContainer);
 
 void outputReady(Socket* s, int clientTraite, string requete);
 void outputOne(Socket* s, int clientTraite);
@@ -60,6 +65,7 @@ void handlerPause(int);
 void handlerCont(int);
 void handlerInt(int);
 void handlerPauseClient(int);
+void handlerAlarm(int);
 
 bool servInPause = false;
 bool servShutdown = false;
@@ -93,10 +99,16 @@ int main()
     hand.sa_flags = 0;
     sigaction(SIGUSR1, &hand, NULL);
 
+    hand.sa_handler = handlerAlarm;
+    sigemptyset(&hand.sa_mask);
+    hand.sa_flags = 0;
+    sigaction(SIGALRM, &hand, NULL);
+
     sigfillset(&masque); // on masque tout 
     sigdelset(&masque, SIGTSTP); //on demasque le signal de pause
     sigdelset(&masque, SIGCONT); //on demasque le signal continue (arret de pause)
     sigdelset(&masque, SIGINT); //on demasque le signal continue (arret de pause)
+    sigdelset(&masque, SIGALRM);
     pthread_sigmask(SIG_SETMASK, &masque, NULL);
 
     //Lecture des informations dans le dossier properties
@@ -114,6 +126,9 @@ int main()
     pthread_mutex_init(&mutexParc, NULL);
 
     SocketServeur* sock = NULL; //On prépare une socket qui sera utilisée pour établir la connection.
+
+    //affichage fichier parc 
+    parcFile.afficheFichier();
 
     try
     {
@@ -210,8 +225,6 @@ void* threadClient(void* p) //le thread lancé
         pthread_mutex_lock(&mutexIndiceCourant);//On reste bloqué ici tant qu'il n'y a pas de nouveau client (indice courant à -1)
         while(indiceCourant == -1)
             pthread_cond_wait(&condIndiceCourant, &mutexIndiceCourant);
-
-        cout << "je m'echappe" << endl;
 
         int clientTraite = indiceCourant; //on récupère l'indice de notre client dans le tableau de socket ouverte pour pas le perdre
         indiceCourant = -1;//On remet à -1 pour éviter qu'un concurrent nous le pique.
@@ -327,8 +340,9 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     char *lec, *tok;
     char sep = CONTAINER_SEPARATION;
     char* saveptr;
-    string retPosition = "", ret = "";
+    string ret = "";
     bool erreur = false, cont = true;
+    listContAdd[clientTraite] = "";
 
     lec =  new char [sit.idContainers.length()+1];
     strcpy(lec, sit.idContainers.c_str());
@@ -347,22 +361,22 @@ void inputTruck(Socket*s, int clientTraite, string requete)
             break;
         }
 
-        retPosition = retPosition + ret;
+        listContAdd[clientTraite] = listContAdd[clientTraite] + ret;
 
         tok = strtok_r(NULL, &sep, &saveptr);
 
         if(tok != NULL)
-            retPosition = retPosition + CONTAINER_SEPARATION;
+            listContAdd[clientTraite] = listContAdd[clientTraite] + CONTAINER_SEPARATION;
     }
 
     if(erreur)
     {
         s->sendChar(composeAckErr(ERREUR, "Pas assez de place dans le parc"));
 
-        if(retPosition.compare("")) // retPosition non vide
+        if(listContAdd[clientTraite].compare("")) // liste non vide
         {
             pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
-            parcFile.freeSpace(retPosition);
+            parcFile.freeSpace(listContAdd[clientTraite]);
             pthread_mutex_unlock(&mutexParc);
         }
         return;
@@ -370,12 +384,12 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     else
     {
         s->sendChar(composeAckErr(ACK, ""));
-        inputDone(s, clientTraite, sit.idContainers, retPosition);
+        inputDone(s, clientTraite, sit.idContainers);
     }
 }
 
 
-void inputDone(Socket*s, int clientTraite, string listContainer, string listPosition)
+void inputDone(Socket*s, int clientTraite, string listContainer)
 {
     char *lecContainer, *tokContainer, *saveptrContainer, *lecPosition, *tokPosition, *saveptrPosition;
     char sep = CONTAINER_SEPARATION;
@@ -383,8 +397,8 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
     lecContainer =  new char [listContainer.length()+1];
     strcpy(lecContainer, listContainer.c_str());
 
-    lecPosition =  new char [listPosition.length()+1];
-    strcpy(lecPosition, listPosition.c_str());
+    lecPosition =  new char [listContAdd[clientTraite].length()+1];
+    strcpy(lecPosition, listContAdd[clientTraite].c_str());
 
 
     tokContainer = strtok_r(lecContainer, &sep, &saveptrContainer);
@@ -428,7 +442,7 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
         else    // On annule tout et on demande au client de se couper car problème sur le réseau
         {
             pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
-            parcFile.freeSpace(listPosition);
+            parcFile.freeSpace(listContAdd[clientTraite]);
             pthread_mutex_unlock(&mutexParc);
             finConnexion(clientTraite, s);
             return;
@@ -447,6 +461,7 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listPosi
     }
 
     s->sendChar(composeAckErr(ACK, "Tous les containers ont ete traites"));
+    listContAdd[clientTraite] = "";
 }
 
 
@@ -551,11 +566,47 @@ void handlerInt(int)
         string tmp(ipstr);
         socketUrgence[i] =  new SocketClient(tmp, portUrgence[i], true);
         socketUrgence[i]->connecter();
-        socketUrgence[i]->sendChar("Le serveur va s'arreter");
+        socketUrgence[i]->sendChar("Le serveur va s'arreter dans " + Utility::intToString(nbrSecBeforeShutdown) + " secondes");
     }
+    cout << "lancement alarm" << endl;
+    alarm(1);
 }
 
 void handlerPauseClient(int)
 {
     pthread_cond_wait(&condSleepThread, NULL); //NOTE pas tip top à changer si possible.
 }
+
+void handlerAlarm(int)
+{
+    if(nbrSecBeforeShutdown > 0)
+        nbrSecBeforeShutdown--;
+
+    cout << "arret dans " << nbrSecBeforeShutdown << endl;
+
+    if(nbrSecBeforeShutdown != 0)
+    {
+        for(int i = 0; i <MAXCLIENT; i++)
+        {
+            if(socketUrgence[i] != NULL)
+                socketUrgence[i]->sendChar(Utility::intToString(nbrSecBeforeShutdown) + " secondes");
+        }
+        alarm(1);
+        return;
+    }
+
+    pthread_mutex_lock(&mutexParc);
+    for(int i = 0; i <MAXCLIENT; i++)
+    {
+        if(socketUrgence[i] != NULL)
+            socketUrgence[i]->sendChar("Serveur arrete");
+
+        if(listContAdd[i] != "")
+            parcFile.freeSpace(listContAdd[i]);
+
+    }
+    pthread_mutex_unlock(&mutexParc);
+
+    exit(1);
+}
+

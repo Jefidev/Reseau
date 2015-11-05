@@ -228,3 +228,19 @@ string Parc::outputList(StructOuputReady sor)
 	return retour;
 }
 
+void Parc::afficheFichier()
+{
+	char * nomFichierChar = new char [nomFichier.length()+1];
+  	strcpy (nomFichierChar, nomFichier.c_str());
+  	FILE* f;
+  	string retour;
+  	RECORD r;
+
+  	f = fopen(nomFichierChar, "r");
+
+  	while(fread(&r, 1, sizeof(RECORD), f) == sizeof(RECORD))
+  	{
+  		cout << r.flagEtat << endl;
+  	}
+}
+

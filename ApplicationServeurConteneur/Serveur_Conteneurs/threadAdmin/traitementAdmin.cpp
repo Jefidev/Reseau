@@ -158,9 +158,9 @@ void listClient(Socket* s)
 
 void pauseServer(Socket* s)
 {
-    if(servInPause)
+    if(servInPause || servShutdown)
     {
-        s->sendChar(composeAckErr(ERREUR, "le serveur est deja en pause"));
+        s->sendChar(composeAckErr(ERREUR, "Une operation est deja en cours sur le serveur"));
         return;
     }
     
@@ -183,11 +183,17 @@ void continueServer(Socket* s)
 
 void shutdownServer(Socket* s, int sec)
 {
-    if(servShutdown)
+    if(servShutdown || servInPause)
     {
-        s->sendChar(composeAckErr(ERREUR, "le serveur est deja en shutdown"));
+        s->sendChar(composeAckErr(ERREUR, "Un operation est en cours sur le serveur"));
         return;
     }
+
+    if(sec > 1000 || sec < 10)
+        nbrSecBeforeShutdown = 10;
+
+    else
+        nbrSecBeforeShutdown = sec;
 
     kill(getpid(), SIGINT);
     s->sendChar(composeAckErr(ACK, "sigEnvoye"));

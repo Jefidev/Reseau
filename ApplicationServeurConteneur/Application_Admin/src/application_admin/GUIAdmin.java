@@ -51,7 +51,6 @@ public class GUIAdmin extends javax.swing.JFrame {
         ipTextField = new javax.swing.JTextField();
         portLabel = new javax.swing.JLabel();
         portTextField = new javax.swing.JTextField();
-        ServeurStatusLabel = new javax.swing.JLabel();
         continuerButton = new javax.swing.JButton();
         reponseLabel = new javax.swing.JLabel();
         secondesTextField = new javax.swing.JTextField();
@@ -99,8 +98,6 @@ public class GUIAdmin extends javax.swing.JFrame {
 
         portLabel.setText("port");
 
-        ServeurStatusLabel.setText("Status du serveur : ");
-
         continuerButton.setText("CONTINUER");
         continuerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -128,7 +125,6 @@ public class GUIAdmin extends javax.swing.JFrame {
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(ServeurStatusLabel)
                                     .addComponent(reponseLabel)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
@@ -193,9 +189,7 @@ public class GUIAdmin extends javax.swing.JFrame {
                             .addComponent(stopButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(secondesLabel)
                             .addComponent(secondesTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(ServeurStatusLabel)
-                        .addGap(18, 18, 18)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(reponseLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(listerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -386,7 +380,6 @@ public class GUIAdmin extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField LoginTextField;
-    private javax.swing.JLabel ServeurStatusLabel;
     private javax.swing.JButton connexionButton;
     private javax.swing.JButton continuerButton;
     private javax.swing.JLabel ipLabel;
