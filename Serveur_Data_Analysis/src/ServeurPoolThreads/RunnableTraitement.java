@@ -5,6 +5,7 @@ import java.net.*;
 import java.sql.*;
 import newBean.*;
 import java.security.*;
+import java.util.Properties;
 import javax.crypto.*;
 
 
@@ -32,6 +33,61 @@ public class RunnableTraitement implements Runnable
             System.err.println("RunnableTraitement : Host non trouvé : " + e);
         }
         
+        
+        /* PROPERTIES */
+        Properties prop = new Properties();
+        String Emplacement;
+        int port;
+        String DBCompta;
+        String DBTrafic;
+        String DBDecisions;
+        String DB;
+        
+        try
+        {
+            FileInputStream FIS = new FileInputStream("DataAnalysis.properties");
+            prop.load(FIS);
+        }
+        catch(FileNotFoundException ex)
+        {
+            try 
+            {
+                FileOutputStream FOS = new FileOutputStream("ServeurDataAnalysis.properties");
+                
+                prop.setProperty("Emplacement", "localhost");
+                prop.setProperty("Port", "1521");
+                prop.setProperty("DBCompta", "COMPTA");
+                prop.setProperty("DBTrafic", "TRAFIC");
+                prop.setProperty("DBDecisions", "DECISIONS");
+                prop.setProperty("DB", "XE");
+                              
+                try
+                {
+                    prop.store(FOS, null);
+                }
+                catch (IOException ex1)
+                {
+                    System.err.println("RunnableTraitement : IOException (Ecriture properties) : " + ex1.getMessage());
+                    System.exit(0);
+                }
+            } 
+            catch (FileNotFoundException ex1) 
+            {
+                System.err.println("RunnableTraitement : FileNotFoundException (Properties) : " + ex1.getMessage());
+                System.exit(0);
+            }
+            
+        }
+        catch(IOException ex)
+        {
+            System.err.println("RunnableTraitement : IOException (Lecture properties) : " + ex.getMessage());
+            System.exit(0);
+        }
+        
+        port = Integer.parseInt(prop.getProperty("Port"));
+        
+        
+        /* BEANS */
         beanOracleCompta = new BeanBDAccess();
         beanOracleTrafic = new BeanBDAccess();
         //beanOracleDecisions = new BeanBDAccess();
@@ -164,37 +220,83 @@ public class RunnableTraitement implements Runnable
     
     
     /* LOGIN (à partir de BD_COMPTA */
-    /* IN : Nom, digest salé sur password */
+    /* IN : Nom, digest salé sur password, sel */
     /* OUT : Oui/Non */
     public void Login(String[] parts)
     {
         ResultSet ResultatDB = null;
+        String password = null;
+        
         try
         {
             ResultatDB = beanOracleCompta.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + parts[1] + "'");
+            while (ResultatDB.next())
+                password = ResultatDB.getString(1);
         }
         catch (SQLException ex)
         {
-            System.err.println("SQLexception Login : " + ex.getMessage());
+            System.err.println("RunnableTraitement : SQLexception Login : " + ex.getMessage());
         }
-     
+       
+        
+        String codeProvider = "BC";
+        String user = parts[1];
+
+        password = password + parts[3];    // On ajoute le sel au password
+        
         try
         {
-            while(ResultatDB.next())
+            // confection d'un digest local
+            MessageDigest md = MessageDigest.getInstance("SHA-1", codeProvider);
+            md.update(password.getBytes());
+            byte[] msgDLocal = md.digest();
+
+            // comparaison
+            byte[] msgD = parts[2].getBytes();
+            
+            if (MessageDigest.isEqual(msgD, msgDLocal))
             {
-                if ((ResultatDB.getString(1)).equals(parts[2]))
-                    SendMsg("OUI");
-                else
-                    SendMsg("NON");
+                SendMsg("OUI");
+                System.out.println("RunnableTraitement : Login : Le client " + user + " est connecté au serveur");
+            }
+            else
+            {
+                SendMsg("NON");
+                System.out.println("RunnableTraitement : Login : Le client " + user + " est refusé");
             }
         }
-        catch (SQLException ex)
+        catch (NoSuchAlgorithmException e)
         {
-            System.err.println("RunnableTraitement : Erreur lecture ResultSet : " + ex);
+            SendMsg("NON");
+            System.err.println("RunnableTraitement : Login : NoSuchAlgorithmException : " + e.getMessage());
+        }
+        catch(NoSuchProviderException e)
+        {
+            SendMsg("NON");
+            System.err.println("RunnableTraitement : Login : NoSuchProviderException : " + e.getMessage());
         }
         
         System.out.println("RunnableTraitement : Fin LOGIN");
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     /* On met dans un fichier les bateaux entrant */
     /*public void BoatArrived(String[] parts)
