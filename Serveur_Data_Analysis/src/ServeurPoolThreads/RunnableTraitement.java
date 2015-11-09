@@ -124,9 +124,9 @@ public class RunnableTraitement implements Runnable
             String reponse = ReceiveMsg();  
             String[] parts = reponse.split("#");
 
-            switch (parts[0])
+            switch (Integer.getInteger(parts[0]))
             {
-                case "LOGIN" :
+                case ProtocolePIDEP.LOGIN :
                     Login(parts);
                     break;
                     
