@@ -6,7 +6,6 @@ import java.sql.*;
 import newBean.*;
 import java.security.*;
 import java.util.Properties;
-import javax.crypto.*;
 
 
 public class RunnableTraitement implements Runnable
@@ -36,12 +35,12 @@ public class RunnableTraitement implements Runnable
         
         /* PROPERTIES */
         Properties prop = new Properties();
-        String Emplacement;
-        int port;
-        String DBCompta;
-        String DBTrafic;
-        String DBDecisions;
-        String DB;
+        String Emplacement = "localhost";
+        int port = 1521;
+        String DBCompta = "COMPTA";
+        String DBTrafic = "TRAFIC";
+        //String DBDecisions = "DECISIONS";
+        String DB = "XE";
         
         try
         {
@@ -58,7 +57,7 @@ public class RunnableTraitement implements Runnable
                 prop.setProperty("Port", "1521");
                 prop.setProperty("DBCompta", "COMPTA");
                 prop.setProperty("DBTrafic", "TRAFIC");
-                prop.setProperty("DBDecisions", "DECISIONS");
+                //prop.setProperty("DBDecisions", "DECISIONS");
                 prop.setProperty("DB", "XE");
                               
                 try
@@ -93,9 +92,9 @@ public class RunnableTraitement implements Runnable
         //beanOracleDecisions = new BeanBDAccess();
         try
         {
-            beanOracleCompta.connexionOracle("localhost", 1521, "COMPTA", "COMPTA", "XE");
-            beanOracleTrafic.connexionOracle("localhost", 1521, "TRAFIC", "TRAFIC", "XE");
-            //beanOracleDecisions.connexionOracle("localhost", 1521, "DECISIONS", "DECISIONS", "XE");
+            beanOracleCompta.connexionOracle(Emplacement, port, DBCompta, DBCompta, DB);
+            beanOracleTrafic.connexionOracle(Emplacement, port, DBTrafic, DBTrafic, DB);
+            //beanOracleDecisions.connexionOracle(Emplacement, port, DBDecisions, DBDecisions, DB);
         }
         catch (ClassNotFoundException ex)
         {
@@ -220,50 +219,47 @@ public class RunnableTraitement implements Runnable
     
     
     /* LOGIN (à partir de BD_COMPTA */
-    /* IN : Nom, digest salé sur password, sel */
+    /* IN : Nom, digest salé sur password, sel 1, sel 2 */
     /* OUT : Oui/Non */
     public void Login(String[] parts)
-    {
-        ResultSet ResultatDB = null;
-        String password = null;
-        
+    {       
         try
         {
+            ResultSet ResultatDB = null;
+            String passwordDB = null;
+            String codeProvider = "BC";
+            
+            // Récupération du mot de passe dans la base de données
             ResultatDB = beanOracleCompta.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + parts[1] + "'");
             while (ResultatDB.next())
-                password = ResultatDB.getString(1);
-        }
-        catch (SQLException ex)
-        {
-            System.err.println("RunnableTraitement : SQLexception Login : " + ex.getMessage());
-        }
-       
-        
-        String codeProvider = "BC";
-        String user = parts[1];
+                passwordDB = ResultatDB.getString(1);
 
-        password = password + parts[3];    // On ajoute le sel au password
-        
-        try
-        {
+            passwordDB = parts[3] + (passwordDB == null ? "" : passwordDB) + parts[4];    // On ajoute le sel au password
+       
+            
             // confection d'un digest local
             MessageDigest md = MessageDigest.getInstance("SHA-1", codeProvider);
-            md.update(password.getBytes());
+            md.update(passwordDB.getBytes());
+            md.update(parts[3].getBytes());
+            md.update(parts[4].getBytes());
             byte[] msgDLocal = md.digest();
 
-            // comparaison
-            byte[] msgD = parts[2].getBytes();
-            
-            if (MessageDigest.isEqual(msgD, msgDLocal))
+            // comparaison            
+            if (MessageDigest.isEqual(parts[2].getBytes(), msgDLocal))
             {
                 SendMsg("OUI");
-                System.out.println("RunnableTraitement : Login : Le client " + user + " est connecté au serveur");
+                System.out.println("RunnableTraitement : Login : Le client " + parts[1] + " est connecté au serveur");
             }
             else
             {
                 SendMsg("NON");
-                System.out.println("RunnableTraitement : Login : Le client " + user + " est refusé");
+                System.out.println("RunnableTraitement : Login : Le client " + parts[1] + " est refusé");
             }
+        }
+        catch (SQLException e)
+        {
+            SendMsg("NON");
+            System.err.println("RunnableTraitement : SQLexception Login : " + e.getMessage());
         }
         catch (NoSuchAlgorithmException e)
         {
