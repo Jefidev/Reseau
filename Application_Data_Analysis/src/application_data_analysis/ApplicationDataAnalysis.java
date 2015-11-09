@@ -1,11 +1,14 @@
 package application_data_analysis;
 
+import javax.swing.JDialog;
+
 
 public class ApplicationDataAnalysis extends javax.swing.JFrame
 {
 
     public ApplicationDataAnalysis() {
         initComponents();
+        (new Login(this, true)).setVisible(true);
     }
 
 
