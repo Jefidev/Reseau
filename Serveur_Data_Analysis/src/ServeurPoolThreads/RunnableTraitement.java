@@ -2,8 +2,10 @@ package ServeurPoolThreads;
 
 import java.io.*;
 import java.net.*;
-import java.sql.SQLException;
+import java.sql.*;
 import newBean.*;
+import java.security.*;
+import javax.crypto.*;
 
 
 public class RunnableTraitement implements Runnable
@@ -69,11 +71,11 @@ public class RunnableTraitement implements Runnable
 
             switch (parts[0])
             {
-                /*case "LOGIN" :
+                case "LOGIN" :
                     Login(parts);
                     break;
                     
-                case "BOAT_ARRIVED" :
+                /*case "BOAT_ARRIVED" :
                     BoatArrived(parts);
                     break;
                     
@@ -160,14 +162,20 @@ public class RunnableTraitement implements Runnable
         return message.toString();
     }
     
-    /* Login */
-    /*public void Login(String[] parts)
+    
+    /* LOGIN (à partir de BD_COMPTA */
+    /* IN : Nom, digest salé sur password */
+    /* OUT : Oui/Non */
+    public void Login(String[] parts)
     {
         ResultSet ResultatDB = null;
-        try {
-            ResultatDB = beanOracle.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + parts[1] + "'");
-        } catch (SQLException ex) {
-            System.err.println("SQLexception line 219 " + ex.getMessage());
+        try
+        {
+            ResultatDB = beanOracleCompta.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + parts[1] + "'");
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("SQLexception Login : " + ex.getMessage());
         }
      
         try
@@ -186,7 +194,7 @@ public class RunnableTraitement implements Runnable
         }
         
         System.out.println("RunnableTraitement : Fin LOGIN");
-    }*/
+    }
     
     /* On met dans un fichier les bateaux entrant */
     /*public void BoatArrived(String[] parts)
