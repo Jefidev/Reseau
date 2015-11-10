@@ -1,7 +1,8 @@
 package application_data_analysis;
 
+import java.io.*;
 import java.security.*;
-import java.util.UUID;
+import java.util.Date;
 
 
 public class Login extends javax.swing.JDialog
@@ -86,29 +87,43 @@ public class Login extends javax.swing.JDialog
     private void ConnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnexionButtonActionPerformed
 
         try
-        {
-            UUID aleatoire = UUID.randomUUID();
-            
-            String format = "dd/MM/yyyy HH:mm:ss";
-            java.text.SimpleDateFormat formater = new java.text.SimpleDateFormat(format);
-            java.util.Date date = new java.util.Date();
+        {            
+            long temps = (new Date()).getTime();
+            double aleatoire = Math.random();
 
             MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
             md.update(PwdPF.getPassword().toString().getBytes());
+<<<<<<< HEAD
             md.update(aleatoire.toString().getBytes());
             md.update(formater.format(date).getBytes());
             String pwdDigest = md.digest().toString();
 
             String chargeUtile = LoginTF + "#" + pwdDigest;
+=======
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream bdos = new DataOutputStream(baos);
+            bdos.writeLong(temps);
+            bdos.writeDouble(aleatoire);
+            md.update(baos.toByteArray());
+            byte[] pwdDigest = md.digest();
+
+            String chargeUtile = LoginTF.getText() + "#" + pwdDigest.toString() + "#" + temps + "#" + aleatoire;
+            System.out.println("CHARGE UTILE ===> " + chargeUtile);
+>>>>>>> Avancement login digest
             Utility.SendMsg(ProtocolePIDEP.LOGIN, chargeUtile);
         }
         catch (NoSuchAlgorithmException ex)
         {
             System.err.println("Login : NoSuchAlgorithmException : " + ex.getMessage());
         }
+<<<<<<< HEAD
         catch (NoSuchProviderException ex)
         {
             System.err.println("Login : NoSuchProviderException : " + ex.getMessage());
+=======
+        catch (IOException ex) {
+            System.err.println("Login : IOException : " + ex.getMessage());
+>>>>>>> Avancement login digest
         }
     }//GEN-LAST:event_ConnexionButtonActionPerformed
 

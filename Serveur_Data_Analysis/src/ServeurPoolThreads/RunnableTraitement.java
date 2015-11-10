@@ -128,8 +128,15 @@ public class RunnableTraitement implements Runnable
         {   
             String reponse = ReceiveMsg();  
             String[] parts = reponse.split("#");
+<<<<<<< HEAD
 
             switch (Integer.getInteger(parts[0]))
+=======
+            
+            System.out.println("REPONSE ===> " + reponse);
+         
+            switch (Integer.parseInt(parts[0]))
+>>>>>>> Avancement login digest
             {
                 case ProtocolePIDEP.LOGIN :
                     Login(parts);
@@ -227,7 +234,8 @@ public class RunnableTraitement implements Runnable
     /* IN : Nom, digest salé sur password, sel 1, sel 2 */
     /* OUT : Oui/Non */
     public void Login(String[] parts)
-    {       
+    {      
+        System.out.println("DEBUT LOGIN");
         try
         {
             ResultSet ResultatDB = null;
@@ -239,15 +247,28 @@ public class RunnableTraitement implements Runnable
             while (ResultatDB.next())
                 passwordDB = ResultatDB.getString(1);
             
+<<<<<<< HEAD
             // confection d'un digest local
             MessageDigest md = MessageDigest.getInstance("SHA-1", codeProvider);
+=======
+
+            long temps = Long.getLong(parts[3]);
+            double aleatoire = Double.parseDouble(parts[4]);
+
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+>>>>>>> Avancement login digest
             md.update(passwordDB.getBytes());
-            md.update(parts[3].getBytes());
-            md.update(parts[4].getBytes());
-            byte[] msgDLocal = md.digest();
+            
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            DataOutputStream bdos = new DataOutputStream(baos);
+            bdos.writeLong(temps);
+            bdos.writeDouble(aleatoire);
+            md.update(baos.toByteArray());
+            byte[] pwdDigest = md.digest();
+    
 
             // comparaison            
-            if (MessageDigest.isEqual(parts[2].getBytes(), msgDLocal))
+            if (MessageDigest.isEqual(parts[2].getBytes(), pwdDigest))
             {
                 SendMsg("OUI");
                 System.out.println("RunnableTraitement : Login : Le client " + parts[1] + " est connecté au serveur");
@@ -268,10 +289,17 @@ public class RunnableTraitement implements Runnable
             SendMsg("NON");
             System.err.println("RunnableTraitement : Login : NoSuchAlgorithmException : " + e.getMessage());
         }
+<<<<<<< HEAD
         catch(NoSuchProviderException e)
         {
             SendMsg("NON");
             System.err.println("RunnableTraitement : Login : NoSuchProviderException : " + e.getMessage());
+=======
+        catch (IOException e)
+        {
+            SendMsg("NON");
+            System.err.println("RunnableTraitement : Login : IOException : " + e.getMessage());
+>>>>>>> Avancement login digest
         }
         
         System.out.println("RunnableTraitement : Fin LOGIN");
