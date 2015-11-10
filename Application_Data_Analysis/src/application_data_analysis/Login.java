@@ -87,19 +87,14 @@ public class Login extends javax.swing.JDialog
     private void ConnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnexionButtonActionPerformed
 
         try
-        {            
+        {        
+            // sels
             long temps = (new Date()).getTime();
             double aleatoire = Math.random();
 
-            MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
+            // digest
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update(PwdPF.getPassword().toString().getBytes());
-<<<<<<< HEAD
-            md.update(aleatoire.toString().getBytes());
-            md.update(formater.format(date).getBytes());
-            String pwdDigest = md.digest().toString();
-
-            String chargeUtile = LoginTF + "#" + pwdDigest;
-=======
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream bdos = new DataOutputStream(baos);
             bdos.writeLong(temps);
@@ -107,23 +102,18 @@ public class Login extends javax.swing.JDialog
             md.update(baos.toByteArray());
             byte[] pwdDigest = md.digest();
 
+            // envoi
             String chargeUtile = LoginTF.getText() + "#" + pwdDigest.toString() + "#" + temps + "#" + aleatoire;
             System.out.println("CHARGE UTILE ===> " + chargeUtile);
->>>>>>> Avancement login digest
             Utility.SendMsg(ProtocolePIDEP.LOGIN, chargeUtile);
         }
         catch (NoSuchAlgorithmException ex)
         {
             System.err.println("Login : NoSuchAlgorithmException : " + ex.getMessage());
         }
-<<<<<<< HEAD
-        catch (NoSuchProviderException ex)
+        catch (IOException ex)
         {
-            System.err.println("Login : NoSuchProviderException : " + ex.getMessage());
-=======
-        catch (IOException ex) {
             System.err.println("Login : IOException : " + ex.getMessage());
->>>>>>> Avancement login digest
         }
     }//GEN-LAST:event_ConnexionButtonActionPerformed
 
