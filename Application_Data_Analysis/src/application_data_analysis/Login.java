@@ -1,11 +1,7 @@
 package application_data_analysis;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
+import java.security.*;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class Login extends javax.swing.JDialog
@@ -17,9 +13,6 @@ public class Login extends javax.swing.JDialog
         this.setTitle("Login");
     }
 
-    
-    
-    
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -90,43 +83,35 @@ public class Login extends javax.swing.JDialog
     }// </editor-fold>//GEN-END:initComponents
 
     
-    
-    
-    
     private void ConnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnexionButtonActionPerformed
 
         try
         {
             UUID aleatoire = UUID.randomUUID();
             
-            
+            String format = "dd/MM/yyyy HH:mm:ss";
+            java.text.SimpleDateFormat formater = new java.text.SimpleDateFormat(format);
+            java.util.Date date = new java.util.Date();
+
             MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
             md.update(PwdPF.getPassword().toString().getBytes());
             md.update(aleatoire.toString().getBytes());
-            md.update(parts[4].getBytes());
-            byte[] msgDLocal = md.digest();
-            
-            
-            
-            
-            
-            
-            String chargeUtile = LoginTF + "#";
+            md.update(formater.format(date).getBytes());
+            String pwdDigest = md.digest().toString();
+
+            String chargeUtile = LoginTF + "#" + pwdDigest;
             Utility.SendMsg(ProtocolePIDEP.LOGIN, chargeUtile);
         }
         catch (NoSuchAlgorithmException ex)
         {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Login : NoSuchAlgorithmException : " + ex.getMessage());
         }
         catch (NoSuchProviderException ex)
         {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            System.err.println("Login : NoSuchProviderException : " + ex.getMessage());
         }
     }//GEN-LAST:event_ConnexionButtonActionPerformed
 
-    
-    
-    
     
     /**
      * @param args the command line arguments
