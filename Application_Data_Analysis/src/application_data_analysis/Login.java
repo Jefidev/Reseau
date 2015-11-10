@@ -1,24 +1,26 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package application_data_analysis;
 
-/**
- *
- * @author Utilisateur
- */
-public class Login extends javax.swing.JDialog {
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-    /**
-     * Creates new form Login
-     */
-    public Login(java.awt.Frame parent, boolean modal) {
+
+public class Login extends javax.swing.JDialog
+{
+    public Login(java.awt.Frame parent, boolean modal)
+    {
         super(parent, modal);
         initComponents();
+        this.setTitle("Login");
     }
 
+    
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -28,22 +30,104 @@ public class Login extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        LoginLabel = new javax.swing.JLabel();
+        PwdLabel = new javax.swing.JLabel();
+        LoginTF = new javax.swing.JTextField();
+        PwdPF = new javax.swing.JPasswordField();
+        ConnexionButton = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        LoginLabel.setText("Login :");
+
+        PwdLabel.setText("Mot de passe :");
+
+        ConnexionButton.setText("Connexion");
+        ConnexionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ConnexionButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(PwdLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(PwdPF, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(LoginLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(LoginTF, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(ConnexionButton)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(LoginLabel)
+                    .addComponent(LoginTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(25, 25, 25)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(PwdLabel)
+                    .addComponent(PwdPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(ConnexionButton)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
+    
+    
+    private void ConnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnexionButtonActionPerformed
+
+        try
+        {
+            UUID aleatoire = UUID.randomUUID();
+            
+            
+            MessageDigest md = MessageDigest.getInstance("SHA-1", "BC");
+            md.update(PwdPF.getPassword().toString().getBytes());
+            md.update(aleatoire.toString().getBytes());
+            md.update(parts[4].getBytes());
+            byte[] msgDLocal = md.digest();
+            
+            
+            
+            
+            
+            
+            String chargeUtile = LoginTF + "#";
+            Utility.SendMsg(ProtocolePIDEP.LOGIN, chargeUtile);
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NoSuchProviderException ex)
+        {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_ConnexionButtonActionPerformed
+
+    
+    
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -87,5 +171,10 @@ public class Login extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ConnexionButton;
+    private javax.swing.JLabel LoginLabel;
+    private javax.swing.JTextField LoginTF;
+    private javax.swing.JLabel PwdLabel;
+    private javax.swing.JPasswordField PwdPF;
     // End of variables declaration//GEN-END:variables
 }

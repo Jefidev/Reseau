@@ -83,7 +83,12 @@ public class RunnableTraitement implements Runnable
             System.exit(0);
         }
         
+        Emplacement = prop.getProperty("Emplacement");
         port = Integer.parseInt(prop.getProperty("Port"));
+        DBCompta = prop.getProperty("DBCompta");
+        DBTrafic = prop.getProperty("DBTrafic");
+        //DBDecisions = prop.getProperty("DBDecisions");
+        DB = prop.getProperty("DB");
         
         
         /* BEANS */
@@ -233,9 +238,6 @@ public class RunnableTraitement implements Runnable
             ResultatDB = beanOracleCompta.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + parts[1] + "'");
             while (ResultatDB.next())
                 passwordDB = ResultatDB.getString(1);
-
-            passwordDB = parts[3] + (passwordDB == null ? "" : passwordDB) + parts[4];    // On ajoute le sel au password
-       
             
             // confection d'un digest local
             MessageDigest md = MessageDigest.getInstance("SHA-1", codeProvider);

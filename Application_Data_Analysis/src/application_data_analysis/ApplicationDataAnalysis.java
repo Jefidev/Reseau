@@ -1,13 +1,21 @@
 package application_data_analysis;
 
-import javax.swing.JDialog;
+import java.net.*;
 
 
 public class ApplicationDataAnalysis extends javax.swing.JFrame
 {
+    boolean isConnected = false;
+    public static Socket cliSock = null;
 
-    public ApplicationDataAnalysis() {
+    public ApplicationDataAnalysis()
+    {
         initComponents();
+        
+        this.setTitle("Data Analysis");
+        Utility.InitialisationFlux();
+        // Désactiver les boutons à réactiver quand connecté
+        
         (new Login(this, true)).setVisible(true);
     }
 
