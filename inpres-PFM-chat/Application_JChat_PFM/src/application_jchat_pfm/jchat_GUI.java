@@ -8,8 +8,11 @@ package application_jchat_pfm;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -23,6 +26,8 @@ public class jchat_GUI extends javax.swing.JFrame {
     
     private DataInputStream dis;
     private DataOutputStream dos;
+    
+    private ArrayList<message> messageList;
 
     /**
      * Creates new form jchat_GUI
@@ -32,6 +37,8 @@ public class jchat_GUI extends javax.swing.JFrame {
         port = p;
         adresse = ip;
         errorLabel.setVisible(false);
+        lectureTextArea.setEditable(false);
+        envoyerButton.setEnabled(false);
     }
 
     /**
@@ -49,6 +56,16 @@ public class jchat_GUI extends javax.swing.JFrame {
         passwordField = new javax.swing.JPasswordField();
         connexionButton = new javax.swing.JButton();
         errorLabel = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList();
+        filtreLabel = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        lectureTextArea = new javax.swing.JTextArea();
+        messageLabel = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        ecritureTextaArea = new javax.swing.JTextArea();
+        envoyerButton = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -66,27 +83,69 @@ public class jchat_GUI extends javax.swing.JFrame {
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorLabel.setText("jLabel1");
 
+        jList1.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Tout", "Infos", " " };
+            public int getSize() { return strings.length; }
+            public Object getElementAt(int i) { return strings[i]; }
+        });
+        jScrollPane1.setViewportView(jList1);
+
+        filtreLabel.setText("Filtres");
+
+        lectureTextArea.setColumns(20);
+        lectureTextArea.setRows(5);
+        jScrollPane2.setViewportView(lectureTextArea);
+
+        messageLabel.setText("message : ");
+
+        ecritureTextaArea.setColumns(20);
+        ecritureTextaArea.setRows(5);
+        jScrollPane3.setViewportView(ecritureTextaArea);
+
+        envoyerButton.setText("Envoyer");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nouvelle question", "Répondre", "Info" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(loginLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(errorLabel)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(loginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(messageLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(loginLabel)
+                                .addGap(16, 16, 16)
+                                .addComponent(loginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(passwordLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
-                        .addComponent(passwordLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
                         .addComponent(connexionButton)
-                        .addGap(56, 56, 56))))
+                        .addContainerGap(45, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(envoyerButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(41, 41, 41)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(filtreLabel)
+                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(errorLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -98,9 +157,24 @@ public class jchat_GUI extends javax.swing.JFrame {
                     .addComponent(passwordLabel)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(connexionButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(errorLabel)
-                .addContainerGap(356, Short.MAX_VALUE))
+                .addGap(8, 8, 8)
+                .addComponent(filtreLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(messageLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(envoyerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
 
         pack();
@@ -108,6 +182,21 @@ public class jchat_GUI extends javax.swing.JFrame {
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
        errorLabel.setVisible(false);
+       
+       if(connexionButton.getText().equals("Deconnexion"))
+       {
+           try {
+               cliSock.close();
+               dis.close();
+               dos.close();
+           } catch (IOException ex) {
+               System.err.println("Erreur fermeture de la requete deconnexion");
+           }
+           
+           connexionButton.setText("Connexion");
+           envoyerButton.setEnabled(false);
+           return;
+       }
        
        try
         {
@@ -136,8 +225,18 @@ public class jchat_GUI extends javax.swing.JFrame {
         
         SendMsg("LOGIN_GROUP#"+loginTextField.getText()+"#"+saltedDigest+"#"+sel1+"#"+sel2);
         
-        errorLabel.setText(ReceiveMsg());
-        errorLabel.setVisible(true); 
+        String[] parts = ReceiveMsg().split("#");
+        System.err.println(parts[0]);
+        if(parts[0].equals("ERR"))
+        {
+            errorLabel.setText(parts[1]);
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        connexionButton.setText("Deconnexion");
+        messageList =  new ArrayList<>();
+        envoyerButton.setEnabled(true);
     }//GEN-LAST:event_connexionButtonActionPerformed
 
     /**
@@ -177,9 +276,19 @@ public class jchat_GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connexionButton;
+    private javax.swing.JTextArea ecritureTextaArea;
+    private javax.swing.JButton envoyerButton;
     private javax.swing.JLabel errorLabel;
+    private javax.swing.JLabel filtreLabel;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JList jList1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTextArea lectureTextArea;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JTextField loginTextField;
+    private javax.swing.JLabel messageLabel;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     // End of variables declaration//GEN-END:variables

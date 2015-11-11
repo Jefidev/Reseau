@@ -56,7 +56,7 @@ public class RunnableTraitement implements Runnable
         }
         else
         {
-            SendMsg("ERR#RequeteInvalide");
+            SendMsg("ERR#Internal server error");
         }   
     }
     
@@ -74,7 +74,7 @@ public class RunnableTraitement implements Runnable
         try {
             if(!rs.next())
             {
-                SendMsg("ERR#USER INVALID");
+                SendMsg("ERR#Nom d'utilisateur incorrecte ");
             }
             else
                 pwd = rs.getString("PASSWORD");
@@ -86,7 +86,7 @@ public class RunnableTraitement implements Runnable
         if(message[2].equals(Integer.toString(digest)))
             SendMsg("ACK#AUTHENTIFIED");
         else
-            SendMsg("ERR#WRONG PASSWORD");
+            SendMsg("ERR#Mot de passe incorrecte");
     }
     
     /* Envoi d'un message au client */
