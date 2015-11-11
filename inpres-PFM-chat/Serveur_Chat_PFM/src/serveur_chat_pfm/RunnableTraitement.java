@@ -3,8 +3,6 @@ package serveur_chat_pfm;
 import java.io.*;
 import java.net.*;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import newBean.*;
 
 public class RunnableTraitement implements Runnable
@@ -13,6 +11,7 @@ public class RunnableTraitement implements Runnable
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
     private BeanBDAccess beanOracle;
+    private int port_UDP = 31049;
     
     boolean first = true;
     
@@ -84,7 +83,7 @@ public class RunnableTraitement implements Runnable
         
         int digest = hashFunction(message[4] + pwd + message[3]);  
         if(message[2].equals(Integer.toString(digest)))
-            SendMsg("ACK#AUTHENTIFIED");
+            SendMsg("ACK#233.42.42.1#"+port_UDP);
         else
             SendMsg("ERR#Mot de passe incorrecte");
     }

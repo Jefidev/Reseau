@@ -6,13 +6,14 @@
 package application_jchat_pfm;
 
 import java.io.*;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -20,22 +21,25 @@ import java.util.logging.Logger;
  */
 public class jchat_GUI extends javax.swing.JFrame {
     
-    private Socket cliSock;
-    private String adresse;
-    private int port;
+    private String adresse_serveur;
+    private int port_serveur;
     
+    MulticastSocket udp_sock;
+    private int port_UDP;
+    private InetAddress add;
     private DataInputStream dis;
     private DataOutputStream dos;
     
     private ArrayList<message> messageList;
+    private String curUser;
 
     /**
      * Creates new form jchat_GUI
      */
     public jchat_GUI(String ip, int p) {
         initComponents();
-        port = p;
-        adresse = ip;
+        port_serveur = p;
+        adresse_serveur = ip;
         errorLabel.setVisible(false);
         lectureTextArea.setEditable(false);
         envoyerButton.setEnabled(false);
@@ -181,26 +185,23 @@ public class jchat_GUI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
-       errorLabel.setVisible(false);
+        errorLabel.setVisible(false);
+        Socket cliSock = null;
        
-       if(connexionButton.getText().equals("Deconnexion"))
-       {
-           try {
-               cliSock.close();
-               dis.close();
-               dos.close();
-           } catch (IOException ex) {
-               System.err.println("Erreur fermeture de la requete deconnexion");
-           }
-           
-           connexionButton.setText("Connexion");
-           envoyerButton.setEnabled(false);
-           return;
-       }
-       
-       try
+       //CAS DE LA DECONNEXION
+        if(connexionButton.getText().equals("Deconnexion"))
         {
-            cliSock = new Socket(adresse, port);
+            udp_sock.close();
+
+            connexionButton.setText("Connexion");
+            envoyerButton.setEnabled(false);
+            curUser = null;
+            return;
+       }
+       //CAS DE LA CONNEXION
+        try
+        {
+            cliSock = new Socket(adresse_serveur, port_serveur);
             System.out.println(cliSock.getInetAddress().toString());
             dis = new DataInputStream(new BufferedInputStream(cliSock.getInputStream()));
             dos = new DataOutputStream(new BufferedOutputStream(cliSock.getOutputStream()));
@@ -219,14 +220,11 @@ public class jchat_GUI extends javax.swing.JFrame {
         String sel2 = Calendar.getInstance().getTime().toString();
         String pwd =  sel2+passwordField.getText()+sel1;
 
-        System.out.println(pwd);
-        
         int saltedDigest = hashFunction(pwd);
         
         SendMsg("LOGIN_GROUP#"+loginTextField.getText()+"#"+saltedDigest+"#"+sel1+"#"+sel2);
         
         String[] parts = ReceiveMsg().split("#");
-        System.err.println(parts[0]);
         if(parts[0].equals("ERR"))
         {
             errorLabel.setText(parts[1]);
@@ -234,9 +232,30 @@ public class jchat_GUI extends javax.swing.JFrame {
             return;
         }
         
+        try {//On a plus besoin du serveur de login on se déconnecte
+            cliSock.close();
+            dis.close();
+            dos.close();
+        } catch (IOException ex) {
+            System.err.println("Erreur fermeture socket serveur chat " + ex);
+        }
+        
+        //des trucs dans le GUI pour faire jolis
         connexionButton.setText("Deconnexion");
         messageList =  new ArrayList<>();
         envoyerButton.setEnabled(true);
+        curUser = loginTextField.getText();
+        
+        try {
+            //On va créer la socket UDP
+            add = InetAddress.getByName(parts[1]);
+            udp_sock =  new MulticastSocket(port_UDP);
+            udp_sock.joinGroup(add);
+        } catch (UnknownHostException ex) {
+            System.err.println("Erreur d'ouverture de la socket UDP " + ex);
+        } catch (IOException ex) {
+            System.err.println("Erreur d'ouverture de la socket UDP " + ex);
+        }
     }//GEN-LAST:event_connexionButtonActionPerformed
 
     /**
