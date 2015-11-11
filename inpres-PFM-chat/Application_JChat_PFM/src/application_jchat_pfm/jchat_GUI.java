@@ -8,6 +8,8 @@ package application_jchat_pfm;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Calendar;
+import java.util.UUID;
 
 /**
  *
@@ -123,7 +125,16 @@ public class jchat_GUI extends javax.swing.JFrame {
             System.err.println("ClientServeurBateau : Pas de connexion ? : " + e);
         }
        
-        SendMsg("LOGIN_GROUP#"+loginTextField.getText()+"#"+passwordField.getText());
+       
+        String sel1 = UUID.randomUUID().toString();
+        String sel2 = Calendar.getInstance().getTime().toString();
+        String pwd =  sel2+passwordField.getText()+sel1;
+
+        System.out.println(pwd);
+        
+        int saltedDigest = hashFunction(pwd);
+        
+        SendMsg("LOGIN_GROUP#"+loginTextField.getText()+"#"+saltedDigest+"#"+sel1+"#"+sel2);
         
         errorLabel.setText(ReceiveMsg());
         errorLabel.setVisible(true); 
@@ -217,5 +228,15 @@ public class jchat_GUI extends javax.swing.JFrame {
         }
             
         return message.toString();
+    }
+    
+    private int hashFunction(String message)
+    {
+        int hashValue = 0;
+        
+        for(int i = 0; i < message.length(); i++)
+            hashValue += (int)message.charAt(i);
+        
+        return hashValue%67;
     }
 }

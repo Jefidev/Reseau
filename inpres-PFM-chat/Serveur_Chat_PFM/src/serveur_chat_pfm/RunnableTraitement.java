@@ -82,7 +82,11 @@ public class RunnableTraitement implements Runnable
             System.err.println("Error serveur chat line 78 : " + ex);
         }
         
-        SendMsg("ACK#"+pwd);
+        int digest = hashFunction(message[4] + pwd + message[3]);  
+        if(message[2].equals(Integer.toString(digest)))
+            SendMsg("ACK#AUTHENTIFIED");
+        else
+            SendMsg("ERR#WRONG PASSWORD");
     }
     
     /* Envoi d'un message au client */
@@ -130,5 +134,15 @@ public class RunnableTraitement implements Runnable
         }
             
         return message.toString();
+    }
+    
+    private int hashFunction(String message)
+    {
+        int hashValue = 0;
+        
+        for(int i = 0; i < message.length(); i++)
+            hashValue += (int)message.charAt(i);
+        
+        return hashValue%67;
     }
 }
