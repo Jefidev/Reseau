@@ -64,11 +64,25 @@ public class RunnableTraitement implements Runnable
     {
         ResultSet rs = null;
         try {
-            rs = beanOracle.selection("PASSWORD", "PERSONNEL", "LOGIN = "+message[1]);
+            rs = beanOracle.selection("PASSWORD", "PERSONNEL", "LOGIN = '"+message[1]+"'");
         } catch (SQLException ex) {
             System.err.println("Erreur runnable traitement verif login : " + ex);
         }
         
+        String pwd = null;
+        
+        try {
+            if(!rs.next())
+            {
+                SendMsg("ERR#USER INVALID");
+            }
+            else
+                pwd = rs.getString("PASSWORD");
+        } catch (SQLException ex) {
+            System.err.println("Error serveur chat line 78 : " + ex);
+        }
+        
+        SendMsg("ACK#"+pwd);
     }
     
     /* Envoi d'un message au client */
