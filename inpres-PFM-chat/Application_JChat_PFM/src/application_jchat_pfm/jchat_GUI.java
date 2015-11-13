@@ -6,6 +6,7 @@
 package application_jchat_pfm;
 
 import java.io.*;
+import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
@@ -13,6 +14,8 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -26,12 +29,13 @@ public class jchat_GUI extends javax.swing.JFrame {
     
     MulticastSocket udp_sock;
     private int port_UDP;
-    private InetAddress add;
+    private InetAddress ip_udp;
     private DataInputStream dis;
     private DataOutputStream dos;
     
     private ArrayList<message> messageList;
     private String curUser;
+    private ThreadReception thr;
 
     /**
      * Creates new form jchat_GUI
@@ -41,7 +45,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         port_serveur = p;
         adresse_serveur = ip;
         errorLabel.setVisible(false);
-        lectureTextArea.setEditable(false);
+        displayTextArea.setEditable(false);
         envoyerButton.setEnabled(false);
     }
 
@@ -64,7 +68,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         jList1 = new javax.swing.JList();
         filtreLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        lectureTextArea = new javax.swing.JTextArea();
+        displayTextArea = new javax.swing.JTextArea();
         messageLabel = new javax.swing.JLabel();
         jScrollPane3 = new javax.swing.JScrollPane();
         ecritureTextaArea = new javax.swing.JTextArea();
@@ -96,9 +100,9 @@ public class jchat_GUI extends javax.swing.JFrame {
 
         filtreLabel.setText("Filtres");
 
-        lectureTextArea.setColumns(20);
-        lectureTextArea.setRows(5);
-        jScrollPane2.setViewportView(lectureTextArea);
+        displayTextArea.setColumns(20);
+        displayTextArea.setRows(5);
+        jScrollPane2.setViewportView(displayTextArea);
 
         messageLabel.setText("message : ");
 
@@ -107,6 +111,11 @@ public class jchat_GUI extends javax.swing.JFrame {
         jScrollPane3.setViewportView(ecritureTextaArea);
 
         envoyerButton.setText("Envoyer");
+        envoyerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                envoyerButtonActionPerformed(evt);
+            }
+        });
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nouvelle question", "Répondre", "Info" }));
 
@@ -248,16 +257,43 @@ public class jchat_GUI extends javax.swing.JFrame {
         
         try {
             //On va créer la socket UDP
-            add = InetAddress.getByName(parts[1]);
+            ip_udp = InetAddress.getByName(parts[1]);
+            port_UDP = Integer.parseInt(parts[2]);//port envoyé par le serveur
+            
             udp_sock =  new MulticastSocket(port_UDP);
-            udp_sock.joinGroup(add);
+            udp_sock.joinGroup(ip_udp);
         } catch (UnknownHostException ex) {
             System.err.println("Erreur d'ouverture de la socket UDP " + ex);
         } catch (IOException ex) {
             System.err.println("Erreur d'ouverture de la socket UDP " + ex);
         }
+        //démarrage du thread de reception de message UDP.
+        thr =  new ThreadReception(udp_sock, messageList, this);
+        thr.start();
     }//GEN-LAST:event_connexionButtonActionPerformed
 
+    private void envoyerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerButtonActionPerformed
+        
+        byte[] buff =  new byte[1000];
+        
+        String message = curUser +"#trololo#"+ecritureTextaArea.getText();
+        buff = message.getBytes();
+        
+        DatagramPacket paquet = new DatagramPacket(buff, buff.length, ip_udp, port_UDP);
+        try {
+            udp_sock.send(paquet);
+        } catch (IOException ex) {
+            System.err.println("Erreur d'envois de message. Client chat ligne 284 " + ex);
+        }
+        ecritureTextaArea.setText(""); // on vide la textArea.
+    }//GEN-LAST:event_envoyerButtonActionPerformed
+    
+    //met à jour la texte area lors de la reception d'un message (appelé par le thread de reception)
+    public void refreshDisplay()
+    {
+        displayTextArea.append(messageList.get(messageList.size()-1).getMessage()+"\n");
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -295,6 +331,7 @@ public class jchat_GUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton connexionButton;
+    private javax.swing.JTextArea displayTextArea;
     private javax.swing.JTextArea ecritureTextaArea;
     private javax.swing.JButton envoyerButton;
     private javax.swing.JLabel errorLabel;
@@ -304,7 +341,6 @@ public class jchat_GUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTextArea lectureTextArea;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JTextField loginTextField;
     private javax.swing.JLabel messageLabel;
