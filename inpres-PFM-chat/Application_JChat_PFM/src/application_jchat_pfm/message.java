@@ -35,4 +35,9 @@ class message {
     {
         return tag;
     }
+    
+    public void setTage(String s)
+    {
+        tag = s;
+    }
 }

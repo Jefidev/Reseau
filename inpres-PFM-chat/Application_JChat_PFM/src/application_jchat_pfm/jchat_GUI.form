@@ -159,10 +159,9 @@
         <Component class="javax.swing.JList" name="subjectList">
           <Properties>
             <Property name="model" type="javax.swing.ListModel" editor="org.netbeans.modules.form.editors2.ListModelEditor">
-              <StringArray count="3">
+              <StringArray count="2">
                 <StringItem index="0" value="Tous"/>
                 <StringItem index="1" value="Infos"/>
-                <StringItem index="2" value=" "/>
               </StringArray>
             </Property>
           </Properties>
@@ -224,9 +223,9 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="3">
-            <StringItem index="0" value="Nouvelle question"/>
-            <StringItem index="1" value="R&#xe9;pondre"/>
-            <StringItem index="2" value="Info"/>
+            <StringItem index="0" value="Info"/>
+            <StringItem index="1" value="Nouvelle question"/>
+            <StringItem index="2" value="R&#xe9;pondre"/>
           </StringArray>
         </Property>
       </Properties>

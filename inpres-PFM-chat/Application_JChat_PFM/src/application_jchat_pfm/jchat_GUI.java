@@ -11,12 +11,15 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 
 
 /**
@@ -48,8 +51,13 @@ public class jchat_GUI extends javax.swing.JFrame {
         errorLabel.setVisible(false);
         displayTextArea.setEditable(false);
         envoyerButton.setEnabled(false);
-        subjectList.setSelectedIndex(1);
         erreurEnvoisLabel.setVisible(false);
+        
+        DefaultListModel lm = new DefaultListModel();
+        lm.addElement("Tous");
+        lm.addElement("Infos");
+        subjectList.setModel(lm);
+        subjectList.setSelectedIndex(0);
     }
 
     /**
@@ -96,7 +104,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         errorLabel.setText("jLabel1");
 
         subjectList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Tous", "Infos", " " };
+            String[] strings = { "Tous", "Infos" };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
@@ -126,7 +134,7 @@ public class jchat_GUI extends javax.swing.JFrame {
             }
         });
 
-        typeMessageCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nouvelle question", "Répondre", "Info" }));
+        typeMessageCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Info", "Nouvelle question", "Répondre" }));
 
         erreurEnvoisLabel.setForeground(new java.awt.Color(255, 0, 0));
         erreurEnvoisLabel.setText("jLabel1");
@@ -298,7 +306,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         
         //Creation du tag pour le message
         String tag = "Infos";
-        String digest = null;
+        int digest = -1;
         if(typeMessageCombo.getSelectedIndex() == 1) // si on a sélectionner une nouvelle question
         {
             if(subjectList.getSelectedIndex() == 0 || subjectList.getSelectedIndex() == 1) // si on essaye de répondre sur 
@@ -307,7 +315,7 @@ public class jchat_GUI extends javax.swing.JFrame {
                 erreurEnvoisLabel.setVisible(true);
                 return;
             }
-            tag = subjectList.getSelectedValue().toString();
+            tag = "R"+subjectList.getSelectedValue().toString();
         }
         else if(typeMessageCombo.getSelectedIndex() == 0)// on génère un tag pour la nouvelle question
         {
@@ -324,11 +332,14 @@ public class jchat_GUI extends javax.swing.JFrame {
                         idIsUsed = true;
             }
             //On construit un digest sur la question
+            digest = hashFunction(ecritureTextaArea.getText());
         }
 
-        System.err.println(typeMessageCombo.getSelectedIndex());
-        
-        String message = curUser +"#"+tag+"#"+ecritureTextaArea.getText();
+        String message;
+        if(digest == -1)
+           message = curUser +"#"+tag+"#"+ecritureTextaArea.getText();//message sans digest
+        else
+           message = curUser +"#"+tag+"#"+ecritureTextaArea.getText()+"#"+digest; //message + digest
         
         //On transforme le message en byte pour l'envoyer dans le datagramme
         byte[] buff;
@@ -362,6 +373,24 @@ public class jchat_GUI extends javax.swing.JFrame {
     public void refreshDisplay()
     {
         message messageEntrant = messageList.get(messageList.size()-1);
+        
+        boolean newSubject = true;
+        for(int i =0; i < subjectList.getModel().getSize(); i++)
+        {
+            if(subjectList.getModel().getElementAt(i).equals(messageEntrant.getTag()))
+            {
+                newSubject = false;
+                break;
+            }
+        }
+        
+        if(newSubject)
+        {
+            DefaultListModel lm = (DefaultListModel) subjectList.getModel();
+            lm.addElement(messageEntrant.getTag());
+        }
+        
+        //On ecrit les bons messages
         if(subjectList.getSelectedValue().equals("Tous") || subjectList.getSelectedValue().equals(messageEntrant.getTag()))
             displayTextArea.append(messageEntrant.getMessage()+"\n");
     }
@@ -467,7 +496,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         return message.toString();
     }
     
-    private int hashFunction(String message)
+    public int hashFunction(String message)
     {
         int hashValue = 0;
         
