@@ -47,6 +47,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         errorLabel.setVisible(false);
         displayTextArea.setEditable(false);
         envoyerButton.setEnabled(false);
+        subjectList.setSelectedIndex(1);
     }
 
     /**
@@ -65,7 +66,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         connexionButton = new javax.swing.JButton();
         errorLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
+        subjectList = new javax.swing.JList();
         filtreLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         displayTextArea = new javax.swing.JTextArea();
@@ -91,12 +92,17 @@ public class jchat_GUI extends javax.swing.JFrame {
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorLabel.setText("jLabel1");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Tout", "Infos", " " };
+        subjectList.setModel(new javax.swing.AbstractListModel() {
+            String[] strings = { "Tous", "Infos", " " };
             public int getSize() { return strings.length; }
             public Object getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane1.setViewportView(jList1);
+        subjectList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                subjectListValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(subjectList);
 
         filtreLabel.setText("Filtres");
 
@@ -276,7 +282,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         
         byte[] buff =  new byte[1000];
         
-        String message = curUser +"#trololo#"+ecritureTextaArea.getText();
+        String message = curUser +"#troooo#"+ecritureTextaArea.getText();
         buff = message.getBytes();
         
         DatagramPacket paquet = new DatagramPacket(buff, buff.length, ip_udp, port_UDP);
@@ -288,10 +294,27 @@ public class jchat_GUI extends javax.swing.JFrame {
         ecritureTextaArea.setText(""); // on vide la textArea.
     }//GEN-LAST:event_envoyerButtonActionPerformed
     
+    //On change de selection dans la Jlist
+    private void subjectListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_subjectListValueChanged
+        
+        if(messageList ==  null || subjectList.getValueIsAdjusting())
+            return;
+        
+        displayTextArea.setText("");
+        for(message m : messageList)
+        {
+            if(m.getTag().equals(subjectList.getSelectedValue()) || subjectList.getSelectedValue().equals("Tous"))
+                displayTextArea.append(m.getMessage() + "\n");
+        }
+    }//GEN-LAST:event_subjectListValueChanged
+
+   
     //met à jour la texte area lors de la reception d'un message (appelé par le thread de reception)
     public void refreshDisplay()
     {
-        displayTextArea.append(messageList.get(messageList.size()-1).getMessage()+"\n");
+        message messageEntrant = messageList.get(messageList.size()-1);
+        if(subjectList.getSelectedValue().equals("Tous") || subjectList.getSelectedValue().equals(messageEntrant.getTag()))
+            displayTextArea.append(messageEntrant.getMessage()+"\n");
     }
     
     /**
@@ -337,7 +360,6 @@ public class jchat_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel errorLabel;
     private javax.swing.JLabel filtreLabel;
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JList jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -346,6 +368,7 @@ public class jchat_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel messageLabel;
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
+    private javax.swing.JList subjectList;
     // End of variables declaration//GEN-END:variables
     /* Envoi d'un message au client */
     public void SendMsg(String msg)
