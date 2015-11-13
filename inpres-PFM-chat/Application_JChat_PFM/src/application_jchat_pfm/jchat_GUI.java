@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,6 +49,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         displayTextArea.setEditable(false);
         envoyerButton.setEnabled(false);
         subjectList.setSelectedIndex(1);
+        erreurEnvoisLabel.setVisible(false);
     }
 
     /**
@@ -74,7 +76,8 @@ public class jchat_GUI extends javax.swing.JFrame {
         jScrollPane3 = new javax.swing.JScrollPane();
         ecritureTextaArea = new javax.swing.JTextArea();
         envoyerButton = new javax.swing.JButton();
-        jComboBox1 = new javax.swing.JComboBox();
+        typeMessageCombo = new javax.swing.JComboBox();
+        erreurEnvoisLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -123,7 +126,10 @@ public class jchat_GUI extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nouvelle question", "Répondre", "Info" }));
+        typeMessageCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nouvelle question", "Répondre", "Info" }));
+
+        erreurEnvoisLabel.setForeground(new java.awt.Color(255, 0, 0));
+        erreurEnvoisLabel.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -134,36 +140,39 @@ public class jchat_GUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(messageLabel)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(loginLabel)
-                                .addGap(16, 16, 16)
-                                .addComponent(loginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(messageLabel)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(loginLabel)
+                                        .addGap(16, 16, 16)
+                                        .addComponent(loginTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(passwordLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(18, 18, 18)
-                                .addComponent(passwordLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addComponent(connexionButton)
-                        .addContainerGap(45, Short.MAX_VALUE))
+                                .addComponent(connexionButton))
+                            .addComponent(errorLabel))
+                        .addContainerGap(71, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(envoyerButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                                         .addGap(41, 41, 41)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(filtreLabel)
-                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                            .addComponent(errorLabel))
+                                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                        .addGap(13, 13, 13)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(envoyerButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(typeMessageCombo, 0, 199, Short.MAX_VALUE)))))
+                            .addComponent(erreurEnvoisLabel))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -187,13 +196,15 @@ public class jchat_GUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(messageLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(envoyerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(typeMessageCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(14, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(erreurEnvoisLabel)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         pack();
@@ -280,9 +291,47 @@ public class jchat_GUI extends javax.swing.JFrame {
 
     private void envoyerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerButtonActionPerformed
         
-        byte[] buff =  new byte[1000];
+        if(ecritureTextaArea.getText().isEmpty()) // barrière anti spam
+            return;    
         
-        String message = curUser +"#troooo#"+ecritureTextaArea.getText();
+        erreurEnvoisLabel.setVisible(false);
+        
+        //Creation du tag pour le message
+        String tag = "Infos";
+        String digest = null;
+        if(typeMessageCombo.getSelectedIndex() == 1) // si on a sélectionner une nouvelle question
+        {
+            if(subjectList.getSelectedIndex() == 0 || subjectList.getSelectedIndex() == 1) // si on essaye de répondre sur 
+            {
+                erreurEnvoisLabel.setText("Sélectionné dans la liste la question à laquelle vous souhaitez répondre");
+                erreurEnvoisLabel.setVisible(true);
+                return;
+            }
+            tag = subjectList.getSelectedValue().toString();
+        }
+        else if(typeMessageCombo.getSelectedIndex() == 0)// on génère un tag pour la nouvelle question
+        {
+            boolean idIsUsed = true;
+            
+            while(idIsUsed)
+            {
+                idIsUsed =  false;
+                Random rand = new Random();
+                tag = "Q"+rand.nextInt(999);
+                
+                for(int i = 2; i < subjectList.getModel().getSize(); i++)//on verifie qu'une autre question n'est pas ouverte à ce tag
+                    if(subjectList.getModel().getElementAt(i).equals(tag))
+                        idIsUsed = true;
+            }
+            //On construit un digest sur la question
+        }
+
+        System.err.println(typeMessageCombo.getSelectedIndex());
+        
+        String message = curUser +"#"+tag+"#"+ecritureTextaArea.getText();
+        
+        //On transforme le message en byte pour l'envoyer dans le datagramme
+        byte[] buff;
         buff = message.getBytes();
         
         DatagramPacket paquet = new DatagramPacket(buff, buff.length, ip_udp, port_UDP);
@@ -357,9 +406,9 @@ public class jchat_GUI extends javax.swing.JFrame {
     private javax.swing.JTextArea displayTextArea;
     private javax.swing.JTextArea ecritureTextaArea;
     private javax.swing.JButton envoyerButton;
+    private javax.swing.JLabel erreurEnvoisLabel;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JLabel filtreLabel;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
@@ -369,6 +418,7 @@ public class jchat_GUI extends javax.swing.JFrame {
     private javax.swing.JPasswordField passwordField;
     private javax.swing.JLabel passwordLabel;
     private javax.swing.JList subjectList;
+    private javax.swing.JComboBox typeMessageCombo;
     // End of variables declaration//GEN-END:variables
     /* Envoi d'un message au client */
     public void SendMsg(String msg)
