@@ -12,6 +12,7 @@ public class Login extends javax.swing.JDialog
         super(parent, modal);
         initComponents();
         this.setTitle("Login");
+        ErrorLabel.setVisible(false);
     }
 
     
@@ -29,6 +30,7 @@ public class Login extends javax.swing.JDialog
         LoginTF = new javax.swing.JTextField();
         PwdPF = new javax.swing.JPasswordField();
         ConnexionButton = new javax.swing.JButton();
+        ErrorLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -43,25 +45,32 @@ public class Login extends javax.swing.JDialog
             }
         });
 
+        ErrorLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        ErrorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        ErrorLabel.setText("Connexion refusée !");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(PwdLabel)
-                        .addGap(18, 18, 18)
-                        .addComponent(PwdPF, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(LoginLabel)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(PwdLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(PwdPF, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(LoginLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(LoginTF, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(ErrorLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(LoginTF, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(ConnexionButton)
+                        .addComponent(ConnexionButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -75,9 +84,11 @@ public class Login extends javax.swing.JDialog
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(PwdLabel)
                     .addComponent(PwdPF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(ConnexionButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ConnexionButton)
+                    .addComponent(ErrorLabel))
+                .addContainerGap())
         );
 
         pack();
@@ -117,9 +128,9 @@ public class Login extends javax.swing.JDialog
             String[] parts = reponse.split("#");
             
             if (parts[0].equals("OUI"))
-                System.out.println("CONNECTE !");
+                this.dispose();
             else
-                System.out.println("REFUSE !");
+                ErrorLabel.setVisible(true);
         }
         catch (NoSuchAlgorithmException ex)
         {
@@ -176,6 +187,7 @@ public class Login extends javax.swing.JDialog
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ConnexionButton;
+    private javax.swing.JLabel ErrorLabel;
     private javax.swing.JLabel LoginLabel;
     private javax.swing.JTextField LoginTF;
     private javax.swing.JLabel PwdLabel;

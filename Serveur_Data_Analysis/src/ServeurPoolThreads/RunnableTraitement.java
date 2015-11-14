@@ -10,6 +10,7 @@ import java.util.Properties;
 
 public class RunnableTraitement implements Runnable
 {
+    private Boolean terminer = false;
     private Socket CSocket = null;
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
@@ -122,11 +123,13 @@ public class RunnableTraitement implements Runnable
     {
         System.out.println("RunnableTraitement : Execution du run");
         
-        Boolean terminer = false;
-        
         while (!terminer)
         {   
-            String reponse = ReceiveMsg();  
+            String reponse = ReceiveMsg(); 
+            
+            if (terminer)
+                break;
+            
             String[] parts = reponse.split("#");
          
             switch (Integer.parseInt(parts[0]))
@@ -135,11 +138,11 @@ public class RunnableTraitement implements Runnable
                     Login();
                     break;
                     
-                /*case "BOAT_ARRIVED" :
-                    BoatArrived(parts);
+                case ProtocolePIDEP.GET_STAT_DESCR_CONT :
+                    //BoatArrived(parts);
                     break;
                     
-                case "HANDLE_CONTAINER_IN" :
+                /*case "HANDLE_CONTAINER_IN" :
                     HandleContainerIn(parts);
                     break;
                     
@@ -203,11 +206,10 @@ public class RunnableTraitement implements Runnable
         try
         {
             while ((b = dis.readByte()) != (byte)'#')
-            {                   
+            {      
                 if (b != (byte)'#')
                     taille.append((char)b);
             }
-                
             for (int i = 0; i < Integer.parseInt(taille.toString()); i++)
             {
                 b = dis.readByte();
@@ -216,7 +218,8 @@ public class RunnableTraitement implements Runnable
         }
         catch(IOException e)
         {
-            System.err.println("RunnableTraitement : Erreur de reception de msg (IO) : " + e);
+            terminer = true;
+            System.err.println("RunnableTraitement : ReceiveMsg : Erreur de reception de msg (IO) : " + e);
         }
             
         return message.toString();
