@@ -194,4 +194,9 @@ public class BeanBDAccess implements Serializable{
         conBD.close();
         conBD = null;
     }
+    
+    public void procedure(String nom, HashMap param)
+    {
+        
+    }
 }
