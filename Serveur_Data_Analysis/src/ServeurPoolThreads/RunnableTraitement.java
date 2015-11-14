@@ -128,13 +128,11 @@ public class RunnableTraitement implements Runnable
         {   
             String reponse = ReceiveMsg();  
             String[] parts = reponse.split("#");
-            
-            System.out.println("REPONSE ===> " + reponse);
          
             switch (Integer.parseInt(parts[0]))
             {
                 case ProtocolePIDEP.LOGIN :
-                    Login(parts);
+                    Login();
                     break;
                     
                 /*case "BOAT_ARRIVED" :
@@ -226,11 +224,10 @@ public class RunnableTraitement implements Runnable
     
     
     /* LOGIN (à partir de BD_COMPTA */
-    /* IN : Nom, digest salé sur password, sel 1, sel 2 */
-    /* OUT : Oui/Non */
-    public void Login(String[] parts)
+    public void Login()
     {      
-        System.out.println("DEBUT LOGIN");
+        System.out.println("RunnableTraitement : DEBUT LOGIN");
+        
         try
         {
             // Lecture des données
@@ -263,12 +260,12 @@ public class RunnableTraitement implements Runnable
             if (MessageDigest.isEqual(pwdClient, pwdLocal))
             {
                 SendMsg("OUI");
-                System.out.println("RunnableTraitement : Login : Le client " + parts[1] + " est connecté au serveur");
+                System.out.println("RunnableTraitement : Login : Le client " + user + " est connecté au serveur");
             }
             else
             {
                 SendMsg("NON");
-                System.out.println("RunnableTraitement : Login : Le client " + parts[1] + " est refusé");
+                System.out.println("RunnableTraitement : Login : Le client " + user + " est refusé");
             }
         }
         catch (SQLException e)

@@ -91,32 +91,35 @@ public class Login extends javax.swing.JDialog
             // sels
             long temps = (new Date()).getTime();
             double aleatoire = Math.random();
+            String Password = new String(PwdPF.getPassword());
 
             // digest
             MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(PwdPF.getPassword().toString().getBytes());
+            md.update(Password.getBytes());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             DataOutputStream bdos = new DataOutputStream(baos);
             bdos.writeLong(temps);
             bdos.writeDouble(aleatoire);
             md.update(baos.toByteArray());
             byte[] pwdDigest = md.digest();
-            /*String tmp = new String(pwdDigest);
-            System.out.println("tmp : " + tmp);*/
 
             // envoi
-            /*String chargeUtile = LoginTF.getText() + "#" + new String(pwdDigest) + "#" + temps + "#" + aleatoire;
-            System.out.println("temps : " + temps);
-            System.out.println("aléatoire : " + aleatoire);
-            System.out.println("CHARGE UTILE ===> " + chargeUtile);*/
-            
+            Utility.SendMsg(ProtocolePIDEP.LOGIN, "");
             Utility.dos.writeUTF(LoginTF.getText());
             Utility.dos.writeLong(temps);
             Utility.dos.writeDouble(aleatoire);
             Utility.dos.writeInt(pwdDigest.length);                    
             Utility.dos.write(pwdDigest);
             Utility.dos.flush();
-            //Utility.SendMsg(ProtocolePIDEP.LOGIN, "");  // On prévient le serveur
+            
+            // réponse
+            String reponse = Utility.ReceiveMsg();  
+            String[] parts = reponse.split("#");
+            
+            if (parts[0].equals("OUI"))
+                System.out.println("CONNECTE !");
+            else
+                System.out.println("REFUSE !");
         }
         catch (NoSuchAlgorithmException ex)
         {
