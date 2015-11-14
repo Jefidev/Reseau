@@ -87,7 +87,7 @@ public class Login extends javax.swing.JDialog
     private void ConnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnexionButtonActionPerformed
 
         try
-        {        
+        {              
             // sels
             long temps = (new Date()).getTime();
             double aleatoire = Math.random();
@@ -101,11 +101,22 @@ public class Login extends javax.swing.JDialog
             bdos.writeDouble(aleatoire);
             md.update(baos.toByteArray());
             byte[] pwdDigest = md.digest();
+            /*String tmp = new String(pwdDigest);
+            System.out.println("tmp : " + tmp);*/
 
             // envoi
-            String chargeUtile = LoginTF.getText() + "#" + pwdDigest.toString() + "#" + temps + "#" + aleatoire;
-            System.out.println("CHARGE UTILE ===> " + chargeUtile);
-            Utility.SendMsg(ProtocolePIDEP.LOGIN, chargeUtile);
+            /*String chargeUtile = LoginTF.getText() + "#" + new String(pwdDigest) + "#" + temps + "#" + aleatoire;
+            System.out.println("temps : " + temps);
+            System.out.println("aléatoire : " + aleatoire);
+            System.out.println("CHARGE UTILE ===> " + chargeUtile);*/
+            
+            Utility.dos.writeUTF(LoginTF.getText());
+            Utility.dos.writeLong(temps);
+            Utility.dos.writeDouble(aleatoire);
+            Utility.dos.writeInt(pwdDigest.length);                    
+            Utility.dos.write(pwdDigest);
+            Utility.dos.flush();
+            //Utility.SendMsg(ProtocolePIDEP.LOGIN, "");  // On prévient le serveur
         }
         catch (NoSuchAlgorithmException ex)
         {

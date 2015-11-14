@@ -8,15 +8,14 @@ import java.util.Properties;
 public final class Utility
 {
     private static DataInputStream dis;
-    private static DataOutputStream dos;
+    public static DataOutputStream dos;
+    private static String adresse;
+    private static int port;
 
 
     public static void InitialisationFlux()
-    {
-        String adresse = null;
-        int port = 0;
-        
-        FichierProperties(adresse, port);
+    {      
+        FichierProperties();
         
         try
         {
@@ -26,11 +25,11 @@ public final class Utility
         }
         catch (IOException e)
         {
-            System.err.println("Utility : Erreur de création de dis et dos (IO) : " + e);
+            System.err.println("Utility : Erreur de création de la socket, dis et dos (IO) : " + e);
         }
     }
     
-    private static void FichierProperties(String adresse, int port)
+    private static void FichierProperties()
     {
         Properties prop = new Properties();
         
@@ -43,9 +42,9 @@ public final class Utility
         {
             try 
             {
-                FileOutputStream FOS = new FileOutputStream("ServeurDataAnalysis.properties");
+                FileOutputStream FOS = new FileOutputStream("DataAnalysis.properties");
                 
-                prop.setProperty("Adresse", "192.168.1.5");
+                prop.setProperty("Adresse", "192.168.1.4");
                 prop.setProperty("Port", "31049");
                               
                 try
@@ -77,7 +76,7 @@ public final class Utility
 
     public static void SendMsg(int requete, String chargeUtile)
     {
-        chargeUtile = requete + chargeUtile;
+        chargeUtile = requete + "#" + chargeUtile;
         int taille = chargeUtile.length();
         String message = String.valueOf(taille) + "#" + chargeUtile;
 

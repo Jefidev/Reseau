@@ -233,19 +233,23 @@ public class RunnableTraitement implements Runnable
         System.out.println("DEBUT LOGIN");
         try
         {
+            // Lecture des données
+            String user = dis.readUTF();
+            long temps = dis.readLong();
+            double aleatoire = dis.readDouble();
+            int longueur = dis.readInt();
+            byte[] pwdClient = new byte[longueur];
+            dis.readFully(pwdClient);
+                       
+            // Récupération du mot de passe dans la base de données
             ResultSet ResultatDB = null;
             String passwordDB = null;
             
-            // Récupération du mot de passe dans la base de données
-            ResultatDB = beanOracleCompta.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + parts[1] + "'");
+            ResultatDB = beanOracleCompta.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + user + "'");
             while (ResultatDB.next())
                 passwordDB = ResultatDB.getString(1);
             
-            
             // confection d'un digest local
-            long temps = Long.getLong(parts[3]);
-            double aleatoire = Double.parseDouble(parts[4]);
-
             MessageDigest md = MessageDigest.getInstance("SHA-1");
             md.update(passwordDB.getBytes());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -253,11 +257,10 @@ public class RunnableTraitement implements Runnable
             bdos.writeLong(temps);
             bdos.writeDouble(aleatoire);
             md.update(baos.toByteArray());
-            byte[] pwdDigest = md.digest();
-    
+            byte[] pwdLocal = md.digest();
 
             // comparaison            
-            if (MessageDigest.isEqual(parts[2].getBytes(), pwdDigest))
+            if (MessageDigest.isEqual(pwdClient, pwdLocal))
             {
                 SendMsg("OUI");
                 System.out.println("RunnableTraitement : Login : Le client " + parts[1] + " est connecté au serveur");
