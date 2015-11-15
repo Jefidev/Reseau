@@ -139,33 +139,8 @@ public class RunnableTraitement implements Runnable
                     break;
                     
                 case ProtocolePIDEP.GET_STAT_DESCR_CONT :
-                    //BoatArrived(parts);
+                    GetStatDescrCont(parts);
                     break;
-                    
-                /*case "HANDLE_CONTAINER_IN" :
-                    HandleContainerIn(parts);
-                    break;
-                    
-                case "END_CONTAINER_IN" :
-                    EndContainerIn();
-                    break;
-                    
-                case "GET_CONTAINERS" :
-                    GetContainers(parts);
-                    break;
-                    
-                case "HANDLE_CONTAINER_OUT" :
-                    HandleContainerOut(parts);
-                    break;
-                
-                case "END_CONTAINER_OUT" :
-                    EndContainerOut();
-                    break;
-                    
-                case "LOGOUT" :
-                    System.out.println("RunnableTraitement : LOGOUT");
-                    terminer = true;
-                    break;*/
                     
                 default :
                     terminer = true;
@@ -291,16 +266,36 @@ public class RunnableTraitement implements Runnable
     }
     
     
+    /* STATITIQUE DESCRIPTIVE CONTINUE (moyenne, mode, médiane, écart-type */
+    /* In : Nb de containers sur lequels faire les stats + containers chargés ou déchargés */
+    /* OUT : moyenne, mode, médiane, écart-type */
+    public void GetStatDescrCont(String[] parts)
+    {
+        /*
+        ResultSet ResultatDB = null;
+            
+        String condition = "EXTRACT(YEAR FROM DateEntree) = EXTRACT(YEAR FROM SYSDATE)";
+        if (parts[1].equals("OUT"))
+            condition += "";
+            ResultatDB = beanOracleTrafic.selection("POIDS", "MOUVEMENTS", "EXTRACT(YEAR FROM DateEntree) = EXTRACT(YEAR FROM SYSDATE)");
+            while (ResultatDB.next())
+                passwordDB = ResultatDB.getString(1);
+        
+        */
+        
+        
+        // Requete
+        // Aléatoire ?
+        // Calcul des données => Math
+        // Envoi des données
+    }
+    
+
     
     
     
-    
-    
-    
-    
-    
-    
-    
+
+
     
     
     

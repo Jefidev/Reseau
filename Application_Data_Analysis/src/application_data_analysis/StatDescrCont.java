@@ -1,5 +1,7 @@
 package application_data_analysis;
 
+import javax.swing.ButtonModel;
+
 
 public class StatDescrCont extends javax.swing.JPanel
 {
@@ -157,7 +159,7 @@ public class StatDescrCont extends javax.swing.JPanel
         ButtonGroup.add(DechargesRB);
         ButtonGroup.add(ChargesRB);
         
-        // Désactiver les boutons à réactiver quand connecté
+        // Cacher les labels
         ErrorNbContainersLabel.setVisible(false);
         MoyenneReponseLabel.setVisible(false);
         ModeReponseLabel.setVisible(false);
@@ -171,9 +173,15 @@ public class StatDescrCont extends javax.swing.JPanel
         {
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
 
-            // IN-OUT
+            ButtonModel tmp = ButtonGroup.getSelection();
+            String mouvement;
+            
+            if (tmp.equals(ChargesRB))
+                mouvement = "OUT";
+            else
+                mouvement = "IN";
 
-            String ChargeUtile = nbContainers + "IN";
+            String ChargeUtile = nbContainers + mouvement;
             Utility.SendMsg(ProtocolePIDEP.GET_STAT_DESCR_CONT, ChargeUtile);
 
             // Réponse
@@ -195,6 +203,7 @@ public class StatDescrCont extends javax.swing.JPanel
         }
     }//GEN-LAST:event_CalculerButtonActionPerformed
 
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup ButtonGroup;
