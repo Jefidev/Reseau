@@ -11,6 +11,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import oracle.jdbc.OracleTypes;
+import oracle.jdbc.oracore.OracleType;
 
 /**
  *
@@ -195,8 +199,20 @@ public class BeanBDAccess implements Serializable{
         conBD = null;
     }
     
-    public void procedure(String nom, HashMap param)
+    public ResultSet procedure(String nom, HashMap param)
     {
+        ResultSet rs = null;
+        CallableStatement cls;
+        try {
+            cls = conBD.prepareCall("{call PACKAGERECHERCHE.recherche(?) }");
+            cls.registerOutParameter(1, OracleTypes.CURSOR);
+            cls.executeQuery();
+            
+            rs = (ResultSet) cls.getObject(1);
+        } catch (SQLException ex) {
+            System.err.println("Erreur ligne 208 beandAccess " + ex);
+        }
         
+        return rs;
     }
 }
