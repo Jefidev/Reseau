@@ -26,6 +26,7 @@ public class StatDescrCont extends javax.swing.JPanel
         MedianeReponseLabel = new javax.swing.JLabel();
         ModeReponseLabel = new javax.swing.JLabel();
         MoyenneReponseLabel = new javax.swing.JLabel();
+        ErrorCalculLabel = new javax.swing.JLabel();
 
         Titre1Label.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         Titre1Label.setForeground(new java.awt.Color(0, 0, 255));
@@ -37,6 +38,7 @@ public class StatDescrCont extends javax.swing.JPanel
 
         NbContainersLabel.setText("Nombre de containers de l'échantillon :");
 
+        ErrorNbContainersLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         ErrorNbContainersLabel.setForeground(new java.awt.Color(255, 0, 0));
         ErrorNbContainersLabel.setText("Doit être un entier positif !");
 
@@ -67,6 +69,10 @@ public class StatDescrCont extends javax.swing.JPanel
 
         MoyenneReponseLabel.setText("jLabel1");
 
+        ErrorCalculLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        ErrorCalculLabel.setForeground(new java.awt.Color(255, 0, 0));
+        ErrorCalculLabel.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -85,20 +91,11 @@ public class StatDescrCont extends javax.swing.JPanel
                                 .addGap(111, 111, 111))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(NbContainersLabel)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(NbContainersLabel)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(DechargesRB)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(ChargesRB)))
+                                .addComponent(DechargesRB)
                                 .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(ErrorNbContainersLabel))
-                                    .addComponent(CalculerButton)))
+                                .addComponent(ChargesRB))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(EcartTypeLabel)
@@ -111,6 +108,14 @@ public class StatDescrCont extends javax.swing.JPanel
                                     .addComponent(ModeReponseLabel)
                                     .addComponent(MedianeReponseLabel)
                                     .addComponent(EcartTypeReponseLabel))))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(ErrorCalculLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(ErrorNbContainersLabel))
+                            .addComponent(CalculerButton))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -133,7 +138,8 @@ public class StatDescrCont extends javax.swing.JPanel
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(MoyenneLabel)
-                    .addComponent(MoyenneReponseLabel))
+                    .addComponent(MoyenneReponseLabel)
+                    .addComponent(ErrorCalculLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ModeLabel)
@@ -187,15 +193,23 @@ public class StatDescrCont extends javax.swing.JPanel
             // Réponse
             String reponse = Utility.ReceiveMsg();
             String[] parts = reponse.split("#");
-
-            MoyenneReponseLabel.setText(parts[0]);
-            MoyenneReponseLabel.setVisible(true);
-            ModeReponseLabel.setText(parts[1]);
-            ModeReponseLabel.setVisible(true);
-            MedianeReponseLabel.setText(parts[2]);
-            MedianeReponseLabel.setVisible(true);
-            EcartTypeReponseLabel.setText(parts[3]);
-            EcartTypeReponseLabel.setVisible(true);
+            
+            if (parts[0].equals("NON")) // Erreur
+            {
+                ErrorCalculLabel.setText(parts[1]);
+                ErrorCalculLabel.setVisible(true);
+            }
+            else
+            {
+                MoyenneReponseLabel.setText(parts[0]);
+                MoyenneReponseLabel.setVisible(true);
+                ModeReponseLabel.setText(parts[1]);
+                ModeReponseLabel.setVisible(true);
+                MedianeReponseLabel.setText(parts[2]);
+                MedianeReponseLabel.setVisible(true);
+                EcartTypeReponseLabel.setText(parts[3]);
+                EcartTypeReponseLabel.setVisible(true);
+            }
         }
         catch (NumberFormatException ex)
         {
@@ -212,6 +226,7 @@ public class StatDescrCont extends javax.swing.JPanel
     private javax.swing.JRadioButton DechargesRB;
     private javax.swing.JLabel EcartTypeLabel;
     private javax.swing.JLabel EcartTypeReponseLabel;
+    private javax.swing.JLabel ErrorCalculLabel;
     private javax.swing.JLabel ErrorNbContainersLabel;
     private javax.swing.JLabel MedianeLabel;
     private javax.swing.JLabel MedianeReponseLabel;

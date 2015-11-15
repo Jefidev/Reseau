@@ -5,7 +5,9 @@ import java.net.*;
 import java.sql.*;
 import newBean.*;
 import java.security.*;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.Random;
 
 
 public class RunnableTraitement implements Runnable
@@ -217,10 +219,9 @@ public class RunnableTraitement implements Runnable
             dis.readFully(pwdClient);
                        
             // Récupération du mot de passe dans la base de données
-            ResultSet ResultatDB = null;
             String passwordDB = null;
             
-            ResultatDB = beanOracleCompta.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + user + "'");
+            ResultSet ResultatDB = beanOracleCompta.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + user + "'");
             while (ResultatDB.next())
                 passwordDB = ResultatDB.getString(1);
             
@@ -268,26 +269,75 @@ public class RunnableTraitement implements Runnable
     
     /* STATITIQUE DESCRIPTIVE CONTINUE (moyenne, mode, médiane, écart-type */
     /* In : Nb de containers sur lequels faire les stats + containers chargés ou déchargés */
-    /* OUT : moyenne, mode, médiane, écart-type */
+    /* OUT : moyenne, mode, médiane, écart-type OU NON#msgErreur */
     public void GetStatDescrCont(String[] parts)
     {
-        /*
-        ResultSet ResultatDB = null;
+        try
+        {   
+            // Base de données
+            int nbCont = Integer.parseInt(parts[1]);
+            String condition;
             
-        String condition = "EXTRACT(YEAR FROM DateEntree) = EXTRACT(YEAR FROM SYSDATE)";
-        if (parts[1].equals("OUT"))
-            condition += "";
-            ResultatDB = beanOracleTrafic.selection("POIDS", "MOUVEMENTS", "EXTRACT(YEAR FROM DateEntree) = EXTRACT(YEAR FROM SYSDATE)");
-            while (ResultatDB.next())
-                passwordDB = ResultatDB.getString(1);
-        
-        */
-        
-        
-        // Requete
-        // Aléatoire ?
-        // Calcul des données => Math
-        // Envoi des données
+            if (parts[2].equals("OUT")) // Chargement
+                condition = "DATE_DEPART IS NOT NULL AND EXTRACT(YEAR FROM DATE_DEPART) = EXTRACT(YEAR FROM SYSDATE)";
+            else // Déchargement
+                condition = "EXTRACT(YEAR FROM DATE_ARRIVEE) = EXTRACT(YEAR FROM SYSDATE)";
+            
+            ResultSet ResultatDB = beanOracleTrafic.selection("POIDS", "MOUVEMENTS", condition);
+            
+            
+            // Vérification de la taille de l'échantillon
+            int size = 0;
+            if (ResultatDB != null)
+            {
+                ResultatDB.last();
+                size = ResultatDB.getRow();
+            }
+            
+            if (size < nbCont)
+                SendMsg("NON#L'échantillon ne peut actuellement pas dépasser " + size + " pour cette condition");
+
+            
+            // Aléatoire
+            Double[] arrayPoids = new Double[nbCont];
+            Integer[] arrayAlea = new Integer[nbCont];
+            Random r = new Random();
+            int tmp;
+            
+            for(int i = 0; i < nbCont; i++)
+            {
+                do
+                {
+                    tmp = r.nextInt(size) + 1;  // Génération d'un nb aléatoire entre 1 et le nb de tuples récupérés
+                } while (!Arrays.asList(arrayAlea).contains(tmp));
+                
+                arrayAlea[i] = tmp;
+            }
+            
+            for(int i = 0; i < size; i++)
+            {
+                ResultatDB.beforeFirst();
+                int cptTuple = 0;
+                
+                while (cptTuple < arrayAlea[i])
+                {
+                    ResultatDB.next();
+                    cptTuple++;
+                }
+                
+                arrayPoids[i] = ResultatDB.getDouble("POIDS");
+            }
+            
+            
+            
+            // Calcul des données => Math
+            // Envoi des données
+        }
+        catch (SQLException ex)
+        {
+            SendMsg("NON#Problème de recherche des données");
+            System.err.println("RunnableTraitement : SQLexception GetStatDescrCont : " + ex.getMessage());
+        }
     }
     
 
