@@ -8,6 +8,9 @@ import java.security.*;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Random;
+import org.apache.commons.math.stat.StatUtils;
+import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.jfree.data.statistics.Statistics;
 
 
 public class RunnableTraitement implements Runnable
@@ -277,11 +280,15 @@ public class RunnableTraitement implements Runnable
             // Base de données
             int nbCont = Integer.parseInt(parts[1]);
             String condition;
+            double[] arrayPoids = new double[nbCont];
+            Random r = new Random();
+            
+            int alea = r.nextInt();
             
             if (parts[2].equals("OUT")) // Chargement
-                condition = "DATE_DEPART IS NOT NULL AND EXTRACT(YEAR FROM DATE_DEPART) = EXTRACT(YEAR FROM SYSDATE)";
+                condition = "DATE_DEPART IS NOT NULL AND EXTRACT(YEAR FROM DATE_DEPART) = EXTRACT(YEAR FROM SYSDATE) ORDER BY " + alea;
             else // Déchargement
-                condition = "EXTRACT(YEAR FROM DATE_ARRIVEE) = EXTRACT(YEAR FROM SYSDATE)";
+                condition = "EXTRACT(YEAR FROM DATE_ARRIVEE) = EXTRACT(YEAR FROM SYSDATE) ORDER BY " + alea;
             
             ResultSet ResultatDB = beanOracleTrafic.selection("POIDS", "MOUVEMENTS", condition);
             
@@ -296,42 +303,28 @@ public class RunnableTraitement implements Runnable
             
             if (size < nbCont)
                 SendMsg("NON#L'échantillon ne peut actuellement pas dépasser " + size + " pour cette condition");
-
             
-            // Aléatoire
-            Double[] arrayPoids = new Double[nbCont];
-            Integer[] arrayAlea = new Integer[nbCont];
-            Random r = new Random();
-            int tmp;
             
-            for(int i = 0; i < nbCont; i++)
-            {
-                do
-                {
-                    tmp = r.nextInt(size) + 1;  // Génération d'un nb aléatoire entre 1 et le nb de tuples récupérés
-                } while (!Arrays.asList(arrayAlea).contains(tmp));
-                
-                arrayAlea[i] = tmp;
-            }
-            
+            // Remplissage du tableau de poids
+            ResultatDB.beforeFirst();
             for(int i = 0; i < size; i++)
             {
-                ResultatDB.beforeFirst();
-                int cptTuple = 0;
-                
-                while (cptTuple < arrayAlea[i])
-                {
-                    ResultatDB.next();
-                    cptTuple++;
-                }
-                
                 arrayPoids[i] = ResultatDB.getDouble("POIDS");
+                ResultatDB.next();
             }
+           
+            
+            // Calculs
+            DescriptiveStatistics ds = new DescriptiveStatistics(arrayPoids);
+            double moyenne = ds.getMean();
+            double ecartType = ds.getStandardDeviation();
+            double[] mode = StatUtils.mode(arrayPoids);
+            double mediane = Statistics.calculateMedian(Arrays.asList(arrayPoids));
             
             
-            
-            // Calcul des données => Math
             // Envoi des données
+            String ChargeUtile = moyenne + "#" + /*mode + "#" +*/ mediane + "#" + ecartType;
+            SendMsg(ChargeUtile);
         }
         catch (SQLException ex)
         {
