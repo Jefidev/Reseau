@@ -98,7 +98,7 @@ public class Login extends javax.swing.JDialog
     private void ConnexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConnexionButtonActionPerformed
 
         try
-        {              
+        {   
             // sels
             long temps = (new Date()).getTime();
             double aleatoire = Math.random();
@@ -128,7 +128,11 @@ public class Login extends javax.swing.JDialog
             String[] parts = reponse.split("#");
             
             if (parts[0].equals("OUI"))
+            {
+                ApplicationDataAnalysis a = (ApplicationDataAnalysis) this.getParent();
+                a.isConnected = true;
                 this.dispose();
+            }
             else
                 ErrorLabel.setVisible(true);
         }
