@@ -16,18 +16,18 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="TitreLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="251" max="-2" attributes="0"/>
-          </Group>
           <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace pref="103" max="32767" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="StatDescrContButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="GrCouleurRepButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="Titre1Label" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="85" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="MenuButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace pref="133" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -35,18 +35,16 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="TitreLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="StatDescrContButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-              <Component id="GrCouleurRepButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="197" max="32767" attributes="0"/>
+              <Component id="Titre1Label" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="238" max="32767" attributes="0"/>
+              <Component id="MenuButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
   </Layout>
   <SubComponents>
-    <Component class="javax.swing.JLabel" name="TitreLabel">
+    <Component class="javax.swing.JLabel" name="Titre1Label">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Tahoma" size="14" style="1"/>
@@ -54,21 +52,16 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="ff" green="0" red="0" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="MENU"/>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="StatDescrContButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Statistiques constructives descriptives : moyenne, mode, m&#xe9;diane, &#xe9;cart-type"/>
-      </Properties>
-      <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StatDescrContButtonActionPerformed"/>
-      </Events>
-    </Component>
-    <Component class="javax.swing.JButton" name="GrCouleurRepButton">
-      <Properties>
         <Property name="text" type="java.lang.String" value="R&#xe9;partition du nombre de containers par destination"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="MenuButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Retour au menu"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="MenuButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

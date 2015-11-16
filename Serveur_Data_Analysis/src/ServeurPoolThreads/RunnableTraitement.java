@@ -144,6 +144,10 @@ public class RunnableTraitement implements Runnable
                     GetStatDescrCont(parts);
                     break;
                     
+                case ProtocolePIDEP.GET_GR_COULEUR_REP :
+                    GetGrCouleurRep();
+                    break;
+                    
                 default :
                     terminer = true;
                     break;
@@ -340,5 +344,12 @@ public class RunnableTraitement implements Runnable
         }
         
         System.out.println("RunnableTraitement : FIN GETSTATDESCRCONT");
+    }
+    
+    
+    /* In : Année ou mois */
+    public void GetGrCouleurRep()
+    {
+        
     }
 }

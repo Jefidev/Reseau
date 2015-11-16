@@ -15,6 +15,7 @@ public class Menu extends javax.swing.JPanel {
 
         TitreLabel = new javax.swing.JLabel();
         StatDescrContButton = new javax.swing.JButton();
+        GrCouleurRepButton = new javax.swing.JButton();
 
         TitreLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TitreLabel.setForeground(new java.awt.Color(0, 0, 255));
@@ -27,6 +28,8 @@ public class Menu extends javax.swing.JPanel {
             }
         });
 
+        GrCouleurRepButton.setText("Répartition du nombre de containers par destination");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -37,7 +40,9 @@ public class Menu extends javax.swing.JPanel {
                 .addGap(251, 251, 251))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(StatDescrContButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(StatDescrContButton)
+                    .addComponent(GrCouleurRepButton))
                 .addContainerGap(133, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -47,7 +52,9 @@ public class Menu extends javax.swing.JPanel {
                 .addComponent(TitreLabel)
                 .addGap(18, 18, 18)
                 .addComponent(StatDescrContButton)
-                .addContainerGap(231, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(GrCouleurRepButton)
+                .addContainerGap(197, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -57,6 +64,7 @@ public class Menu extends javax.swing.JPanel {
     }//GEN-LAST:event_StatDescrContButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton GrCouleurRepButton;
     private javax.swing.JButton StatDescrContButton;
     private javax.swing.JLabel TitreLabel;
     // End of variables declaration//GEN-END:variables

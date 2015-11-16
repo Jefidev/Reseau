@@ -41,5 +41,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="application_data_analysis.GrCouleurRep" name="GrCouleurRep">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="GrCouleurRep"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
