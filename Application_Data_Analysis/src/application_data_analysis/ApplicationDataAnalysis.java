@@ -14,11 +14,13 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
     private void initComponents() {
 
         ButtonGroup = new javax.swing.ButtonGroup();
-        statDescrCont = new application_data_analysis.StatDescrCont();
+        Menu = new application_data_analysis.Menu();
+        StatDescrCont = new application_data_analysis.StatDescrCont();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
-        getContentPane().add(statDescrCont, "statDescrCont");
+        getContentPane().add(Menu, "Menu");
+        getContentPane().add(StatDescrCont, "StatDescrCont");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -75,6 +77,7 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup ButtonGroup;
-    private application_data_analysis.StatDescrCont statDescrCont;
+    private application_data_analysis.Menu Menu;
+    private application_data_analysis.StatDescrCont StatDescrCont;
     // End of variables declaration//GEN-END:variables
 }

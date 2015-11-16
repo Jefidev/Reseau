@@ -53,7 +53,7 @@ public class Menu extends javax.swing.JPanel {
 
     private void StatDescrContButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatDescrContButtonActionPerformed
         ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("StatDescCont");
+        app.ChangePanel("StatDescrCont");
     }//GEN-LAST:event_StatDescrContButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

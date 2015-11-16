@@ -1,6 +1,7 @@
 package application_data_analysis;
 
 import javax.swing.ButtonModel;
+import javax.swing.SwingUtilities;
 
 
 public class StatDescrCont extends javax.swing.JPanel
@@ -14,7 +15,7 @@ public class StatDescrCont extends javax.swing.JPanel
         Titre2Label = new javax.swing.JLabel();
         NbContainersLabel = new javax.swing.JLabel();
         NbContainersTF = new javax.swing.JTextField();
-        ErrorNbContainersLabel = new javax.swing.JLabel();
+        ErrorSaisieLabel = new javax.swing.JLabel();
         DechargesRB = new javax.swing.JRadioButton();
         ChargesRB = new javax.swing.JRadioButton();
         CalculerButton = new javax.swing.JButton();
@@ -39,9 +40,9 @@ public class StatDescrCont extends javax.swing.JPanel
 
         NbContainersLabel.setText("Nombre de containers de l'échantillon :");
 
-        ErrorNbContainersLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        ErrorNbContainersLabel.setForeground(new java.awt.Color(255, 0, 0));
-        ErrorNbContainersLabel.setText("Doit être un entier positif !");
+        ErrorSaisieLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        ErrorSaisieLabel.setForeground(new java.awt.Color(255, 0, 0));
+        ErrorSaisieLabel.setText("Doit être un entier positif !");
 
         DechargesRB.setText("Déchargés");
 
@@ -75,6 +76,11 @@ public class StatDescrCont extends javax.swing.JPanel
         ErrorCalculLabel.setText("jLabel1");
 
         RetourMenuButton.setText("Retour au menu");
+        RetourMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RetourMenuButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -105,7 +111,7 @@ public class StatDescrCont extends javax.swing.JPanel
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(ErrorNbContainersLabel))
+                                .addComponent(ErrorSaisieLabel))
                             .addComponent(CalculerButton))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -141,7 +147,7 @@ public class StatDescrCont extends javax.swing.JPanel
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(NbContainersLabel)
                             .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ErrorNbContainersLabel))
+                            .addComponent(ErrorSaisieLabel))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(DechargesRB)
@@ -171,8 +177,6 @@ public class StatDescrCont extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
     public StatDescrCont()
     {
         initComponents();
@@ -181,7 +185,8 @@ public class StatDescrCont extends javax.swing.JPanel
         ButtonGroup.add(ChargesRB);
         
         // Cacher les labels
-        ErrorNbContainersLabel.setVisible(false);
+        ErrorSaisieLabel.setVisible(false);
+        ErrorCalculLabel.setVisible(false);
         MoyenneReponseLabel.setVisible(false);
         ModeReponseLabel.setVisible(false);
         MedianeReponseLabel.setVisible(false);
@@ -190,6 +195,9 @@ public class StatDescrCont extends javax.swing.JPanel
         
     private void CalculerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CalculerButtonActionPerformed
 
+        ErrorSaisieLabel.setVisible(false);
+        ErrorCalculLabel.setVisible(false);
+        
         try
         {
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
@@ -197,12 +205,19 @@ public class StatDescrCont extends javax.swing.JPanel
             ButtonModel tmp = ButtonGroup.getSelection();
             String mouvement;
             
+            if (tmp == null)
+            {
+                ErrorSaisieLabel.setText("Sélectionner 'Chargés' ou 'Déchargés'");
+                ErrorSaisieLabel.setVisible(true);
+                return;
+            }
+            
             if (tmp.equals(ChargesRB))
                 mouvement = "OUT";
             else
                 mouvement = "IN";
 
-            String ChargeUtile = nbContainers + mouvement;
+            String ChargeUtile = nbContainers + "#" + mouvement;
             Utility.SendMsg(ProtocolePIDEP.GET_STAT_DESCR_CONT, ChargeUtile);
 
             // Réponse
@@ -228,11 +243,14 @@ public class StatDescrCont extends javax.swing.JPanel
         }
         catch (NumberFormatException ex)
         {
-            ErrorNbContainersLabel.setVisible(true);
+            ErrorSaisieLabel.setVisible(true);
         }
     }//GEN-LAST:event_CalculerButtonActionPerformed
 
-    
+    private void RetourMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RetourMenuButtonActionPerformed
+        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        app.ChangePanel("Menu");
+    }//GEN-LAST:event_RetourMenuButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup ButtonGroup;
@@ -242,7 +260,7 @@ public class StatDescrCont extends javax.swing.JPanel
     private javax.swing.JLabel EcartTypeLabel;
     private javax.swing.JLabel EcartTypeReponseLabel;
     private javax.swing.JLabel ErrorCalculLabel;
-    private javax.swing.JLabel ErrorNbContainersLabel;
+    private javax.swing.JLabel ErrorSaisieLabel;
     private javax.swing.JLabel MedianeLabel;
     private javax.swing.JLabel MedianeReponseLabel;
     private javax.swing.JLabel ModeLabel;
