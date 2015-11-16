@@ -324,9 +324,11 @@ public class RunnableTraitement implements Runnable
             
             
             // Envoi des données
-            String mode = "";
-            for(int i = 0; i < modetab.length; i++)
-                mode += modetab[i] + " ";
+            String mode = "[";
+            int i;
+            for(i = 0; i < (modetab.length - 1); i++)
+                mode += modetab[i] + ", ";
+            mode += modetab[i] + "]";
                 
             String ChargeUtile = moyenne + "#" + mode + "#" + mediane + "#" + ecartType;
             SendMsg(ChargeUtile);
