@@ -281,20 +281,10 @@ public class RunnableTraitement implements Runnable
             String condition;
             double[] arrayPoids = new double[nbCont];
             
-            System.out.println(parts[2]);
-            
             if (parts[2].equals("OUT")) // Chargement
-            {
-                System.out.println("OUT");
-                condition = "DATE_DEPART IS NOT NULL AND EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = EXTRACT(YEAR FROM SYSDATE) ORDER BY DBMS_RANDOM.VALUE";
-            }
+                condition = "DATE_DEPART IS NOT NULL AND EXTRACT(YEAR FROM(TO_DATE(DATE_DEPART, 'DD/MM/YYYY'))) = EXTRACT(YEAR FROM SYSDATE) ORDER BY DBMS_RANDOM.VALUE";
             else // Déchargement
-            {
-                System.out.println("IN");
                 condition = "EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = EXTRACT(YEAR FROM SYSDATE) ORDER BY DBMS_RANDOM.VALUE";
-            }
-            
-            System.out.println(condition);
 
             ResultSet ResultatDB = beanOracleTrafic.selection("POIDS", "MOUVEMENTS", condition);
             
@@ -302,11 +292,10 @@ public class RunnableTraitement implements Runnable
             // Vérification de la taille de l'échantillon
             if (!ResultatDB.next())
             {
-                System.out.println("111");
-                SendMsg("NON#Aucune donnee correspondante");
+                SendMsg("NON#Aucune donnee correspondante aux parametres demandes");
                 return;
             }
-            
+                    
             ResultatDB.last();
             int size = ResultatDB.getRow();
             System.out.println("size : " + size);
@@ -319,14 +308,11 @@ public class RunnableTraitement implements Runnable
             
             // Remplissage du tableau de poids
             ResultatDB.beforeFirst();
-            for(int i = 0; i < size; i++)
+            for(int i = 0; i < nbCont && ResultatDB.next(); i++)
             {
-                System.out.println("777");
+                System.out.println(ResultatDB.getDouble("POIDS"));
                 arrayPoids[i] = ResultatDB.getDouble("POIDS");
-                if (!ResultatDB.isLast())
-                    ResultatDB.next();
             }
-            System.out.println("888");
            
             
             // Calculs
