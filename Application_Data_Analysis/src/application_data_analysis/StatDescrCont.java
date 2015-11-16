@@ -201,21 +201,18 @@ public class StatDescrCont extends javax.swing.JPanel
         try
         {
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
-
-            ButtonModel tmp = ButtonGroup.getSelection();
             String mouvement;
             
-            if (tmp == null)
+            if (ChargesRB.isSelected())
+                mouvement = "OUT";
+            else if (DechargesRB.isSelected())
+                mouvement = "IN";
+            else
             {
                 ErrorSaisieLabel.setText("Sélectionner 'Chargés' ou 'Déchargés'");
                 ErrorSaisieLabel.setVisible(true);
                 return;
             }
-            
-            if (tmp.equals(ChargesRB))
-                mouvement = "OUT";
-            else
-                mouvement = "IN";
 
             String ChargeUtile = nbContainers + "#" + mouvement;
             Utility.SendMsg(ProtocolePIDEP.GET_STAT_DESCR_CONT, ChargeUtile);
