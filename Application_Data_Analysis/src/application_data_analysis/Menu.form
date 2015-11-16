@@ -69,6 +69,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="R&#xe9;partition du nombre de containers par destination"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GrCouleurRepButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

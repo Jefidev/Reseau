@@ -29,6 +29,11 @@ public class Menu extends javax.swing.JPanel {
         });
 
         GrCouleurRepButton.setText("Répartition du nombre de containers par destination");
+        GrCouleurRepButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GrCouleurRepButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -62,6 +67,11 @@ public class Menu extends javax.swing.JPanel {
         ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
         app.ChangePanel("StatDescrCont");
     }//GEN-LAST:event_StatDescrContButtonActionPerformed
+
+    private void GrCouleurRepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrCouleurRepButtonActionPerformed
+        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        app.ChangePanel("GrCouleurRep");
+    }//GEN-LAST:event_GrCouleurRepButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton GrCouleurRepButton;
