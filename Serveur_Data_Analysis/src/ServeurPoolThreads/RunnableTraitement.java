@@ -8,8 +8,8 @@ import java.security.*;
 import java.util.Arrays;
 import java.util.Properties;
 import java.util.Random;
-import org.apache.commons.math.stat.StatUtils;
-import org.apache.commons.math.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.StatUtils;
+import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.jfree.data.statistics.Statistics;
 
 
@@ -319,11 +319,12 @@ public class RunnableTraitement implements Runnable
             double moyenne = ds.getMean();
             double ecartType = ds.getStandardDeviation();
             double[] mode = StatUtils.mode(arrayPoids);
+            //double mediane = 
             double mediane = Statistics.calculateMedian(Arrays.asList(arrayPoids));
             
             
             // Envoi des données
-            String ChargeUtile = moyenne + "#" + /*mode + "#" +*/ mediane + "#" + ecartType;
+            String ChargeUtile = moyenne + "#" + mode + "#" + mediane + "#" + ecartType;
             SendMsg(ChargeUtile);
         }
         catch (SQLException ex)
