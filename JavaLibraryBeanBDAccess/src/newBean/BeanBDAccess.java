@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package newBean;
 
 import java.io.Serializable;
@@ -13,10 +8,7 @@ import java.util.Iterator;
 import java.util.Set;
 import oracle.jdbc.OracleTypes;
 
-/**
- *
- * @author Jerome
- */
+
 public class BeanBDAccess implements Serializable{
     
     private Connection conBD = null;
@@ -94,7 +86,11 @@ public class BeanBDAccess implements Serializable{
         else
             url = "select " + select + " from " + from;
             
-        PreparedStatement pStmt = conBD.prepareStatement(url);
+                    
+        
+        int type = ResultSet.TYPE_SCROLL_INSENSITIVE;
+        int mode = ResultSet.CONCUR_UPDATABLE;
+        PreparedStatement pStmt = conBD.prepareStatement(url, type, mode);
         ResultSet rs = pStmt.executeQuery();
         
         return rs;
@@ -196,7 +192,6 @@ public class BeanBDAccess implements Serializable{
         conBD = null;
     }
    
-    
     public Connection getConnexion()
     {
         return conBD;

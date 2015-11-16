@@ -282,23 +282,28 @@ public class RunnableTraitement implements Runnable
             double[] arrayPoids = new double[nbCont];
             
             if (parts[2].equals("OUT")) // Chargement
-                condition = "DATE_DEPART IS NOT NULL AND TO_DATE(DATE_ARRIVEE, 'YYYY') = TO_DATE(SYSDATE, 'YYYY') ORDER BY DBMS_RANDOM.VALUE";
+                condition = "DATE_DEPART IS NOT NULL AND EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = EXTRACT(YEAR FROM SYSDATE) ORDER BY DBMS_RANDOM.VALUE";
             else // Déchargement
-                condition = "TO_DATE(DATE_ARRIVEE, 'YYYY') = TO_DATE(SYSDATE, 'YYYY') ORDER BY DBMS_RANDOM.VALUE";
+                condition = "EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = EXTRACT(YEAR FROM SYSDATE) ORDER BY DBMS_RANDOM.VALUE";
             
             ResultSet ResultatDB = beanOracleTrafic.selection("POIDS", "MOUVEMENTS", condition);
             
             
-            // Vérification de la taille de l'échantillon                       
-            if (ResultatDB.first() == false)
+            // Vérification de la taille de l'échantillon
+            if (!ResultatDB.first())
+            {
                 SendMsg("NON#Aucune donnee correspondante");
+                return;
+            }
             
             ResultatDB.last();
             int size = ResultatDB.getRow();
-            
+
             if (size < nbCont)
+            {
                 SendMsg("NON#L'echantillon ne peut actuellement pas depasser " + size + " pour cette condition");
-            
+                return;
+            }
             
             // Remplissage du tableau de poids
             ResultatDB.beforeFirst();
