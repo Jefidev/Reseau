@@ -319,8 +319,7 @@ public class RunnableTraitement implements Runnable
             double moyenne = ds.getMean();
             double ecartType = ds.getStandardDeviation();
             double[] mode = StatUtils.mode(arrayPoids);
-            //double mediane = 
-            double mediane = Statistics.calculateMedian(Arrays.asList(arrayPoids));
+            double mediane = ds.getPercentile(50);
             
             
             // Envoi des données

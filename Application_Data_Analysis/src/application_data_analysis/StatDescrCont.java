@@ -27,6 +27,7 @@ public class StatDescrCont extends javax.swing.JPanel
         ModeReponseLabel = new javax.swing.JLabel();
         MoyenneReponseLabel = new javax.swing.JLabel();
         ErrorCalculLabel = new javax.swing.JLabel();
+        RetourMenuButton = new javax.swing.JButton();
 
         Titre1Label.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         Titre1Label.setForeground(new java.awt.Color(0, 0, 255));
@@ -73,6 +74,8 @@ public class StatDescrCont extends javax.swing.JPanel
         ErrorCalculLabel.setForeground(new java.awt.Color(255, 0, 0));
         ErrorCalculLabel.setText("jLabel1");
 
+        RetourMenuButton.setText("Retour au menu");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,19 +98,7 @@ public class StatDescrCont extends javax.swing.JPanel
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(DechargesRB)
                                 .addGap(18, 18, 18)
-                                .addComponent(ChargesRB))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(EcartTypeLabel)
-                                    .addComponent(MedianeLabel)
-                                    .addComponent(ModeLabel)
-                                    .addComponent(MoyenneLabel))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(MoyenneReponseLabel)
-                                    .addComponent(ModeReponseLabel)
-                                    .addComponent(MedianeReponseLabel)
-                                    .addComponent(EcartTypeReponseLabel))))
+                                .addComponent(ChargesRB)))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ErrorCalculLabel)
@@ -116,7 +107,26 @@ public class StatDescrCont extends javax.swing.JPanel
                                 .addGap(18, 18, 18)
                                 .addComponent(ErrorNbContainersLabel))
                             .addComponent(CalculerButton))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(EcartTypeLabel)
+                            .addComponent(MedianeLabel)
+                            .addComponent(ModeLabel)
+                            .addComponent(MoyenneLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(EcartTypeReponseLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(RetourMenuButton)
+                                .addContainerGap())
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(MoyenneReponseLabel)
+                                    .addComponent(ModeReponseLabel)
+                                    .addComponent(MedianeReponseLabel))
+                                .addGap(0, 0, Short.MAX_VALUE))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,34 +134,39 @@ public class StatDescrCont extends javax.swing.JPanel
                 .addContainerGap()
                 .addComponent(Titre1Label)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Titre2Label)
-                .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(NbContainersLabel)
-                    .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ErrorNbContainersLabel))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(DechargesRB)
-                    .addComponent(ChargesRB)
-                    .addComponent(CalculerButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(MoyenneLabel)
-                    .addComponent(MoyenneReponseLabel)
-                    .addComponent(ErrorCalculLabel))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(ModeLabel)
-                    .addComponent(ModeReponseLabel))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(MedianeLabel)
-                    .addComponent(MedianeReponseLabel))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(EcartTypeLabel)
-                    .addComponent(EcartTypeReponseLabel))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(Titre2Label)
+                        .addGap(33, 33, 33)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(NbContainersLabel)
+                            .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(ErrorNbContainersLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(DechargesRB)
+                            .addComponent(ChargesRB)
+                            .addComponent(CalculerButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(MoyenneLabel)
+                            .addComponent(MoyenneReponseLabel)
+                            .addComponent(ErrorCalculLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(ModeLabel)
+                            .addComponent(ModeReponseLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(MedianeLabel)
+                            .addComponent(MedianeReponseLabel))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(EcartTypeLabel)
+                            .addComponent(EcartTypeReponseLabel)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(RetourMenuButton)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -236,6 +251,7 @@ public class StatDescrCont extends javax.swing.JPanel
     private javax.swing.JLabel MoyenneReponseLabel;
     private javax.swing.JLabel NbContainersLabel;
     private javax.swing.JTextField NbContainersTF;
+    private javax.swing.JButton RetourMenuButton;
     private javax.swing.JLabel Titre1Label;
     private javax.swing.JLabel Titre2Label;
     // End of variables declaration//GEN-END:variables

@@ -44,21 +44,6 @@
                               <EmptySpace type="separate" max="-2" attributes="0"/>
                               <Component id="ChargesRB" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="EcartTypeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="MedianeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="ModeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="MoyenneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="separate" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="MoyenneReponseLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="ModeReponseLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="MedianeReponseLabel" min="-2" max="-2" attributes="0"/>
-                                  <Component id="EcartTypeReponseLabel" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                          </Group>
                       </Group>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
@@ -72,6 +57,31 @@
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="EcartTypeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="MedianeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ModeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="MoyenneLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="EcartTypeReponseLabel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="RetourMenuButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="MoyenneReponseLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ModeReponseLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="MedianeReponseLabel" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                      </Group>
+                  </Group>
               </Group>
           </Group>
       </Group>
@@ -82,39 +92,47 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="Titre1Label" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="Titre2Label" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="NbContainersLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="NbContainersTF" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ErrorNbContainersLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="DechargesRB" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ChargesRB" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="CalculerButton" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="34" max="32767" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="MoyenneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="MoyenneReponseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ErrorCalculLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="ModeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ModeReponseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="MedianeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="MedianeReponseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="EcartTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="EcartTypeReponseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Component id="Titre2Label" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="NbContainersLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="NbContainersTF" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ErrorNbContainersLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="DechargesRB" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ChargesRB" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="CalculerButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="34" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="MoyenneLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="MoyenneReponseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ErrorCalculLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="ModeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="ModeReponseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="MedianeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="MedianeReponseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="EcartTypeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="EcartTypeReponseLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="RetourMenuButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -229,6 +247,11 @@
           <Color blue="0" green="0" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="jLabel1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="RetourMenuButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Retour au menu"/>
       </Properties>
     </Component>
   </SubComponents>

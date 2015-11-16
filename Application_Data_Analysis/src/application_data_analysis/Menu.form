@@ -56,6 +56,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Statistiques constructives descriptives : moyenne, mode, m&#xe9;diane, &#xe9;cart-type"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StatDescrContButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

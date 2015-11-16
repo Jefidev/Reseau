@@ -1,5 +1,6 @@
 package application_data_analysis;
 
+import java.awt.CardLayout;
 import java.net.*;
 
 
@@ -13,11 +14,11 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
     private void initComponents() {
 
         ButtonGroup = new javax.swing.ButtonGroup();
-        statDescrCont1 = new application_data_analysis.StatDescrCont();
+        statDescrCont = new application_data_analysis.StatDescrCont();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
-        getContentPane().add(statDescrCont1, "card2");
+        getContentPane().add(statDescrCont, "statDescrCont");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -33,6 +34,12 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
         (new Login(this, true)).setVisible(true);
         if (!isConnected)
             this.dispose();
+    }
+    
+    public void ChangePanel(String newPanel)
+    {
+        CardLayout card = (CardLayout)this.getContentPane().getLayout();
+        card.show(this.getContentPane(), newPanel);
     }
        
     public static void main(String args[]) {
@@ -68,6 +75,6 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup ButtonGroup;
-    private application_data_analysis.StatDescrCont statDescrCont1;
+    private application_data_analysis.StatDescrCont statDescrCont;
     // End of variables declaration//GEN-END:variables
 }

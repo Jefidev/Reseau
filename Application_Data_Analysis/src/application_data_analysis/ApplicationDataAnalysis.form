@@ -27,10 +27,10 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
   <SubComponents>
-    <Component class="application_data_analysis.StatDescrCont" name="statDescrCont1">
+    <Component class="application_data_analysis.StatDescrCont" name="statDescrCont">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
-          <CardConstraints cardName="card2"/>
+          <CardConstraints cardName="statDescrCont"/>
         </Constraint>
       </Constraints>
     </Component>
