@@ -5,6 +5,7 @@ import java.net.*;
 import java.sql.*;
 import newBean.*;
 import java.security.*;
+import java.util.HashMap;
 import java.util.Properties;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
@@ -145,7 +146,7 @@ public class RunnableTraitement implements Runnable
                     break;
                     
                 case ProtocolePIDEP.GET_GR_COULEUR_REP :
-                    GetGrCouleurRep();
+                    GetGrCouleurRep(parts);
                     break;
                     
                 default :
@@ -347,9 +348,37 @@ public class RunnableTraitement implements Runnable
     }
     
     
+    /* DIAGRAMME SECTORIEL DE REPARTITION DU NOMBRE DE CONTAINERS PAR DESTINATION POUR UNE ANNEE OU UN MOIS DONNE */
     /* In : Année ou mois */
-    public void GetGrCouleurRep()
+    public void GetGrCouleurRep(String[] parts)
     {
+        System.out.println("RunnableTraitement : DEBUT GETGRCOULEURREP");
         
+        try
+        {   
+            // Base de données
+            String condition;
+            
+            if (parts[1].length() == 4) // Année
+                condition = "EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = EXTRACT(YEAR FROM SYSDATE) GROUP BY DESTINATION";
+            else // Mois
+                condition = "EXTRACT(MONTH FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = EXTRACT(MONTH FROM SYSDATE) GROUP BY DESTINATION";
+            
+            ResultSet ResultatDB = beanOracleTrafic.selection("DESTINATION, COUNT(ID_CONTAINER)", "MOUVEMENTS", condition);
+            
+            HashMap<String, String> map = new HashMap();
+            
+            while(ResultatDB.next())
+                map.put(ResultatDB.getString("DESTINATION"), ResultatDB.getString("COUNT(ID_CONTAINER"));
+            
+            //ObjectOuputStream oos = new ObjectOuputStream(new BufferedOutputStream(NewFileOuputStream))
+        }
+        catch (SQLException ex)
+        {
+            SendMsg("NON");
+            System.err.println("RunnableTraitement : SQLexception GetGrCouleurRep : " + ex.getMessage());
+        }
+        
+        System.out.println("RunnableTraitement : FIN GETGRCOULEURREP");
     }
 }

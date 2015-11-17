@@ -62,11 +62,11 @@ public class GrCouleurRep extends javax.swing.JPanel
 
         ErrorAnneeLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         ErrorAnneeLabel.setForeground(new java.awt.Color(255, 0, 0));
-        ErrorAnneeLabel.setText("jLabel1");
+        ErrorAnneeLabel.setText("Insérer une année valide (entre 1000 et 9999) !");
 
         ErrorMoisLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         ErrorMoisLabel.setForeground(new java.awt.Color(255, 0, 0));
-        ErrorMoisLabel.setText("jLabel1");
+        ErrorMoisLabel.setText("Insérer un mois valide (entre 1 et 12) !");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -144,9 +144,8 @@ public class GrCouleurRep extends javax.swing.JPanel
         {
             int annee = Integer.parseInt(AnneeTF.getText());
             
-            if (annee <= 0)
+            if (annee <= 1000 &&  9999 <= annee)
             {
-                ErrorAnneeLabel.setText("Insérer une date valide !");
                 ErrorAnneeLabel.setVisible(true);
                 return;
             }
@@ -155,7 +154,6 @@ public class GrCouleurRep extends javax.swing.JPanel
         }
         catch(NumberFormatException e)
         {
-            ErrorAnneeLabel.setText("Insérer une date valide !");
             ErrorAnneeLabel.setVisible(true);
         }
     }//GEN-LAST:event_CalculerAnneeButtonActionPerformed
@@ -171,7 +169,6 @@ public class GrCouleurRep extends javax.swing.JPanel
             
             if (mois < 1 || 12 < mois)
             {
-                ErrorMoisLabel.setText("Insérer un mois valide (entre 1 et 12) !");
                 ErrorMoisLabel.setVisible(true);
                 return;
             }
@@ -180,7 +177,6 @@ public class GrCouleurRep extends javax.swing.JPanel
         }
         catch(NumberFormatException e)
         {
-            ErrorMoisLabel.setText("Insérer un mois valide (entre 1 et 12) !");
             ErrorMoisLabel.setVisible(true);
         }
     }//GEN-LAST:event_CalculerMoisButtonActionPerformed

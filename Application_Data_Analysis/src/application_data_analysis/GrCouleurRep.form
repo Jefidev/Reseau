@@ -159,7 +159,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="0" green="0" red="ff" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
+        <Property name="text" type="java.lang.String" value="Ins&#xe9;rer une ann&#xe9;e valide (entre 1000 et 9999) !"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="ErrorMoisLabel">
@@ -170,7 +170,7 @@
         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="0" green="0" red="ff" type="rgb"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="jLabel1"/>
+        <Property name="text" type="java.lang.String" value="Ins&#xe9;rer un mois valide (entre 1 et 12) !"/>
       </Properties>
     </Component>
   </SubComponents>
