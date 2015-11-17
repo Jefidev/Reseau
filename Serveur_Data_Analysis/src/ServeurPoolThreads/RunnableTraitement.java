@@ -5,6 +5,7 @@ import java.net.*;
 import java.sql.*;
 import newBean.*;
 import java.security.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
 import org.apache.commons.math3.stat.StatUtils;
@@ -366,17 +367,34 @@ public class RunnableTraitement implements Runnable
             
             ResultSet ResultatDB = beanOracleTrafic.selection("DESTINATION, COUNT(ID_CONTAINER)", "MOUVEMENTS", condition);
             
-            HashMap<String, String> map = new HashMap();
+            
+            // HashMap
+            HashMap<String, Object> map = new HashMap();
+            ArrayList<String> listDestinations = new ArrayList<>();
+            ArrayList<Integer> listCount = new ArrayList<>();
             
             while(ResultatDB.next())
-                map.put(ResultatDB.getString("DESTINATION"), ResultatDB.getString("COUNT(ID_CONTAINER"));
+            {
+                listDestinations.add(ResultatDB.getString("DESTINATION"));
+                listCount.add(ResultatDB.getInt("COUNT(ID_CONTAINER)"));
+            }
             
-            //ObjectOuputStream oos = new ObjectOuputStream(new BufferedOutputStream(NewFileOuputStream))
+            map.put("DESTINATIONS", listDestinations);
+            map.put("COUNT", listCount);
+            
+            
+            // Envoi
+            ObjectOutputStream oos = new ObjectOutputStream(CSocket.getOutputStream());
+            oos.writeObject(map);
+            oos.close();
         }
         catch (SQLException ex)
         {
-            SendMsg("NON");
             System.err.println("RunnableTraitement : SQLexception GetGrCouleurRep : " + ex.getMessage());
+        }
+        catch (IOException ex)
+        {
+            System.err.println("RunnableTraitement : IOException GetGrCouleurRep : " + ex.getMessage());
         }
         
         System.out.println("RunnableTraitement : FIN GETGRCOULEURREP");

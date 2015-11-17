@@ -38,23 +38,28 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="AnneeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="MoisLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="AnneeTF" pref="50" max="32767" attributes="0"/>
-                          <Component id="MoisTF" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="CalculerAnneeButton" max="32767" attributes="0"/>
-                          <Component id="CalculerMoisButton" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="ErrorMoisLabel" min="-2" max="-2" attributes="0"/>
-                          <Component id="ErrorAnneeLabel" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="AnneeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="MoisLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="AnneeTF" pref="50" max="32767" attributes="0"/>
+                                  <Component id="MoisTF" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="CalculerAnneeButton" max="32767" attributes="0"/>
+                                  <Component id="CalculerMoisButton" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="ErrorMoisLabel" min="-2" max="-2" attributes="0"/>
+                                  <Component id="ErrorAnneeLabel" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="ErrorNoDataLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
@@ -83,7 +88,9 @@
                   <Component id="CalculerMoisButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="ErrorMoisLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="105" max="32767" attributes="0"/>
+              <EmptySpace pref="54" max="32767" attributes="0"/>
+              <Component id="ErrorNoDataLabel" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
               <Component id="MenuButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -171,6 +178,17 @@
           <Color blue="0" green="0" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Ins&#xe9;rer un mois valide (entre 1 et 12) !"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="ErrorNoDataLabel">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="0" red="ff" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Aucune donn&#xe9;e correspondant aux crit&#xe8;res n&apos;a &#xe9;t&#xe9; trouv&#xe9;e"/>
       </Properties>
     </Component>
   </SubComponents>

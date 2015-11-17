@@ -1,6 +1,15 @@
 package application_data_analysis;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.SwingUtilities;
+import javax.swing.JDialog;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.general.DefaultPieDataset;
 
 
 public class GrCouleurRep extends javax.swing.JPanel
@@ -9,6 +18,7 @@ public class GrCouleurRep extends javax.swing.JPanel
         initComponents();
         ErrorAnneeLabel.setVisible(false);
         ErrorMoisLabel.setVisible(false);
+        ErrorNoDataLabel.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -26,6 +36,7 @@ public class GrCouleurRep extends javax.swing.JPanel
         CalculerMoisButton = new javax.swing.JButton();
         ErrorAnneeLabel = new javax.swing.JLabel();
         ErrorMoisLabel = new javax.swing.JLabel();
+        ErrorNoDataLabel = new javax.swing.JLabel();
 
         Titre1Label.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         Titre1Label.setForeground(new java.awt.Color(0, 0, 255));
@@ -68,6 +79,10 @@ public class GrCouleurRep extends javax.swing.JPanel
         ErrorMoisLabel.setForeground(new java.awt.Color(255, 0, 0));
         ErrorMoisLabel.setText("Insérer un mois valide (entre 1 et 12) !");
 
+        ErrorNoDataLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        ErrorNoDataLabel.setForeground(new java.awt.Color(255, 0, 0));
+        ErrorNoDataLabel.setText("Aucune donnée correspondant aux critères n'a été trouvée");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -89,20 +104,23 @@ public class GrCouleurRep extends javax.swing.JPanel
                                 .addGap(92, 92, 92))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(AnneeLabel)
-                            .addComponent(MoisLabel))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(AnneeTF, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
-                            .addComponent(MoisTF))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(CalculerAnneeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(CalculerMoisButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ErrorMoisLabel)
-                            .addComponent(ErrorAnneeLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(AnneeLabel)
+                                    .addComponent(MoisLabel))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(AnneeTF, javax.swing.GroupLayout.DEFAULT_SIZE, 50, Short.MAX_VALUE)
+                                    .addComponent(MoisTF))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(CalculerAnneeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(CalculerMoisButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ErrorMoisLabel)
+                                    .addComponent(ErrorAnneeLabel)))
+                            .addComponent(ErrorNoDataLabel))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -124,7 +142,9 @@ public class GrCouleurRep extends javax.swing.JPanel
                     .addComponent(MoisTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(CalculerMoisButton)
                     .addComponent(ErrorMoisLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 105, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addComponent(ErrorNoDataLabel)
+                .addGap(37, 37, 37)
                 .addComponent(MenuButton)
                 .addContainerGap())
         );
@@ -139,6 +159,7 @@ public class GrCouleurRep extends javax.swing.JPanel
 
         ErrorAnneeLabel.setVisible(false);
         ErrorMoisLabel.setVisible(false);
+        ErrorNoDataLabel.setVisible(false);
         
         try
         {
@@ -162,6 +183,7 @@ public class GrCouleurRep extends javax.swing.JPanel
         
         ErrorAnneeLabel.setVisible(false);
         ErrorMoisLabel.setVisible(false);
+        ErrorNoDataLabel.setVisible(false);
         
         try
         {
@@ -174,13 +196,49 @@ public class GrCouleurRep extends javax.swing.JPanel
             }
             
             Utility.SendMsg(ProtocolePIDEP.GET_GR_COULEUR_REP, MoisTF.getText());
+        
+            ObjectInputStream ois = new ObjectInputStream(ApplicationDataAnalysis.cliSock.getInputStream());
+            HashMap<String, Object> map = (HashMap<String, Object>) ois.readObject();
+            ois.close();
+            
+            if(map.isEmpty())
+                ErrorNoDataLabel.setVisible(true);
+            else
+                ShowPieChart(map);
         }
-        catch(NumberFormatException e)
+        catch(NumberFormatException ex)
         {
             ErrorMoisLabel.setVisible(true);
+            System.err.println("GrCouleurRep : NumberFormatException : " + ex.getMessage());
+        }
+        catch (IOException ex)
+        {
+            System.err.println("GrCouleurRep : IOException : " + ex.getMessage());
+        }
+        catch (ClassNotFoundException ex)
+        {
+            System.err.println("GrCouleurRep : ClassNotFoundException : " + ex.getMessage());
         }
     }//GEN-LAST:event_CalculerMoisButtonActionPerformed
 
+    public void ShowPieChart(HashMap<String, Object> map)
+    {
+        ArrayList<String> listDestinations = (ArrayList<String>)map.get("DESTINATIONS");
+        ArrayList<Integer> listCount = (ArrayList<Integer>)map.get("COUNT");
+        
+        DefaultPieDataset dpds = new DefaultPieDataset();
+        for(int i = 0; i < listDestinations.size(); i++)
+            dpds.setValue(listDestinations.get(i), listCount.get(i));
+        
+        JFreeChart jfc = ChartFactory.createPieChart("Répartition du nombre de containers par destination", dpds, true, true, true);
+        ChartPanel cp = new ChartPanel(jfc);
+        JDialog dialog = new JDialog();
+        dialog.setSize(500, 500);
+        dialog.setContentPane(cp);
+        dialog.setTitle("Répartition du nombre de containers par destination");
+        dialog.setVisible(true);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AnneeLabel;
     private javax.swing.JTextField AnneeTF;
@@ -188,6 +246,7 @@ public class GrCouleurRep extends javax.swing.JPanel
     private javax.swing.JButton CalculerMoisButton;
     private javax.swing.JLabel ErrorAnneeLabel;
     private javax.swing.JLabel ErrorMoisLabel;
+    private javax.swing.JLabel ErrorNoDataLabel;
     private javax.swing.JButton MenuButton;
     private javax.swing.JLabel MoisLabel;
     private javax.swing.JTextField MoisTF;
