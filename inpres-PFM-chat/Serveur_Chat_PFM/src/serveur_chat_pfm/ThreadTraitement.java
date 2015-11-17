@@ -27,6 +27,7 @@ public class ThreadTraitement extends Thread
             
             System.out.println("ThreadTraitement : Lancement du run de la tacheEnCours");
             tacheEnCours.run();
+            System.out.println("fin de tâche");
         }
     }
 }
