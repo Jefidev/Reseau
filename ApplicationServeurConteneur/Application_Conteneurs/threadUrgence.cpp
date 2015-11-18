@@ -19,6 +19,9 @@ using namespace std;
 extern string portUrgence;
 extern string ip;
 
+extern bool inPause;
+extern pthread_cond_t condServeurPause;
+
 void* threadUrgence(void* p)
 {
 	SocketServeur* sock = NULL; //Socket qui sera en attente d'une connexion d'urgence
@@ -38,23 +41,41 @@ void* threadUrgence(void* p)
 
     cout << "avant accept" << endl;
 
-    int service;
-    try
-    {
-        sock->ecouter(); 
-        service = sock->accepter();
-    }
-    catch(ErrnoException er)
-    {
-        cout << er.getErrorCode() << "------" << er.getMessage() << endl;
-        exit(-1);
-    }
-
-    Socket sockService(service);	
-
     while(1)
-    	cout << sockService.receiveChar() << endl;
+    {
+        int service;
+        try
+        {
+            sock->ecouter(); 
+            service = sock->accepter();
+        }
+        catch(ErrnoException er)
+        {
+            cout << er.getErrorCode() << "------" << er.getMessage() << endl;
+            exit(-1);
+        }
 
+        Socket sockService(service);
+
+        string str = sockService.receiveChar();
+
+        if(str.compare("pause") == 0)
+        {
+            inPause = true;
+        }
+        else if(str.compare("continuer") == 0)
+        {
+            inPause = false;
+        }
+        else
+        {
+            cout << str << endl;
+            while(1)
+                cout << sockService.receiveChar() << endl;
+        }
+
+        sockService.finConnexion();
+    }
 }
 
 

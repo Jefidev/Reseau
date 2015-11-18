@@ -519,9 +519,12 @@ void handlerPause(int)
     int sigRecu;
 
     servInPause = true;
-    
+
     for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
+    {
         pthread_kill(threadsLances[i], SIGUSR1);
+        cout << i << endl;
+    }
 
     sigwait(&masque, &sigRecu);
 
@@ -530,6 +533,7 @@ void handlerPause(int)
 
 void handlerCont(int)
 {
+    cout << "cont" << endl;
     for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
         pthread_cond_signal(&condSleepThread);
 
@@ -574,7 +578,9 @@ void handlerInt(int)
 
 void handlerPauseClient(int)
 {
-    pthread_cond_wait(&condSleepThread, NULL); //NOTE pas tip top à changer si possible.
+    cout << " je me met en wait" << endl;
+    pthread_cond_wait(&condSleepThread, NULL);
+    cout << " je sors du wait" << endl;
 }
 
 void handlerAlarm(int)

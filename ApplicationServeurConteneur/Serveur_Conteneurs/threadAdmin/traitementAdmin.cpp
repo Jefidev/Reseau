@@ -178,7 +178,7 @@ void continueServer(Socket* s)
         cout << "envois" << endl;
         return;
     }
-    s->sendChar(composeAckErr(ERREUR, "le serveur est pas en pause"));
+    s->sendChar(composeAckErr(ERREUR, "le serveur n'est pas en pause"));
 }
 
 void shutdownServer(Socket* s, int sec)

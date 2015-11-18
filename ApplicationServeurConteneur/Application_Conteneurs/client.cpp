@@ -32,8 +32,13 @@ int menu();
 string portUrgence;
 string ip;
 
+bool inPause;
+
+pthread_cond_t condServeurPause;
+
 int main()
 {
+    inPause = false;
     FichierProp fp = FichierProp("properties.txt");//On créer un objet permettant de lire le fichier properties
     string host = fp.getValue("HOST");//On peut recuperer une valeur grâce à getValue
     string port = fp.getValue("PORT");

@@ -281,13 +281,14 @@ public class jchat_GUI extends javax.swing.JFrame {
             ip_udp = InetAddress.getByName(parts[1]);
             port_UDP = Integer.parseInt(parts[2]);//port envoyé par le serveur
             
-            udp_sock =  new MulticastSocket(port_UDP);
+            udp_sock = new MulticastSocket(port_UDP);
             udp_sock.joinGroup(ip_udp);
         } catch (UnknownHostException ex) {
             System.err.println("Erreur d'ouverture de la socket UDP " + ex);
         } catch (IOException ex) {
             System.err.println("Erreur d'ouverture de la socket UDP " + ex);
         }
+        
         //démarrage du thread de reception de message UDP.
         thr =  new ThreadReception(udp_sock, messageList, this);
         thr.start();
@@ -422,7 +423,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new jchat_GUI("localhost", 31047).setVisible(true);
+                new jchat_GUI("192.168.1.7", 31047).setVisible(true);//TO DO properties
             }
         });
     }
