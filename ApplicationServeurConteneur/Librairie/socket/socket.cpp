@@ -128,9 +128,22 @@ void Socket::receiveStruct(void* r, int size)
 	int bytes, sizeMax;
 
 	do
-	{
-		if((bytes = recv(socketHandle, r + totBytesReceives, size, 0)) == -1)	// déplacement à l'offset
-			throw ErrnoException(errno, "Erreur receive");
+	{	
+		int err = 0;
+		do
+		{
+			err = 0;
+			if((bytes = recv(socketHandle, r + totBytesReceives, size, 0)) == -1)	// déplacement à l'offset
+			{
+				cout << errno << endl;
+				if(errno == 4)
+				{
+					cout << "erreur interruption" << endl;
+					err = 4;
+				}
+				throw ErrnoException(errno, "Erreur receive");
+			}
+		}while(err == 4);
 
 		totBytesReceives += bytes;
 

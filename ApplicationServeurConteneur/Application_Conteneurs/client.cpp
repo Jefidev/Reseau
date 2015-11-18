@@ -136,7 +136,6 @@ void login(SocketClient* sock)
         }
 
         sock->sendChar(composeConnexion(LOGIN, sc));
-        
        
 
         string str = typeRequestParse(sock->receiveChar(), &reponseType);

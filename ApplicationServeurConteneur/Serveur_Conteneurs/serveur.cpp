@@ -421,7 +421,7 @@ void inputDone(Socket*s, int clientTraite, string listContainer)
 
     tokContainer = strtok_r(lecContainer, &sep, &saveptrContainer);
     tokPosition = strtok_r(lecPosition, &sep, &saveptrPosition);
-
+    sleep(1);
     while(tokContainer != NULL)
     {
         string str;
@@ -614,7 +614,6 @@ void handlerCont(int)
 
     len = sizeof addr;
 
-    cout << "cont" << endl;
     for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
     {
         pthread_cond_signal(&condSleepThread);
