@@ -72,6 +72,7 @@ bool servShutdown = false;
 int nbrSecBeforeShutdown = 0;
 
 pthread_cond_t condSleepThread;
+pthread_mutex_t mutexPause;
 
 int main()
 {
@@ -124,6 +125,8 @@ int main()
     pthread_mutex_init(&mutexIndiceCourant, NULL);
     pthread_mutex_init(&mutexLog, NULL);
     pthread_mutex_init(&mutexParc, NULL);
+    pthread_mutex_init(&mutexPause, NULL);
+
 
     SocketServeur* sock = NULL; //On prépare une socket qui sera utilisée pour établir la connection.
 
@@ -239,7 +242,15 @@ void* threadClient(void* p) //le thread lancé
 
         while(cont) //boucle sur les demandes du client
         {
-            string str = typeRequestParse(socketService->receiveChar(), &requestType);
+            string str;
+            try
+            {
+                str = typeRequestParse(socketService->receiveChar(), &requestType);
+            }
+            catch(ErrnoException ex)
+            {
+                cout << ex.getErrorCode() << endl;
+            }
 
             switch(requestType)
             {
@@ -286,7 +297,14 @@ int login(Socket* s, int clientTraite)
 
     while(1)
     {
-        str = typeRequestParse(s->receiveChar(), &requestType);
+        try
+        {
+            str = typeRequestParse(s->receiveChar(), &requestType);
+        }
+        catch(ErrnoException ex)
+        {
+            cout << ex.getErrorCode() << endl;
+        }
 
         if(requestType != LOGIN)
         {
@@ -416,7 +434,14 @@ void inputDone(Socket*s, int clientTraite, string listContainer)
 
         s->sendChar(composeContPos(CONT_POS, scp)); // Envoi de la position
 
-        str = typeRequestParse(s->receiveChar(), &requestType); // Réception des données du container
+        try
+        {
+            str = typeRequestParse(s->receiveChar(), &requestType); // Réception des données du container
+        }
+        catch(ErrnoException ex)
+        {
+            cout << ex.getErrorCode() << endl;
+        }
 
         if(requestType == INPUT_DONE)
         {
@@ -448,7 +473,15 @@ void inputDone(Socket*s, int clientTraite, string listContainer)
             return;
         }
 
-        str = typeRequestParse(s->receiveChar(), &requestType); // Attend un NEXT du client (accord)
+        try
+        {
+            str = typeRequestParse(s->receiveChar(), &requestType); // Réception des données du container
+        }
+        catch(ErrnoException ex)
+        {
+            cout << ex.getErrorCode() << endl;
+        }
+
 
         if(requestType != NEXT)
         {
@@ -485,7 +518,15 @@ void outputReady(Socket* s, int clientTraite, string requete)
 void outputOne(Socket* s, int clientTraite)
 {
     int requestType;
-    string reponse = typeRequestParse(s->receiveChar(), &requestType);
+    string reponse;
+    try
+    {
+        reponse = typeRequestParse(s->receiveChar(), &requestType); // Réception des données du container
+    }
+    catch(ErrnoException ex)
+    {
+        cout << ex.getErrorCode() << endl;
+    }
     
     while(requestType == OUTPUT_ONE)
     {
@@ -498,8 +539,14 @@ void outputOne(Socket* s, int clientTraite)
         cout << "retire du fichier" << endl;
 
         s->sendChar(composeAckErr(ACK, "container retire"));
-
-        reponse = typeRequestParse(s->receiveChar(), &requestType);
+        try
+        {
+            reponse = typeRequestParse(s->receiveChar(), &requestType); // Réception des données du container
+        }
+        catch(ErrnoException ex)
+        {
+            cout << ex.getErrorCode() << endl;
+        }
     }
 
     if(requestType != OUTPUT_DONE)
@@ -520,10 +567,36 @@ void handlerPause(int)
 
     servInPause = true;
 
+    socklen_t len;
+    struct sockaddr_storage addr;
+    char ipstr[INET6_ADDRSTRLEN];
+
+    len = sizeof addr;
+
     for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
     {
         pthread_kill(threadsLances[i], SIGUSR1);
-        cout << i << endl;
+        
+        if(portUrgence[i] == 0)
+            continue;
+
+        //du bordel pour recupérer l'IP du client
+        getpeername(socketOuverte[i]->getSocketHandle(), (struct sockaddr*)&addr, &len);
+        if (addr.ss_family == AF_INET) 
+        {
+            struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+            inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+        } 
+        else 
+        {
+            struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+            inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+        }
+        string tmp(ipstr);
+        SocketClient* sc =  new SocketClient(tmp, portUrgence[i], true);
+        sc->connecter();
+        sc->sendChar("pause");
+        sc->finConnexion();
     }
 
     sigwait(&masque, &sigRecu);
@@ -533,11 +606,41 @@ void handlerPause(int)
 
 void handlerCont(int)
 {
+    servInPause = false;
+
+    socklen_t len;
+    struct sockaddr_storage addr;
+    char ipstr[INET6_ADDRSTRLEN];
+
+    len = sizeof addr;
+
     cout << "cont" << endl;
     for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
+    {
         pthread_cond_signal(&condSleepThread);
 
-    servInPause = false;
+        if(portUrgence[i] == 0)
+            continue;
+
+        //du bordel pour recupérer l'IP du client
+        getpeername(socketOuverte[i]->getSocketHandle(), (struct sockaddr*)&addr, &len);
+        if (addr.ss_family == AF_INET) 
+        {
+            struct sockaddr_in *s = (struct sockaddr_in *)&addr;
+            inet_ntop(AF_INET, &s->sin_addr, ipstr, sizeof ipstr);
+        } 
+        else 
+        {
+            struct sockaddr_in6 *s = (struct sockaddr_in6 *)&addr;
+            inet_ntop(AF_INET6, &s->sin6_addr, ipstr, sizeof ipstr);
+        }
+        string tmp(ipstr);
+        SocketClient* sc =  new SocketClient(tmp, portUrgence[i], true);
+        sc->connecter();
+        sc->sendChar("continuer");
+        sc->finConnexion();
+    }
+    
 }
 
 void handlerInt(int)
@@ -579,7 +682,7 @@ void handlerInt(int)
 void handlerPauseClient(int)
 {
     cout << " je me met en wait" << endl;
-    pthread_cond_wait(&condSleepThread, NULL);
+    pthread_cond_wait(&condSleepThread, &mutexPause);
     cout << " je sors du wait" << endl;
 }
 

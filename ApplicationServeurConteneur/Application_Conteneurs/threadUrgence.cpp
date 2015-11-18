@@ -39,8 +39,6 @@ void* threadUrgence(void* p)
         exit(-1);
     }
 
-    cout << "avant accept" << endl;
-
     while(1)
     {
         int service;
@@ -66,6 +64,7 @@ void* threadUrgence(void* p)
         else if(str.compare("continuer") == 0)
         {
             inPause = false;
+            pthread_cond_signal(&condServeurPause);
         }
         else
         {

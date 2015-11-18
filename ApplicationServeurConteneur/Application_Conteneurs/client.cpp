@@ -35,10 +35,14 @@ string ip;
 bool inPause;
 
 pthread_cond_t condServeurPause;
+pthread_mutex_t mutexPause;
 
 int main()
 {
     inPause = false;
+    pthread_cond_init(&condServeurPause, NULL);
+    pthread_mutex_init(&mutexPause, NULL);
+
     FichierProp fp = FichierProp("properties.txt");//On créer un objet permettant de lire le fichier properties
     string host = fp.getValue("HOST");//On peut recuperer une valeur grâce à getValue
     string port = fp.getValue("PORT");
@@ -122,6 +126,15 @@ void login(SocketClient* sock)
 
         sc.port = portUrgence;
 
+        if(inPause)
+        {
+            cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+            while(inPause)
+                pthread_cond_wait(&condServeurPause, &mutexPause);
+
+            cout << "Serveur en ligne" << endl;
+        }
+
         sock->sendChar(composeConnexion(LOGIN, sc));
         
        
@@ -135,6 +148,15 @@ void login(SocketClient* sock)
             if(!str.compare("INVALIDE"))//Si le serveur à reçus un type de requete invalide (hacker ou autre client sur la meme socket c'est la merde)
             {
                 cout << "Requete recue invalide" << endl;
+
+                if(inPause)
+                {
+                    cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+                    while(inPause)
+                        pthread_cond_wait(&condServeurPause, &mutexPause);
+                    cout << "Serveur en ligne" << endl;
+                }
+
                 sock->sendChar(composeConnexion(LOGOUT, sc));
                 string str = typeRequestParse(sock->receiveChar(), &reponseType);
                 sock->finConnexion();
@@ -161,6 +183,15 @@ void logout(SocketClient* sock)// on envoit la demande de LOGOUT au serveur qui 
 {
     StructConnexion sc;
     int reponseType;
+
+    if(inPause)
+    {
+        cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+        while(inPause)
+            pthread_cond_wait(&condServeurPause, &mutexPause);
+        cout << "Serveur en ligne" << endl;
+    }
+
     sock->sendChar(composeConnexion(LOGOUT, sc)); //envois demande LOGOUT
 
     string str = typeRequestParse(sock->receiveChar(), &reponseType); //Reception ACK
@@ -234,6 +265,14 @@ void inputTruck(SocketClient* sock)
 
     sit.idContainers = containersList;
 
+    if(inPause)
+    {
+        cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+        while(inPause)
+            pthread_cond_wait(&condServeurPause, &mutexPause);
+        cout << "Serveur en ligne" << endl;
+    }
+
     sock->sendChar(composeInputTruck(INPUT_TRUCK, sit));
 
     int reponseType;
@@ -279,6 +318,14 @@ void inputDone(SocketClient* sock)
         }while(sid.transport != 0 && sid.transport != 1);
 
 
+        if(inPause)
+        {
+            cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+            while(inPause)
+                pthread_cond_wait(&condServeurPause, &mutexPause);
+            cout << "Serveur en ligne" << endl;
+        }
+
         sock->sendChar(composeInputDone(INPUT_DONE, sid));
 
         lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
@@ -289,6 +336,14 @@ void inputDone(SocketClient* sock)
             cout << endl << lecRecus;
         else //On a reçus des trucs pas cool on coupe
             logout(sock);
+
+        if(inPause)
+        {
+            cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+            while(inPause)
+                pthread_cond_wait(&condServeurPause, &mutexPause);
+            cout << "Serveur en ligne" << endl;
+        }
 
         sock->sendChar(composeAckErr(NEXT, ""));
 
@@ -326,6 +381,14 @@ void outputReady(SocketClient* sock)
     }while(sor.capaciteMax < 1);
 
     cout << endl << endl << endl;
+
+    if(inPause)
+    {
+        cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+        while(inPause)
+             pthread_cond_wait(&condServeurPause, &mutexPause);
+        cout << "Serveur en ligne" << endl;
+    }
 
     sock->sendChar(composeOutputReady(OUTPUT_READY, sor));
 
@@ -376,6 +439,14 @@ void outputOne(SocketClient* sock, int capaMax, string idTransport)
             StructOutputOne soo;
             soo.emplacement = emplacement;
 
+            if(inPause)
+            {
+                cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+                while(inPause)
+                    pthread_cond_wait(&condServeurPause, &mutexPause);
+                cout << "Serveur en ligne" << endl;
+            }
+
             sock->sendChar(composeOutputOne(OUTPUT_ONE, soo));
             cout << "after send" << endl;
             string lecRecus = typeRequestParse(sock->receiveChar(), &reponseType);
@@ -422,6 +493,14 @@ void outputOne(SocketClient* sock, int capaMax, string idTransport)
 
     sod.nbrContainers = nbrCharge;
     sod.idTrainBateau = idTransport;
+
+    if(inPause)
+    {
+        cout << "Le serveur n'est pas disponible pour le moment. Attente de remise en ligne..." << endl;
+        while(inPause)
+            pthread_cond_wait(&condServeurPause, &mutexPause);
+        cout << "Serveur en ligne" << endl;
+    }
 
     sock->sendChar(composeOutputDone(OUTPUT_DONE, sod));
 
