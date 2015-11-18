@@ -303,9 +303,10 @@ public class jchat_GUI extends javax.swing.JFrame {
         //Creation du tag pour le message
         String tag = "Infos";
         int digest = -1;
-        if(typeMessageCombo.getSelectedIndex() == 1) // si on a sélectionner une nouvelle question
+        if(typeMessageCombo.getSelectedIndex() == 2) // si on a sélectionner répondre
         {
-            if(subjectList.getSelectedIndex() == 0 || subjectList.getSelectedIndex() == 1) // si on essaye de répondre sur 
+            //On verifie qu'on a bien selectionne une question pour repondre
+            if(subjectList.getSelectedIndex() == 0 || subjectList.getSelectedIndex() == 1) 
             {
                 erreurEnvoisLabel.setText("Sélectionné dans la liste la question à laquelle vous souhaitez répondre");
                 erreurEnvoisLabel.setVisible(true);
@@ -313,7 +314,7 @@ public class jchat_GUI extends javax.swing.JFrame {
             }
             tag = "R"+subjectList.getSelectedValue().toString();
         }
-        else if(typeMessageCombo.getSelectedIndex() == 0)// on génère un tag pour la nouvelle question
+        else if(typeMessageCombo.getSelectedIndex() == 1)// on génère un tag pour la nouvelle question
         {
             boolean idIsUsed = true;
             
