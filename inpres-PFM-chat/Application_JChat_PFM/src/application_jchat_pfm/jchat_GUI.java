@@ -13,6 +13,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.Random;
 import java.util.UUID;
 import javax.swing.DefaultListModel;
@@ -423,7 +424,49 @@ public class jchat_GUI extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new jchat_GUI("192.168.1.7", 31047).setVisible(true);//TO DO properties
+                
+                /*Fichier properties*/
+                String pathProperties = "chat.properties";
+
+                Properties paramCo = new Properties();
+
+                try
+                {
+                    FileInputStream Oread = new FileInputStream(pathProperties);
+                    paramCo.load(Oread);
+                }
+                catch(FileNotFoundException ex)
+                {
+                    try 
+                    {
+                        FileOutputStream Oflux = new FileOutputStream(pathProperties);
+
+                        paramCo.setProperty("PORT_SERVEUR", "31047");
+                        paramCo.setProperty("IP_SERVEUR", "localhost");
+                        try {
+                            paramCo.store(Oflux, null);
+                        }
+                        catch (IOException ex1) {
+                            System.err.println(ex1.getStackTrace());
+                            System.exit(0);
+                        }
+                    } 
+                    catch (FileNotFoundException ex1) 
+                    {
+                        System.err.println(ex1.getStackTrace());
+                        System.exit(0);
+                    }
+
+                }
+                catch(IOException ex)
+                {
+                    System.err.println(ex.getStackTrace());
+                    System.exit(0);
+                }
+                
+                String ip = paramCo.getProperty("IP_SERVEUR");
+                int p = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR"));
+                new jchat_GUI(ip, p).setVisible(true);//TO DO properties
             }
         });
     }

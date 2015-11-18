@@ -11,14 +11,16 @@ public class RunnableTraitement implements Runnable
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
     private BeanBDAccess beanOracle;
-    private int port_UDP = 31049;
+    private int port_UDP;
+    private String ip_udp;
     
     boolean first = true;
     
-    public RunnableTraitement(Socket s)
+    public RunnableTraitement(Socket s, int pu, String ipu)
     {
         CSocket = s;
-        
+        port_UDP = pu;
+        ip_udp = ipu;
         try
         {
             dis = new DataInputStream(new BufferedInputStream(CSocket.getInputStream()));
@@ -83,7 +85,7 @@ public class RunnableTraitement implements Runnable
         
         int digest = hashFunction(message[4] + pwd + message[3]);  
         if(message[2].equals(Integer.toString(digest)))
-            SendMsg("ACK#233.42.42.1#"+port_UDP);
+            SendMsg("ACK#"+ip_udp+"#"+port_UDP);
         else
             SendMsg("ERR#Mot de passe incorrecte");
     }
