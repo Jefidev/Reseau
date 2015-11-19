@@ -150,6 +150,10 @@ public class RunnableTraitement implements Runnable
                     GetGrCouleurRep(parts);
                     break;
                     
+                case ProtocolePIDEP.GET_GR_COULEUR_COMP :
+                    GetGrCouleurComp(parts);
+                    break;
+                    
                 default :
                     terminer = true;
                     break;
@@ -405,5 +409,59 @@ public class RunnableTraitement implements Runnable
         }
         
         System.out.println("RunnableTraitement : FIN GETGRCOULEURREP");
+    }
+    
+    
+    /* HISTOGRAMME DE REPARTITION DU NOMBRE DE CONTAINERS PAR DESTINATION PAR TRIMESTRE POUR UNE ANNEE DONNEE */
+    /* In : Année */
+    public void GetGrCouleurComp(String[] parts)
+    {
+        System.out.println("RunnableTraitement : DEBUT GETGRCOULEURCOMP");
+        
+        try
+        {   
+            // Base de données
+            String condition = "EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = " + parts[1] + " GROUP BY DESTINATION";
+            
+            ResultSet ResultatDB = beanOracleTrafic.selection("DESTINATION, COUNT(ID_CONTAINER)", "MOUVEMENTS", condition);
+            
+            
+            // HashMap
+            HashMap<String, Object> map = new HashMap();
+            ArrayList<String> listDestinations = new ArrayList<>();
+            ArrayList<Integer> listCount = new ArrayList<>();
+            
+            if(!ResultatDB.first())
+            {
+                SendMsg("NON");
+                return;
+            }
+            
+            do
+            {
+                listDestinations.add(ResultatDB.getString("DESTINATION"));
+                listCount.add(ResultatDB.getInt("COUNT(ID_CONTAINER)"));
+            }while(ResultatDB.next());
+            
+            map.put("DESTINATIONS", listDestinations);
+            map.put("COUNT", listCount);
+            
+            
+            // Envoi
+            SendMsg("OUI");
+            ObjectOutputStream oos = new ObjectOutputStream(CSocket.getOutputStream());
+            oos.writeObject(map);
+            oos.flush();
+        }
+        catch (SQLException ex)
+        {
+            System.err.println("RunnableTraitement : SQLexception GetGrCouleurComp : " + ex.getMessage());
+        }
+        catch (IOException ex)
+        {
+            System.err.println("RunnableTraitement : IOException GetGrCouleurComp : " + ex.getMessage());
+        }
+        
+        System.out.println("RunnableTraitement : FIN GETGRCOULEURCOMP");
     }
 }
