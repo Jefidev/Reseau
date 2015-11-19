@@ -65,6 +65,9 @@ public class RunnableTraitementEntree implements Runnable
             parts = ReceiveMsg().split("#");
             switch (parts[0])
             {       
+                case "INPUT_LORRY" :
+                        inputLorry(parts);
+                        break;
                 case "LOGOUT" :
                     terminer = true;
                     break;
@@ -102,7 +105,7 @@ public class RunnableTraitementEntree implements Runnable
         } catch (SQLException ex) {
             System.err.println(ex.getStackTrace());
         }
-        System.err.println(part[2]);
+
         if(pwd.equals(part[2]))
         {
             SendMsg("ACK");
@@ -112,6 +115,11 @@ public class RunnableTraitementEntree implements Runnable
             SendMsg("ERR#Mot de passe incorrecte");
         
         return false;
+    }
+    
+    private void inputLorry(String[] request)
+    {
+        
     }
     
     /* Envoi d'un message au client */

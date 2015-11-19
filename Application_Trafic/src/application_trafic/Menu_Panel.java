@@ -46,6 +46,11 @@ public class Menu_Panel extends javax.swing.JPanel {
         titreLabel.setText("Menu trafic");
 
         entreeReservationButton.setText("Camion avec réservation");
+        entreeReservationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                entreeReservationButtonActionPerformed(evt);
+            }
+        });
 
         sansReservation.setText("Camion sans réservation");
 
@@ -91,6 +96,11 @@ public class Menu_Panel extends javax.swing.JPanel {
         
         frame.logout();
     }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void entreeReservationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_entreeReservationButtonActionPerformed
+        GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
+        ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "avecReservation");
+    }//GEN-LAST:event_entreeReservationButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

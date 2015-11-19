@@ -37,5 +37,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="application_trafic.Avec_reservation_panel" name="avec_reservation_panel">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="avecReservation"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
