@@ -171,11 +171,36 @@ public class GrCouleurRep extends javax.swing.JPanel
                 return;
             }
             
+            
             Utility.SendMsg(ProtocolePIDEP.GET_GR_COULEUR_REP, AnneeTF.getText());
+            AnneeTF.setText("");
+        
+            
+            String reponse = Utility.ReceiveMsg();  
+            String[] parts = reponse.split("#");
+            
+            if(parts[0].equals("NON"))
+            {
+                ErrorNoDataLabel.setVisible(true);
+                return;
+            }
+            
+            
+            ObjectInputStream ois = new ObjectInputStream(ApplicationDataAnalysis.cliSock.getInputStream());
+            HashMap<String, Object> map = (HashMap<String, Object>) ois.readObject();
+            ShowPieChart(map);
         }
-        catch(NumberFormatException e)
+        catch(NumberFormatException ex)
         {
             ErrorAnneeLabel.setVisible(true);
+        }
+        catch (IOException ex)
+        {
+            System.err.println("GrCouleurRep : IOException : " + ex.getMessage());
+        }
+        catch (ClassNotFoundException ex)
+        {
+            System.err.println("GrCouleurRep : ClassNotFoundException : " + ex.getMessage());
         }
     }//GEN-LAST:event_CalculerAnneeButtonActionPerformed
 
@@ -194,17 +219,25 @@ public class GrCouleurRep extends javax.swing.JPanel
                 ErrorMoisLabel.setVisible(true);
                 return;
             }
+
             
             Utility.SendMsg(ProtocolePIDEP.GET_GR_COULEUR_REP, MoisTF.getText());
+            MoisTF.setText("");
         
+            
+            String reponse = Utility.ReceiveMsg();  
+            String[] parts = reponse.split("#");
+            
+            if(parts[0].equals("NON"))
+            {
+                ErrorNoDataLabel.setVisible(true);
+                return;
+            }
+            
+            
             ObjectInputStream ois = new ObjectInputStream(ApplicationDataAnalysis.cliSock.getInputStream());
             HashMap<String, Object> map = (HashMap<String, Object>) ois.readObject();
-            ois.close();
-            
-            if(map.isEmpty())
-                ErrorNoDataLabel.setVisible(true);
-            else
-                ShowPieChart(map);
+            ShowPieChart(map);
         }
         catch(NumberFormatException ex)
         {

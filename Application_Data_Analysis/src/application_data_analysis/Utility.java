@@ -75,7 +75,7 @@ public final class Utility
     }
 
     public static void SendMsg(int requete, String chargeUtile)
-    {
+    {       
         chargeUtile = requete + "#" + chargeUtile;
         int taille = chargeUtile.length();
         String message = String.valueOf(taille) + "#" + chargeUtile;

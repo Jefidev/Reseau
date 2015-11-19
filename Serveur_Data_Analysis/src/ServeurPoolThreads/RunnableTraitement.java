@@ -361,9 +361,9 @@ public class RunnableTraitement implements Runnable
             String condition;
             
             if (parts[1].length() == 4) // Année
-                condition = "EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = EXTRACT(YEAR FROM SYSDATE) GROUP BY DESTINATION";
+                condition = "EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = " + parts[1] + " GROUP BY DESTINATION";
             else // Mois
-                condition = "EXTRACT(MONTH FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = EXTRACT(MONTH FROM SYSDATE) GROUP BY DESTINATION";
+                condition = "EXTRACT(MONTH FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = " + parts[1] + " GROUP BY DESTINATION";
             
             ResultSet ResultatDB = beanOracleTrafic.selection("DESTINATION, COUNT(ID_CONTAINER)", "MOUVEMENTS", condition);
             
@@ -373,20 +373,27 @@ public class RunnableTraitement implements Runnable
             ArrayList<String> listDestinations = new ArrayList<>();
             ArrayList<Integer> listCount = new ArrayList<>();
             
-            while(ResultatDB.next())
+            if(!ResultatDB.first())
+            {
+                SendMsg("NON");
+                return;
+            }
+            
+            do
             {
                 listDestinations.add(ResultatDB.getString("DESTINATION"));
                 listCount.add(ResultatDB.getInt("COUNT(ID_CONTAINER)"));
-            }
+            }while(ResultatDB.next());
             
             map.put("DESTINATIONS", listDestinations);
             map.put("COUNT", listCount);
             
             
             // Envoi
+            SendMsg("OUI");
             ObjectOutputStream oos = new ObjectOutputStream(CSocket.getOutputStream());
             oos.writeObject(map);
-            oos.close();
+            oos.flush();
         }
         catch (SQLException ex)
         {
