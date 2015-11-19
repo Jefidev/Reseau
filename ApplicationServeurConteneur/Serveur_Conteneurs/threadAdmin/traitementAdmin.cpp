@@ -43,7 +43,6 @@ void* traitementAdmin(void* p)
 {
     //Mise en place des masques
     sigset_t masque;
-
     sigfillset(&masque); // on masque tout 
     pthread_sigmask(SIG_SETMASK, &masque, NULL);
 
