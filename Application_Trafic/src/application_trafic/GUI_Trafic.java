@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -60,6 +62,15 @@ public class GUI_Trafic extends javax.swing.JFrame {
         {
             login_panel.setErreur("Connexion au serveur échouée");
             System.err.println("Application trafic : Pas de connexion ? : " + e);
+        }
+    }
+    
+    public void logout()
+    {
+        try {
+            cliSock.close();
+        } catch (IOException ex) {
+            System.err.println("Application trafic : erreur fermeture client : " + ex.getStackTrace());
         }
     }
     
@@ -120,10 +131,12 @@ public class GUI_Trafic extends javax.swing.JFrame {
     private void initComponents() {
 
         login_panel = new application_trafic.Login_Panel();
+        menu_Panel = new application_trafic.Menu_Panel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
         getContentPane().add(login_panel, "login");
+        getContentPane().add(menu_Panel, "menu");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -207,5 +220,6 @@ public class GUI_Trafic extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private application_trafic.Login_Panel login_panel;
+    private application_trafic.Menu_Panel menu_Panel;
     // End of variables declaration//GEN-END:variables
 }

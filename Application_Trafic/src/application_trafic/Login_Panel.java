@@ -5,6 +5,7 @@
  */
 package application_trafic;
 
+import java.awt.CardLayout;
 import java.net.Socket;
 import javax.swing.SwingUtilities;
 
@@ -88,7 +89,7 @@ public class Login_Panel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(loginTextField)
                             .addComponent(passwordField, javax.swing.GroupLayout.DEFAULT_SIZE, 260, Short.MAX_VALUE))))
-                .addContainerGap(281, Short.MAX_VALUE))
+                .addContainerGap(280, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,7 +117,7 @@ public class Login_Panel extends javax.swing.JPanel {
                 .addComponent(loginButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(ErrorLabel)
-                .addContainerGap(183, Short.MAX_VALUE))
+                .addContainerGap(182, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -140,8 +141,8 @@ public class Login_Panel extends javax.swing.JPanel {
             return;
         }
         
-        //TO DO changement de page
-
+        CardLayout card = (CardLayout) frame.getContentPane().getLayout();
+        card.show(frame.getContentPane(), "menu");
     }//GEN-LAST:event_loginButtonActionPerformed
 
 

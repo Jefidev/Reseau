@@ -55,11 +55,27 @@ public class RunnableTraitementEntree implements Runnable
         else
         {
             SendMsg("ERR#Requète invalide");
+            return;
         }
         
-        System.err.println("login ok");
+        boolean terminer = false;
+               
+        while(!terminer)
+        {
+            parts = ReceiveMsg().split("#");
+            switch (parts[0])
+            {       
+                case "LOGOUT" :
+                    terminer = true;
+                    break;
+                    
+                default :
+                    terminer = true;
+                    break;
+            }
+        }
         
-        //TO DO
+        System.err.println("fin du runnable");
     }
     
     private boolean login(String[] part)

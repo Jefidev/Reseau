@@ -5,6 +5,9 @@
  */
 package application_trafic;
 
+import java.awt.CardLayout;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author Jerome
@@ -27,19 +30,73 @@ public class Menu_Panel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        logoutButton = new javax.swing.JButton();
+        titreLabel = new javax.swing.JLabel();
+        entreeReservationButton = new javax.swing.JButton();
+        sansReservation = new javax.swing.JButton();
+
+        logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
+
+        titreLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        titreLabel.setText("Menu trafic");
+
+        entreeReservationButton.setText("Camion avec réservation");
+
+        sansReservation.setText("Camion sans réservation");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 901, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(titreLabel)
+                .addGap(265, 265, 265)
+                .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(341, 341, 341)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(sansReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(entreeReservationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(354, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 499, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(logoutButton, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(titreLabel))
+                .addGap(36, 36, 36)
+                .addComponent(entreeReservationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(26, 26, 26)
+                .addComponent(sansReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(281, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
+        
+        frame.SendMsg("LOGOUT");
+        
+        CardLayout card = (CardLayout) frame.getContentPane().getLayout();
+        card.show(frame.getContentPane(), "login");
+        
+        frame.logout();
+    }//GEN-LAST:event_logoutButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton entreeReservationButton;
+    private javax.swing.JButton logoutButton;
+    private javax.swing.JButton sansReservation;
+    private javax.swing.JLabel titreLabel;
     // End of variables declaration//GEN-END:variables
 }

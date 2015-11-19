@@ -30,5 +30,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="application_trafic.Menu_Panel" name="menu_Panel">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="menu"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
