@@ -21,6 +21,7 @@ public class Avec_reservation_panel extends javax.swing.JPanel {
     public Avec_reservation_panel() {
         initComponents();
         idContainerList.setModel(new DefaultListModel());
+        reponseList.setModel(new DefaultListModel());
         erreurLabel.setVisible(false);
     }
 
@@ -168,7 +169,8 @@ public class Avec_reservation_panel extends javax.swing.JPanel {
         if(idContainerTextField.getText().isEmpty())
             return;
         
-        ((DefaultListModel)idContainerList.getModel()).addElement(idContainerTextField.getText());                  
+        ((DefaultListModel)idContainerList.getModel()).addElement(idContainerTextField.getText());
+        idContainerTextField.setText("");
     }//GEN-LAST:event_ajouterButtonActionPerformed
 
     private void retirerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retirerButtonActionPerformed
@@ -180,6 +182,7 @@ public class Avec_reservation_panel extends javax.swing.JPanel {
 
     private void rechercheButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechercheButtonActionPerformed
         erreurLabel.setVisible(false);
+        ((DefaultListModel)reponseList.getModel()).clear();
         
         if(numeroTextField.getText().isEmpty())
         {
@@ -194,7 +197,33 @@ public class Avec_reservation_panel extends javax.swing.JPanel {
             return;
         }
         
-        //TO DO envoi requete pour serveur
+        GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
+        
+        String message = "INPUT_LORRY#" + numeroTextField.getText()+"#";
+        
+        for(int i = 0; i < ((DefaultListModel)idContainerList.getModel()).getSize(); i++)
+        {
+            message = message + ((DefaultListModel)idContainerList.getModel()).getElementAt(i)+"@";
+        }
+        
+        frame.SendMsg(message);
+        
+        String[] reponse = frame.ReceiveMsg().split("#");
+       
+        if(reponse[0].equals("ERR"))
+        {
+            erreurLabel.setText(reponse[1]);
+            erreurLabel.setVisible(true);
+            return;
+        }
+        
+        String[] emplacement = reponse[1].split("@");
+        
+        for(String s : emplacement)
+        {
+            ((DefaultListModel)reponseList.getModel()).addElement(s);
+        }
+       
     }//GEN-LAST:event_rechercheButtonActionPerformed
 
     private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed

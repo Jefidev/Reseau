@@ -120,6 +120,92 @@ public class RunnableTraitementEntree implements Runnable
     private void inputLorry(String[] request)
     {
         
+        ResultSet rs = null;
+        
+        try {
+            rs = beanOracle.selection("ID_CONTAINER", "CONTAINERS", "RESERVATION = '"+request[1]+"'");
+        } catch (SQLException ex) {
+            SendMsg("ERR#Base de donnée inaccessible");
+            System.err.println("Erreur SQL exception input lorry");
+            return;
+        }
+        
+        boolean isResultEmpty = true;
+        int nbrElemParc = 0;
+        
+        String[] idList =  request[2].split("@");
+        System.out.println(request[2]);
+        try {
+            while(rs.next())
+            {
+                nbrElemParc++;
+                isResultEmpty = false;
+                String curId = null;
+                String id = rs.getString("ID_CONTAINER");
+                boolean invalidContainerID = true;
+                for(String s : idList)
+                {
+                    System.out.println(s +"---"+id);
+                    curId = s;
+                    if(s.equals(id))
+                    {
+                        invalidContainerID = false;
+                        break;
+                    }
+                }
+                if(invalidContainerID)
+                {
+                    SendMsg("ERR#Le container " + curId +" ne fait pas partie de la reservation" );
+                    return;
+                }
+                
+                if(nbrElemParc >= idList.length)
+                    break;
+            }
+        } catch (SQLException ex) {
+            SendMsg("ERR#Base de donnée inaccessible");
+            System.err.println("Erreur SQL exception input lorry resultat");
+            return;
+        }
+        
+        if(isResultEmpty)
+        {
+            SendMsg("ERR#Le numero de reservation demande n'existe pas");
+            return;
+        }
+        
+        try {
+            rs = beanOracle.selection("X, Y", "PARC", "ETAT=1");
+        } catch (SQLException ex) {
+            SendMsg("ERR#Base de donnée inaccessible");
+            System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
+            return;
+        }
+        
+        String reponse = "ACK#";
+        
+        try
+        {
+            for(int i = 0; i < idList.length ; i++)
+            {
+                if(rs.next())
+                {
+                    reponse = reponse + idList[i] + "==>("+rs.getString("X")+";"+rs.getString("Y")+")@";
+                }
+                else
+                {
+                    SendMsg("ERR#Erreur pas assez de places reservees");
+                    return;
+                }
+            }
+        }
+        catch(SQLException ex){
+            SendMsg("ERR#Base de donnée inaccessible");
+            System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
+            return;
+        }
+        
+        SendMsg(reponse);
     }
     
     /* Envoi d'un message au client */
