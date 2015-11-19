@@ -92,7 +92,7 @@ public class Serveur_trafic extends Thread{
             {
                 FileOutputStream Oflux = new FileOutputStream(pathProperties);
                 
-                paramCo.setProperty("PORT_SERVEUR_IN", "31045");
+                paramCo.setProperty("PORT_SERVEUR_IN", "31043");
                 paramCo.setProperty("PORT_SERVEUR_RES", "31041");
 
                 try {

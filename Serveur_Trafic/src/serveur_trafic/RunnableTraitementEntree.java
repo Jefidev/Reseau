@@ -57,6 +57,8 @@ public class RunnableTraitementEntree implements Runnable
             SendMsg("ERR#Requète invalide");
         }
         
+        System.err.println("login ok");
+        
         //TO DO
     }
     
@@ -84,14 +86,14 @@ public class RunnableTraitementEntree implements Runnable
         } catch (SQLException ex) {
             System.err.println(ex.getStackTrace());
         }
-        
+        System.err.println(part[2]);
         if(pwd.equals(part[2]))
         {
             SendMsg("ACK");
             return true;
         }
         else
-            SendMsg("ERR");
+            SendMsg("ERR#Mot de passe incorrecte");
         
         return false;
     }
