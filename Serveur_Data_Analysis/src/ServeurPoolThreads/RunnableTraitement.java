@@ -421,15 +421,15 @@ public class RunnableTraitement implements Runnable
         try
         {   
             // Base de données
-            String condition = "EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = " + parts[1] + " GROUP BY DESTINATION";
-            
-            ResultSet ResultatDB = beanOracleTrafic.selection("DESTINATION, COUNT(ID_CONTAINER)", "MOUVEMENTS", condition);
+            String condition = "EXTRACT(YEAR FROM(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'))) = " + parts[1] + "GROUP BY TO_CHAR(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'), 'Q'), DESTINATION ORDER BY TO_CHAR(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'), 'Q')";
+            ResultSet ResultatDB = beanOracleTrafic.selection("DESTINATION, COUNT(ID_CONTAINER), TO_CHAR(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'), 'Q')", "MOUVEMENTS", condition);
             
             
             // HashMap
             HashMap<String, Object> map = new HashMap();
             ArrayList<String> listDestinations = new ArrayList<>();
             ArrayList<Integer> listCount = new ArrayList<>();
+            ArrayList<Integer> listTrimestres = new ArrayList<>();
             
             if(!ResultatDB.first())
             {
@@ -441,10 +441,12 @@ public class RunnableTraitement implements Runnable
             {
                 listDestinations.add(ResultatDB.getString("DESTINATION"));
                 listCount.add(ResultatDB.getInt("COUNT(ID_CONTAINER)"));
+                listTrimestres.add(ResultatDB.getInt("TO_CHAR(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'), 'Q')"));
             }while(ResultatDB.next());
             
             map.put("DESTINATIONS", listDestinations);
             map.put("COUNT", listCount);
+            map.put("TRIMESTRES", listTrimestres);
             
             
             // Envoi

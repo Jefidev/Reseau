@@ -2,6 +2,7 @@ package application_data_analysis;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.SwingUtilities;
 import javax.swing.JDialog;
@@ -171,20 +172,14 @@ public class GrCouleurComp extends javax.swing.JPanel
 
     private void ShowBarChart(HashMap<String, Object> map)
     {
-        // RECUP DONNEES MAP
-        
+        ArrayList<String> listDestinations = (ArrayList<String>)map.get("DESTINATIONS");
+        ArrayList<Integer> listCount = (ArrayList<Integer>)map.get("COUNT");
+        ArrayList<Integer> listTrimestres = (ArrayList<Integer>)map.get("TRIMESTRES");
+
         DefaultCategoryDataset dcds = new DefaultCategoryDataset();
-        // dcds.setValue();
-        //Le 1er, c'est le nombre d'occurrence du Nieme trimestre pour ta destination courante,
-        //le 2e c'est le trimestre en lui-même, le 3e la destination (5, 1, "Verviers)
-        //dcds.addValue(array2DCount[i][j], arrayTrimestres[j], listDestinations.get(i));
-        /*
-        DefaultPieDataset dpds = new DefaultPieDataset();
         for(int i = 0; i < listDestinations.size(); i++)
-            dpds.setValue(listDestinations.get(i), listCount.get(i));
-        */
-        
-        
+            dcds.setValue(listCount.get(i), listTrimestres.get(i), listDestinations.get(i));
+               
         JFreeChart jfc = ChartFactory.createBarChart("Répartition du nombre de containers par destination par trimestre", "Destinations", "Occurences", dcds, PlotOrientation.HORIZONTAL, true, true, true);
         ChartPanel cp = new ChartPanel(jfc);
         JDialog dialog = new JDialog();
