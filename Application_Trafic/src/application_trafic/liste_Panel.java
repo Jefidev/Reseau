@@ -40,6 +40,11 @@ public class liste_Panel extends javax.swing.JPanel {
         rechercheTitre.setText("Recherche mouvements");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Date", "Nom société", "Destination" }));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
 
         critereLabel.setText("Critère de recherche : ");
 
@@ -105,6 +110,10 @@ public class liste_Panel extends javax.swing.JPanel {
                 .addGap(112, 112, 112))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+        System.err.println("test");
+    }//GEN-LAST:event_jComboBox1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
