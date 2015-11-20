@@ -5,6 +5,9 @@
  */
 package application_trafic;
 
+import java.awt.CardLayout;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author John
@@ -28,21 +31,24 @@ public class liste_Panel extends javax.swing.JPanel {
     private void initComponents() {
 
         rechercheTitre = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        rechercheCombo = new javax.swing.JComboBox();
         critereLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         resultatLabel = new javax.swing.JLabel();
         recherchePanel = new javax.swing.JPanel();
         date_panel1 = new application_trafic.recherchePanel.date_panel();
+        societe_panel1 = new application_trafic.recherchePanel.societe_panel();
+        destination_panel1 = new application_trafic.recherchePanel.destination_panel();
+        menuButton = new javax.swing.JButton();
 
         rechercheTitre.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         rechercheTitre.setText("Recherche mouvements");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Date", "Nom société", "Destination" }));
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        rechercheCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Date", "Nom société", "Destination" }));
+        rechercheCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                rechercheComboActionPerformed(evt);
             }
         });
 
@@ -65,6 +71,15 @@ public class liste_Panel extends javax.swing.JPanel {
 
         recherchePanel.setLayout(new java.awt.CardLayout());
         recherchePanel.add(date_panel1, "date");
+        recherchePanel.add(societe_panel1, "societe");
+        recherchePanel.add(destination_panel1, "destination");
+
+        menuButton.setText("Menu");
+        menuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -76,7 +91,7 @@ public class liste_Panel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(critereLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(rechercheCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(recherchePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(94, 94, 94))
@@ -87,7 +102,9 @@ public class liste_Panel extends javax.swing.JPanel {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(rechercheTitre)
-                                    .addGap(252, 252, 252))
+                                    .addGap(169, 169, 169)
+                                    .addComponent(menuButton)
+                                    .addContainerGap())
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGap(94, 94, 94)))))))
@@ -96,12 +113,14 @@ public class liste_Panel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(rechercheTitre)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rechercheTitre)
+                    .addComponent(menuButton))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(critereLabel)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(rechercheCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(recherchePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(resultatLabel)
@@ -111,19 +130,41 @@ public class liste_Panel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
-        System.err.println("test");
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    private void rechercheComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechercheComboActionPerformed
+        if(rechercheCombo.getSelectedIndex() == 0)
+            ((CardLayout)recherchePanel.getLayout()).show(recherchePanel, "date");
 
+        else if(rechercheCombo.getSelectedIndex() == 1)
+            ((CardLayout)recherchePanel.getLayout()).show(recherchePanel, "societe");
+        
+        else
+            ((CardLayout)recherchePanel.getLayout()).show(recherchePanel, "destination");
+    }//GEN-LAST:event_rechercheComboActionPerformed
+
+    private void menuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuButtonActionPerformed
+        GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
+        ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "menu");
+    }//GEN-LAST:event_menuButtonActionPerformed
+    
+    
+    public void send(String msg)
+    {
+        GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
+        
+        frame.SendMsg(msg);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel critereLabel;
     private application_trafic.recherchePanel.date_panel date_panel1;
-    private javax.swing.JComboBox jComboBox1;
+    private application_trafic.recherchePanel.destination_panel destination_panel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JButton menuButton;
+    private javax.swing.JComboBox rechercheCombo;
     private javax.swing.JPanel recherchePanel;
     private javax.swing.JLabel rechercheTitre;
     private javax.swing.JLabel resultatLabel;
+    private application_trafic.recherchePanel.societe_panel societe_panel1;
     // End of variables declaration//GEN-END:variables
 }
