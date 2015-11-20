@@ -68,6 +68,9 @@ public class RunnableTraitementEntree implements Runnable
                 case "INPUT_LORRY" :
                         inputLorry(parts);
                         break;
+                case "INPUT_LORRY_WITHOUT_RESERVATION" :
+                        inputLorryWithoutReserv(parts);
+                        break;
                 case "LOGOUT" :
                     terminer = true;
                     break;
@@ -195,6 +198,48 @@ public class RunnableTraitementEntree implements Runnable
                 else
                 {
                     SendMsg("ERR#Erreur pas assez de places reservees");
+                    return;
+                }
+            }
+        }
+        catch(SQLException ex){
+            SendMsg("ERR#Base de donnée inaccessible");
+            System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
+            return;
+        }
+        
+        SendMsg(reponse);
+    }
+    
+    
+    
+    private void inputLorryWithoutReserv(String[] request)
+    {    
+        ResultSet rs = null;
+        
+        String[] idList =  request[2].split("@");
+        
+        try {
+            rs = beanOracle.selection("X, Y", "PARC", "ETAT=0");
+        } catch (SQLException ex) {
+            SendMsg("ERR#Base de donnée inaccessible");
+            System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
+            return;
+        }
+        
+        String reponse = "ACK#";
+        
+        try
+        {
+            for(int i = 0; i < idList.length ; i++)
+            {
+                if(rs.next())
+                {
+                    reponse = reponse + idList[i] + "==>("+rs.getString("X")+";"+rs.getString("Y")+")@";
+                }
+                else
+                {
+                    SendMsg("ERR#Erreur pas assez de places");
                     return;
                 }
             }
