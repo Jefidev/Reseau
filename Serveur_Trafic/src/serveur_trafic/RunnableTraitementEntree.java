@@ -71,6 +71,9 @@ public class RunnableTraitementEntree implements Runnable
                 case "INPUT_LORRY_WITHOUT_RESERVATION" :
                         inputLorryWithoutReserv(parts);
                         break;
+                case "LIST_OPERATIONS" :
+                        listOperation(parts);
+                        break;
                 case "LOGOUT" :
                     terminer = true;
                     break;
@@ -211,6 +214,16 @@ public class RunnableTraitementEntree implements Runnable
         SendMsg(reponse);
     }
     
+    
+    private void listOperation(String[] request)
+    {
+        if(request[1].equals("societe"))
+        {
+            
+        }
+        
+        SendMsg("ERR#Recherche impossible sur ce critère");
+    }
     
     
     private void inputLorryWithoutReserv(String[] request)

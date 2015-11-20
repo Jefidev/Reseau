@@ -72,11 +72,15 @@ public class societe_panel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void rechercheButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechercheButtonActionPerformed
-        societeTextField.setText("");
         
+        if(societeTextField.getText().isEmpty())
+            return;
+
         liste_Panel parent = (liste_Panel)this.getParent().getParent();
         
-        parent.send("test");
+        String m = "LIST_OPERATIONS#societe#" + societeTextField.getText();
+        
+        parent.recherche(m);
         
     }//GEN-LAST:event_rechercheButtonActionPerformed
 

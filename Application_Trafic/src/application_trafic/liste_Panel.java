@@ -6,7 +6,13 @@
 package application_trafic;
 
 import java.awt.CardLayout;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.Vector;
+import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,6 +25,7 @@ public class liste_Panel extends javax.swing.JPanel {
      */
     public liste_Panel() {
         initComponents();
+        resultList.setModel(new DefaultListModel());
     }
 
     /**
@@ -33,14 +40,14 @@ public class liste_Panel extends javax.swing.JPanel {
         rechercheTitre = new javax.swing.JLabel();
         rechercheCombo = new javax.swing.JComboBox();
         critereLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         resultatLabel = new javax.swing.JLabel();
         recherchePanel = new javax.swing.JPanel();
         date_panel1 = new application_trafic.recherchePanel.date_panel();
         societe_panel1 = new application_trafic.recherchePanel.societe_panel();
         destination_panel1 = new application_trafic.recherchePanel.destination_panel();
         menuButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        resultList = new javax.swing.JList();
 
         rechercheTitre.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         rechercheTitre.setText("Recherche mouvements");
@@ -53,19 +60,6 @@ public class liste_Panel extends javax.swing.JPanel {
         });
 
         critereLabel.setText("Critère de recherche : ");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
 
         resultatLabel.setText("Résultat : ");
 
@@ -80,6 +74,8 @@ public class liste_Panel extends javax.swing.JPanel {
                 menuButtonActionPerformed(evt);
             }
         });
+
+        jScrollPane2.setViewportView(resultList);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -99,15 +95,13 @@ public class liste_Panel extends javax.swing.JPanel {
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(resultatLabel)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(rechercheTitre)
-                                    .addGap(169, 169, 169)
-                                    .addComponent(menuButton)
-                                    .addContainerGap())
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 667, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(94, 94, 94)))))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(142, 142, 142)
+                                .addComponent(rechercheTitre)
+                                .addGap(169, 169, 169)
+                                .addComponent(menuButton))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -124,9 +118,9 @@ public class liste_Panel extends javax.swing.JPanel {
                     .addComponent(recherchePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                 .addComponent(resultatLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(112, 112, 112))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(142, 142, 142))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -147,24 +141,53 @@ public class liste_Panel extends javax.swing.JPanel {
     }//GEN-LAST:event_menuButtonActionPerformed
     
     
-    public void send(String msg)
+    public void recherche(String msg)
     {
         GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
         
         frame.SendMsg(msg);
+        ((DefaultListModel)resultList.getModel()).clear();
+        
+        String str = frame.ReceiveMsg();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel critereLabel;
     private application_trafic.recherchePanel.date_panel date_panel1;
     private application_trafic.recherchePanel.destination_panel destination_panel1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton menuButton;
     private javax.swing.JComboBox rechercheCombo;
     private javax.swing.JPanel recherchePanel;
     private javax.swing.JLabel rechercheTitre;
+    private javax.swing.JList resultList;
     private javax.swing.JLabel resultatLabel;
     private application_trafic.recherchePanel.societe_panel societe_panel1;
     // End of variables declaration//GEN-END:variables
+
+    public DefaultTableModel buildTableModel(ResultSet rs) throws SQLException{
+        
+        Vector<String> columnNames = new Vector<String>();
+        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+        
+        ResultSetMetaData metaData = rs.getMetaData();
+
+        int columnCount = metaData.getColumnCount();
+        for (int column = 1; column <= columnCount; column++) {
+            columnNames.add(metaData.getColumnName(column));
+        }
+
+        while (rs.next()) 
+        {
+            Vector<Object> vector = new Vector<Object>();
+            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                vector.add(rs.getObject(columnIndex));
+            }
+            data.add(vector);
+        }
+
+        return(new DefaultTableModel(data, columnNames));
+    }
+
+
 }
