@@ -34,6 +34,7 @@ public class Menu_Panel extends javax.swing.JPanel {
         titreLabel = new javax.swing.JLabel();
         entreeReservationButton = new javax.swing.JButton();
         sansReservation = new javax.swing.JButton();
+        listOpButton = new javax.swing.JButton();
 
         logoutButton.setText("Logout");
         logoutButton.addActionListener(new java.awt.event.ActionListener() {
@@ -59,6 +60,13 @@ public class Menu_Panel extends javax.swing.JPanel {
             }
         });
 
+        listOpButton.setText("Liste opération");
+        listOpButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                listOpButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -72,6 +80,7 @@ public class Menu_Panel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(341, 341, 341)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(listOpButton, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sansReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(entreeReservationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(354, Short.MAX_VALUE))
@@ -87,7 +96,9 @@ public class Menu_Panel extends javax.swing.JPanel {
                 .addComponent(entreeReservationButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(sansReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(281, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addComponent(listOpButton, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(198, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -112,9 +123,15 @@ public class Menu_Panel extends javax.swing.JPanel {
         ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "sansReservation");
     }//GEN-LAST:event_sansReservationActionPerformed
 
+    private void listOpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_listOpButtonActionPerformed
+        GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
+        ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "list");
+    }//GEN-LAST:event_listOpButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton entreeReservationButton;
+    private javax.swing.JButton listOpButton;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton sansReservation;
     private javax.swing.JLabel titreLabel;

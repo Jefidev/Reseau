@@ -26,6 +26,7 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="341" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="listOpButton" min="-2" pref="206" max="-2" attributes="0"/>
                   <Component id="sansReservation" min="-2" pref="206" max="-2" attributes="0"/>
                   <Component id="entreeReservationButton" min="-2" pref="206" max="-2" attributes="0"/>
               </Group>
@@ -45,7 +46,9 @@
               <Component id="entreeReservationButton" min="-2" pref="54" max="-2" attributes="0"/>
               <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
               <Component id="sansReservation" min="-2" pref="54" max="-2" attributes="0"/>
-              <EmptySpace pref="281" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
+              <Component id="listOpButton" min="-2" pref="54" max="-2" attributes="0"/>
+              <EmptySpace pref="198" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -81,6 +84,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sansReservationActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="listOpButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Liste op&#xe9;ration"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="listOpButtonActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>
