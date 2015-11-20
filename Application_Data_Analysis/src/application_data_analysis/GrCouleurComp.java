@@ -9,8 +9,11 @@ import javax.swing.JDialog;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.axis.NumberTickUnit;
+import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.chart.axis.NumberAxis;
 
 
 public class GrCouleurComp extends javax.swing.JPanel
@@ -181,6 +184,9 @@ public class GrCouleurComp extends javax.swing.JPanel
             dcds.setValue(listCount.get(i), listTrimestres.get(i), listDestinations.get(i));
                
         JFreeChart jfc = ChartFactory.createBarChart("Répartition du nombre de containers par destination par trimestre", "Destinations", "Occurences", dcds, PlotOrientation.VERTICAL, true, true, true);
+        CategoryPlot plot = jfc.getCategoryPlot();
+        NumberAxis rangeAxis = (NumberAxis)plot.getRangeAxis();
+        rangeAxis.setTickUnit(new NumberTickUnit(1.0)); // Valeurs de l'axe par pas de 1
         ChartPanel cp = new ChartPanel(jfc);
         JDialog dialog = new JDialog();
         dialog.setSize(500, 500);
