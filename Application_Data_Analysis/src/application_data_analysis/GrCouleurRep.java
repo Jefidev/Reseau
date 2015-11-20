@@ -165,7 +165,7 @@ public class GrCouleurRep extends javax.swing.JPanel
         {
             int annee = Integer.parseInt(AnneeTF.getText());
             
-            if (annee <= 1000 &&  9999 <= annee)
+            if (annee <= 1000 ||  9999 <= annee)
             {
                 ErrorAnneeLabel.setVisible(true);
                 return;

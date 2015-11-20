@@ -79,10 +79,10 @@ public class GrCouleurComp extends javax.swing.JPanel
                 .addContainerGap()
                 .addComponent(AnneeLabel)
                 .addGap(18, 18, 18)
-                .addComponent(AnneeTF, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                .addComponent(AnneeTF, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(CalculerButton, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
-                .addGap(18, 18, 18)
+                .addComponent(CalculerButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addComponent(ErrorAnneeLabel)
                 .addContainerGap())
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,7 +134,7 @@ public class GrCouleurComp extends javax.swing.JPanel
         {
             int annee = Integer.parseInt(AnneeTF.getText());
 
-            if (annee <= 1000 &&  9999 <= annee)
+            if (annee <= 1000 ||  9999 <= annee)
             {
                 ErrorAnneeLabel.setVisible(true);
                 return;
@@ -180,7 +180,7 @@ public class GrCouleurComp extends javax.swing.JPanel
         for(int i = 0; i < listDestinations.size(); i++)
             dcds.setValue(listCount.get(i), listTrimestres.get(i), listDestinations.get(i));
                
-        JFreeChart jfc = ChartFactory.createBarChart("Répartition du nombre de containers par destination par trimestre", "Destinations", "Occurences", dcds, PlotOrientation.HORIZONTAL, true, true, true);
+        JFreeChart jfc = ChartFactory.createBarChart("Répartition du nombre de containers par destination par trimestre", "Destinations", "Occurences", dcds, PlotOrientation.VERTICAL, true, true, true);
         ChartPanel cp = new ChartPanel(jfc);
         JDialog dialog = new JDialog();
         dialog.setSize(500, 500);

@@ -25,10 +25,10 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="AnneeLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="AnneeTF" pref="85" max="32767" attributes="0"/>
+              <Component id="AnneeTF" min="-2" pref="85" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="CalculerButton" pref="85" max="32767" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="CalculerButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="32" max="32767" attributes="0"/>
               <Component id="ErrorAnneeLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>

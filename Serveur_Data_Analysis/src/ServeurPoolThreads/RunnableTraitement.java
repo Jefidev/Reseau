@@ -441,7 +441,7 @@ public class RunnableTraitement implements Runnable
             {
                 listDestinations.add(ResultatDB.getString("DESTINATION"));
                 listCount.add(ResultatDB.getInt("COUNT(ID_CONTAINER)"));
-                listTrimestres.add(ResultatDB.getInt("TO_CHAR(TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'), 'Q')"));
+                listTrimestres.add(ResultatDB.getInt(3));
             }while(ResultatDB.next());
             
             map.put("DESTINATIONS", listDestinations);

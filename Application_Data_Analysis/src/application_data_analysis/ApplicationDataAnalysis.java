@@ -17,12 +17,14 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
         Menu = new application_data_analysis.Menu();
         StatDescrCont = new application_data_analysis.StatDescrCont();
         GrCouleurRep = new application_data_analysis.GrCouleurRep();
+        GrCouleurComp = new application_data_analysis.GrCouleurComp();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
         getContentPane().add(Menu, "Menu");
         getContentPane().add(StatDescrCont, "StatDescrCont");
         getContentPane().add(GrCouleurRep, "GrCouleurRep");
+        getContentPane().add(GrCouleurComp, "GrCouleurComp");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -79,6 +81,7 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup ButtonGroup;
+    private application_data_analysis.GrCouleurComp GrCouleurComp;
     private application_data_analysis.GrCouleurRep GrCouleurRep;
     private application_data_analysis.Menu Menu;
     private application_data_analysis.StatDescrCont StatDescrCont;

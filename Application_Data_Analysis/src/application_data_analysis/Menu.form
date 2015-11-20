@@ -26,8 +26,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="StatDescrContButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="GrCouleurRepButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="GrCouleurComp" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="133" max="32767" attributes="0"/>
+              <EmptySpace pref="121" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -38,9 +39,11 @@
               <Component id="TitreLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="StatDescrContButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="GrCouleurRepButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="197" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="GrCouleurComp" min="-2" max="-2" attributes="0"/>
+              <EmptySpace pref="149" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -67,10 +70,19 @@
     </Component>
     <Component class="javax.swing.JButton" name="GrCouleurRepButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="R&#xe9;partition du nombre de containers par destination"/>
+        <Property name="text" type="java.lang.String" value="R&#xe9;partition du nombre de containers par destination (diagramme sectoriel)"/>
+        <Property name="actionCommand" type="java.lang.String" value="R&#xe9;partition du nombre de containers par destination (diagramme sectoriel)"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GrCouleurRepButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="GrCouleurComp">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="R&#xe9;partition du nombre de containers par destination par trimestre (histogramme)"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GrCouleurCompActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

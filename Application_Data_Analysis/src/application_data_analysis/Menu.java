@@ -16,6 +16,7 @@ public class Menu extends javax.swing.JPanel {
         TitreLabel = new javax.swing.JLabel();
         StatDescrContButton = new javax.swing.JButton();
         GrCouleurRepButton = new javax.swing.JButton();
+        GrCouleurComp = new javax.swing.JButton();
 
         TitreLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         TitreLabel.setForeground(new java.awt.Color(0, 0, 255));
@@ -28,10 +29,18 @@ public class Menu extends javax.swing.JPanel {
             }
         });
 
-        GrCouleurRepButton.setText("Répartition du nombre de containers par destination");
+        GrCouleurRepButton.setText("Répartition du nombre de containers par destination (diagramme sectoriel)");
+        GrCouleurRepButton.setActionCommand("Répartition du nombre de containers par destination (diagramme sectoriel)");
         GrCouleurRepButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 GrCouleurRepButtonActionPerformed(evt);
+            }
+        });
+
+        GrCouleurComp.setText("Répartition du nombre de containers par destination par trimestre (histogramme)");
+        GrCouleurComp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                GrCouleurCompActionPerformed(evt);
             }
         });
 
@@ -47,8 +56,9 @@ public class Menu extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(StatDescrContButton)
-                    .addComponent(GrCouleurRepButton))
-                .addContainerGap(133, Short.MAX_VALUE))
+                    .addComponent(GrCouleurRepButton)
+                    .addComponent(GrCouleurComp))
+                .addContainerGap(121, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -57,9 +67,11 @@ public class Menu extends javax.swing.JPanel {
                 .addComponent(TitreLabel)
                 .addGap(18, 18, 18)
                 .addComponent(StatDescrContButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(GrCouleurRepButton)
-                .addContainerGap(197, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(GrCouleurComp)
+                .addContainerGap(149, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -73,7 +85,13 @@ public class Menu extends javax.swing.JPanel {
         app.ChangePanel("GrCouleurRep");
     }//GEN-LAST:event_GrCouleurRepButtonActionPerformed
 
+    private void GrCouleurCompActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrCouleurCompActionPerformed
+        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        app.ChangePanel("GrCouleurComp");
+    }//GEN-LAST:event_GrCouleurCompActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton GrCouleurComp;
     private javax.swing.JButton GrCouleurRepButton;
     private javax.swing.JButton StatDescrContButton;
     private javax.swing.JLabel TitreLabel;
