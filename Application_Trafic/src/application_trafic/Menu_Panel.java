@@ -53,6 +53,11 @@ public class Menu_Panel extends javax.swing.JPanel {
         });
 
         sansReservation.setText("Camion sans réservation");
+        sansReservation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sansReservationActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -101,6 +106,11 @@ public class Menu_Panel extends javax.swing.JPanel {
         GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
         ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "avecReservation");
     }//GEN-LAST:event_entreeReservationButtonActionPerformed
+
+    private void sansReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sansReservationActionPerformed
+        GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
+        ((CardLayout)frame.getContentPane().getLayout()).show(frame.getContentPane(), "sansReservation");
+    }//GEN-LAST:event_sansReservationActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

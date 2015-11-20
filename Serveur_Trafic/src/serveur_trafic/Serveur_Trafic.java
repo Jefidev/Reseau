@@ -18,7 +18,7 @@ import javax.swing.JOptionPane;
  *
  * @author John
  */
-public class Serveur_trafic extends Thread{
+public class Serveur_Trafic extends Thread{
 
     private int port;
     private SourceTaches tachesAExecuter;
@@ -28,7 +28,7 @@ public class Serveur_trafic extends Thread{
     private int port_upd;
     private String ip_udp;
     
-    public Serveur_trafic(int p, SourceTaches st, int nt)
+    public Serveur_Trafic(int p, SourceTaches st, int nt)
     {
         port = p;
         tachesAExecuter = st;
@@ -118,7 +118,7 @@ public class Serveur_trafic extends Thread{
         
         int p = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_IN"));
         
-        Serveur_trafic sc = new Serveur_trafic(p, new ListeTaches(), 5);
+        Serveur_Trafic sc = new Serveur_Trafic(p, new ListeTaches(), 5);
         sc.start();
     }
     

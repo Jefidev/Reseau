@@ -133,12 +133,14 @@ public class GUI_Trafic extends javax.swing.JFrame {
         login_panel = new application_trafic.Login_Panel();
         menu_Panel = new application_trafic.Menu_Panel();
         avec_reservation_panel = new application_trafic.Avec_reservation_panel();
+        sans_reservation_panel1 = new application_trafic.Sans_reservation_panel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
         getContentPane().add(login_panel, "login");
         getContentPane().add(menu_Panel, "menu");
         getContentPane().add(avec_reservation_panel, "avecReservation");
+        getContentPane().add(sans_reservation_panel1, "sansReservation");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -224,5 +226,6 @@ public class GUI_Trafic extends javax.swing.JFrame {
     private application_trafic.Avec_reservation_panel avec_reservation_panel;
     private application_trafic.Login_Panel login_panel;
     private application_trafic.Menu_Panel menu_Panel;
+    private application_trafic.Sans_reservation_panel sans_reservation_panel1;
     // End of variables declaration//GEN-END:variables
 }

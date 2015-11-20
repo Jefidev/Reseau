@@ -44,5 +44,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="application_trafic.Sans_reservation_panel" name="sans_reservation_panel1">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="sansReservation"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
