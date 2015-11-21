@@ -241,6 +241,7 @@ public class StatDescrCont extends javax.swing.JPanel
         }
         catch (NumberFormatException ex)
         {
+            ErrorSaisieLabel.setText("Doit être un entier positif !");
             ErrorSaisieLabel.setVisible(true);
         }
     }//GEN-LAST:event_CalculerButtonActionPerformed

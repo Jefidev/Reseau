@@ -1,11 +1,14 @@
 package application_data_analysis;
 
+import javax.swing.SwingUtilities;
+
 
 public class StatInferTestHomog extends javax.swing.JPanel
 {
     public StatInferTestHomog()
     {
         initComponents();
+        ErrorSaisieLabel.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -19,6 +22,7 @@ public class StatInferTestHomog extends javax.swing.JPanel
         ErrorSaisieLabel = new javax.swing.JLabel();
         TesterButton = new javax.swing.JButton();
         Sujet2Label = new javax.swing.JLabel();
+        RetourMenuButton = new javax.swing.JButton();
 
         TitreLabel.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         TitreLabel.setForeground(new java.awt.Color(0, 0, 255));
@@ -34,14 +38,30 @@ public class StatInferTestHomog extends javax.swing.JPanel
         ErrorSaisieLabel.setText("Doit être un entier positif !");
 
         TesterButton.setText("Tester");
+        TesterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TesterButtonActionPerformed(evt);
+            }
+        });
 
         Sujet2Label.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         Sujet2Label.setText("si il est à destination de Duisbourg ou Strasbourg ?");
+
+        RetourMenuButton.setText("Retour au menu");
+        RetourMenuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RetourMenuButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(48, 48, 48)
+                .addComponent(Sujet2Label)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -61,12 +81,11 @@ public class StatInferTestHomog extends javax.swing.JPanel
                     .addGroup(layout.createSequentialGroup()
                         .addGap(158, 158, 158)
                         .addComponent(TitreLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(RetourMenuButton)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(48, 48, 48)
-                .addComponent(Sujet2Label)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -83,15 +102,43 @@ public class StatInferTestHomog extends javax.swing.JPanel
                     .addComponent(ErrorSaisieLabel)
                     .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TesterButton))
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                .addComponent(RetourMenuButton)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void RetourMenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RetourMenuButtonActionPerformed
+        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        app.ChangePanel("Menu");
+    }//GEN-LAST:event_RetourMenuButtonActionPerformed
+
+    private void TesterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TesterButtonActionPerformed
+        
+        ErrorSaisieLabel.setVisible(false);
+        
+        try
+        {
+            int nbContainers = Integer.parseInt(NbContainersTF.getText());
+
+            Utility.SendMsg(ProtocolePIDEP.GET_STAT_INFER_TEST_HOMOG, NbContainersTF.getText());
+
+            // Réponse
+            String reponse = Utility.ReceiveMsg();
+            String[] parts = reponse.split("#");
+        }
+        catch (NumberFormatException ex)
+        {
+            ErrorSaisieLabel.setVisible(true);
+        }
+    }//GEN-LAST:event_TesterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ErrorSaisieLabel;
     private javax.swing.JLabel NbContainersLabel;
     private javax.swing.JTextField NbContainersTF;
+    private javax.swing.JButton RetourMenuButton;
     private javax.swing.JLabel Sujet2Label;
     private javax.swing.JLabel SujetLabel;
     private javax.swing.JButton TesterButton;
