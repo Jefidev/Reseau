@@ -234,15 +234,20 @@ void inputTruck(SocketClient* sock)
     cout << "Immatriculation du camion : ";
     cin >> sit.immatriculation;
 
+    cout << "Nom de la societe de transport : ";
+    cin >> sit.societe;
+
     bool continuer = true;
-    string containersList, c;
+    string containersList, c, d;
 
     do
     {
         cout << endl << endl << endl << "ID du container : ";
         cin >> c;
+        cout << endl << "Destination du container : ";
+        cin >> d;
 
-        containersList = containersList + c;
+        containersList = containersList + c +";"+d;
 
         int choix = 0;
 

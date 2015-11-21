@@ -3,6 +3,9 @@ package serveur_trafic;
 import java.io.*;
 import java.net.*;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import newBean.*;
@@ -287,14 +290,16 @@ public class RunnableTraitementEntree implements Runnable
         }
         
         String reponse = "ACK#";
+        ArrayList emplacement = new ArrayList();
         
-        try
+        try// on regarde si y'a assez de place et on recupere l'id de ces places.
         {
             for(int i = 0; i < idList.length ; i++)
             {
                 if(rs.next())
                 {
                     reponse = reponse + idList[i] + "==>("+rs.getString("X")+";"+rs.getString("Y")+")@";
+                    emplacement.add(rs.getString("X")+";"+rs.getString("Y"));
                 }
                 else
                 {
@@ -307,6 +312,27 @@ public class RunnableTraitementEntree implements Runnable
             SendMsg("ERR#Base de donnée inaccessible");
             System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
             return;
+        }
+        
+        //On insert les containers ajoutés dans la BD et on leur met un numéro de réservation + on réserve leurs places
+        UUID resID =  UUID.randomUUID();
+        for(int i = 0; i < idList.length; i++)
+        {
+            String[] coord = emplacement.get(i).toString().split(";");
+            HashMap<String, String> insertion = new HashMap();
+            HashMap<String, String> update = new HashMap();
+            
+            insertion.put("ID_CONTAINER", idList[i]);
+            insertion.put("RESERVATION", resID.toString());
+            
+            update.put("ETAT", "1");         
+            
+            try {
+                beanOracle.ecriture("CONTAINERS", insertion);
+                //beanOracle.miseAJour("PARC", update, "X="+coord[0]+" AND Y=" + coord[1]);
+            } catch (requeteException ex) {
+                System.err.println("Erreur d'insertion");
+            }
         }
         
         SendMsg(reponse);

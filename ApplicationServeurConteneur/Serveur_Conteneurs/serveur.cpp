@@ -305,7 +305,7 @@ void finConnexion(int cTraite, Socket* s) //On déconnecte le client (on le fait
 
     socketTrafic[cTraite]->sendChar("LOGOUT");
     socketTrafic[cTraite]->finConnexion();
-    free(socketTrafic[cTraite]);
+    delete socketTrafic[cTraite];
 
     s->sendChar(composeConnexion(LOGOUT, sc));
     s->finConnexion();

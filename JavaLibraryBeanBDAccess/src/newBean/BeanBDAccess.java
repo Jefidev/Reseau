@@ -196,4 +196,14 @@ public class BeanBDAccess implements Serializable{
     {
         return conBD;
     }
+    
+    public void commit() throws SQLException
+    {
+        conBD.commit();
+    }
+    
+    public void rollback() throws SQLException
+    {
+        conBD.rollback();
+    }
 }
