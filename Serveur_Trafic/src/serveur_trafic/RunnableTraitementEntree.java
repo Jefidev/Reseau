@@ -313,9 +313,9 @@ public class RunnableTraitementEntree implements Runnable
             System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
             return;
         }
-        
+        //TO DO
         //On insert les containers ajoutés dans la BD et on leur met un numéro de réservation + on réserve leurs places
-        UUID resID =  UUID.randomUUID();
+        /*UUID resID =  UUID.randomUUID();
         for(int i = 0; i < idList.length; i++)
         {
             String[] coord = emplacement.get(i).toString().split(";");
@@ -329,11 +329,11 @@ public class RunnableTraitementEntree implements Runnable
             
             try {
                 beanOracle.ecriture("CONTAINERS", insertion);
-                //beanOracle.miseAJour("PARC", update, "X="+coord[0]+" AND Y=" + coord[1]);
+                beanOracle.miseAJour("PARC", update, "X="+coord[0]+" AND Y=" + coord[1]);
             } catch (requeteException ex) {
                 System.err.println("Erreur d'insertion");
             }
-        }
+        }*/
         
         SendMsg(reponse);
     }

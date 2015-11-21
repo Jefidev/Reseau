@@ -55,10 +55,10 @@ void finConnexion(int cTraite, Socket* s);
 int login(Socket* s, int clientTraite);
 
 void inputTruck(Socket*s, int clientTraite, string requete);
-void inputDone(Socket*s, int clientTraite, string listContainer);
+void inputDone(Socket*s, int clientTraite, string listContainer, string listcoord);
 
 void outputReady(Socket* s, int clientTraite, string requete);
-void outputOne(Socket* s, int clientTraite);
+void outputOne(Socket* s, int clientTraite, string idBateau);
 
 /*HANDLERS*/
 void handlerPause(int);
@@ -388,69 +388,38 @@ int login(Socket* s, int clientTraite)
 void inputTruck(Socket*s, int clientTraite, string requete)
 {
     StructInputTruck sit = parseInputTruck(requete);
-    char *lec, *tok;
-    char sep = CONTAINER_SEPARATION;
-    char* saveptr;
-    string ret = "";
-    bool erreur = false, cont = true;
-    listContAdd[clientTraite] = "";
 
-    lec =  new char [sit.idContainers.length()+1];
-    strcpy(lec, sit.idContainers.c_str());
+    socketTrafic[clientTraite]->sendChar("GET_XY#"+sit.immatriculation+"#"+sit.societe+"#"+sit.idContainers);
 
-    tok = strtok_r(lec, &sep, &saveptr);
+    string reponse;
+    string typeReponse;
+    reponse = typeRequestParse(socketTrafic[clientTraite]->receiveChar(), &typeReponse);
 
-    while(tok != NULL)
+    //TO DO x;y$ liste rollback listContAdd[clientTraite]
+
+    if(typeReponse ==  "ERR")
     {
-        pthread_mutex_lock(&mutexParc);
-        ret = parcFile.getFirstFree(); //Renvoie les coord du premier emplacement libre sous forme x;y
-        pthread_mutex_unlock(&mutexParc);
-
-        if(!ret.compare(""))    // Plus assez de place
-        {
-            erreur = true;
-            break;
-        }
-
-        listContAdd[clientTraite] = listContAdd[clientTraite] + ret;
-
-        tok = strtok_r(NULL, &sep, &saveptr);
-
-        if(tok != NULL)
-            listContAdd[clientTraite] = listContAdd[clientTraite] + CONTAINER_SEPARATION;
-    }
-
-    if(erreur)
-    {
+        cout << typeReponse << reponse << endl;
         s->sendChar(composeAckErr(ERREUR, "Pas assez de place dans le parc"));
-
-        if(listContAdd[clientTraite].compare("")) // liste non vide
-        {
-            pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
-            parcFile.freeSpace(listContAdd[clientTraite]);
-            pthread_mutex_unlock(&mutexParc);
-        }
-        return;
     }
     else
     {
         s->sendChar(composeAckErr(ACK, ""));
-        inputDone(s, clientTraite, sit.idContainers);
+        inputDone(s, clientTraite, sit.idContainers, reponse);
     }
 }
 
 
-void inputDone(Socket*s, int clientTraite, string listContainer)
+void inputDone(Socket*s, int clientTraite, string listContainer, string listCoord)
 {
     char *lecContainer, *tokContainer, *saveptrContainer, *lecPosition, *tokPosition, *saveptrPosition;
-    char sep = CONTAINER_SEPARATION;
-
+    char sep = '@';
+    cout << listCoord << endl;
     lecContainer =  new char [listContainer.length()+1];
     strcpy(lecContainer, listContainer.c_str());
 
-    lecPosition =  new char [listContAdd[clientTraite].length()+1];
-    strcpy(lecPosition, listContAdd[clientTraite].c_str());
-
+    lecPosition =  new char [listCoord.length()+1];
+    strcpy(lecPosition, listCoord.c_str());
 
     tokContainer = strtok_r(lecContainer, &sep, &saveptrContainer);
     tokPosition = strtok_r(lecPosition, &sep, &saveptrPosition);
@@ -478,30 +447,25 @@ void inputDone(Socket*s, int clientTraite, string listContainer)
 
         if(requestType == INPUT_DONE)
         {
-
             sid = parseInputDone(str);
+            
+            socketTrafic[clientTraite]->sendChar("SEND_WEIGHT#"+sid.id+"#"+Utility::intToString(sid.poids)+"#"+Utility::intToString(sid.transport));
 
-            if(sid.poids > 100)
-            {   
-                pthread_mutex_lock(&mutexParc);
-                parcFile.freeSpace(sid.coord);
-                pthread_mutex_unlock(&mutexParc);
-                s->sendChar(composeAckErr(ERREUR, "Le container est trop lourd : enregistrement annule"));
-            }
-            else
+            string reponse;
+            string typeReponse;
+            reponse = typeRequestParse(socketTrafic[clientTraite]->receiveChar(), &typeReponse);
+
+            if(typeReponse ==  "ERR")
             {
-                pthread_mutex_lock(&mutexParc);
-                parcFile.placeContainer(sid);
-                pthread_mutex_unlock(&mutexParc);
-                s->sendChar(composeAckErr(ACK, "Le container a ete enregistre"));
+                finConnexion(clientTraite, s);
+                return;
             }
+
+            s->sendChar(composeAckErr(ACK, "Le container a ete enregistre"));
             
         }
         else    // On annule tout et on demande au client de se couper car problème sur le réseau
         {
-            pthread_mutex_lock(&mutexParc); //On libere les places qui étaient réservées dans le fichier
-            parcFile.freeSpace(listContAdd[clientTraite]);
-            pthread_mutex_unlock(&mutexParc);
             finConnexion(clientTraite, s);
             return;
         }
@@ -527,7 +491,6 @@ void inputDone(Socket*s, int clientTraite, string listContainer)
     }
 
     s->sendChar(composeAckErr(ACK, "Tous les containers ont ete traites"));
-    listContAdd[clientTraite] = "";
 }
 
 
@@ -535,23 +498,28 @@ void outputReady(Socket* s, int clientTraite, string requete)
 {
     StructOuputReady sor = parseOutputReady(requete);
 
-    pthread_mutex_lock(&mutexParc); 
-    string listeContainer = parcFile.outputList(sor);
-    pthread_mutex_unlock(&mutexParc);
+    socketTrafic[clientTraite]->sendChar("GET_LIST#"+sor.idTrainBateau +"#"+Utility::intToString(sor.type)+"#"+sor.destination);
 
-    if(listeContainer.compare(""))  // Si chaine remplie
+    string idTransport = sor.idTrainBateau;
+
+    string reponse;
+    string typeReponse;
+    reponse = typeRequestParse(socketTrafic[clientTraite]->receiveChar(), &typeReponse);
+    cout << reponse << endl;
+    if(typeReponse == "ACK")  // Si chaine remplie
     {
-        s->sendChar(composeAckErr(ACK, listeContainer));
-        outputOne(s, clientTraite);
+        s->sendChar(composeAckErr(ACK, reponse));
+        outputOne(s, clientTraite, idTransport);
     }
     else
         s->sendChar(composeAckErr(ERREUR, "Aucun containers pour cette destination"));
 }
 
-void outputOne(Socket* s, int clientTraite)
+void outputOne(Socket* s, int clientTraite, string idBateau)
 {
     int requestType;
     string reponse;
+    string listeContainer = "";
     try
     {
         reponse = typeRequestParse(s->receiveChar(), &requestType); // Réception des données du container
@@ -565,11 +533,7 @@ void outputOne(Socket* s, int clientTraite)
     {
         StructOutputOne soo = parseOutputOne(reponse);
 
-        pthread_mutex_lock(&mutexParc); 
-        parcFile.freeSpace(soo.emplacement);
-        pthread_mutex_unlock(&mutexParc);
-
-        cout << "retire du fichier" << endl;
+        listeContainer = listeContainer + soo.emplacement + "#";
 
         s->sendChar(composeAckErr(ACK, "container retire"));
         try
@@ -586,6 +550,11 @@ void outputOne(Socket* s, int clientTraite)
     {
         finConnexion(clientTraite, s);
     }
+
+    socketTrafic[clientTraite]->sendChar("SIGNAL_DEP#"+idBateau+"#"+listeContainer);
+
+    string typeReponse;
+    typeRequestParse(socketTrafic[clientTraite]->receiveChar(), &typeReponse);
 
     s->sendChar(composeAckErr(ACK, "les containers ont bien ete retires"));
 }
@@ -742,8 +711,8 @@ void handlerAlarm(int)
         if(socketUrgence[i] != NULL)
             socketUrgence[i]->sendChar("Serveur arrete");
 
-        if(listContAdd[i] != "")
-            parcFile.freeSpace(listContAdd[i]);
+        /*if(listContAdd[i] != "")
+            parcFile.freeSpace(listContAdd[i]);*/ //TO DO ROLL BACK SERVEUR
 
     }
     pthread_mutex_unlock(&mutexParc);

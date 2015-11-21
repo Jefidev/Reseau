@@ -63,6 +63,9 @@ StructInputTruck parseInputTruck(string s)
 	si.immatriculation = token;
 
 	getline(iss, token, SEPARATION);
+	si.societe = token;
+
+	getline(iss, token, SEPARATION);
 	si.idContainers = token;
 
 	return si;
@@ -77,7 +80,7 @@ string composeInputDone(int l, StructInputDone sc)
 	convert << sc.poids << SEPARATION << sc.transport;
 
 	retour = Utility::intToString(l);
-	retour = retour + SEPARATION + sc.destination + SEPARATION + convert.str() + SEPARATION + sc.coord + SEPARATION + sc.id;
+	retour = retour + SEPARATION + convert.str() + SEPARATION + sc.coord + SEPARATION + sc.id;
 
 	return retour;
 }
@@ -88,9 +91,6 @@ StructInputDone parseInputDone(string s)
 
 	istringstream iss(s);
 	string token;
-
-	getline(iss, token, SEPARATION);
-	si.destination = token;
 
 	getline(iss, token, SEPARATION);
 	si.poids = atoi(token.c_str());

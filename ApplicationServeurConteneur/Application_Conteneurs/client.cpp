@@ -263,7 +263,7 @@ void inputTruck(SocketClient* sock)
         if(choix == 0)
             continuer = false;
         else
-            containersList = containersList + CONTAINER_SEPARATION;
+            containersList = containersList + "@";
 
     }while(continuer);
 
@@ -312,8 +312,6 @@ void inputDone(SocketClient* sock)
         cout << "Emplacement : " << sid.coord << endl;
         cout << "poids (en tonne): ";
         cin >> sid.poids;
-        cout << endl << "Destination : ";
-        cin >> sid.destination;
 
         do
         {
@@ -413,7 +411,7 @@ void outputOne(SocketClient* sock, int capaMax, string idTransport)
     if(reponseType != ACK)
         logout(sock);
 
-    char *lecContainer, sep = SEPARATION, *saveptr, sepaContainer = CONTAINER_SEPARATION;
+    char *lecContainer, sep = SEPARATION, *saveptr, sepaContainer = '@';
     char* copieReponse =  new char [reponse.length()+1];
     strcpy (copieReponse, reponse.c_str());
 

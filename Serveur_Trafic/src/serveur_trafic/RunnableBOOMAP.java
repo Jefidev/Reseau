@@ -77,11 +77,26 @@ public class RunnableBOOMAP implements Runnable{
         while(!terminer)
         {
             parts = ReceiveMsg().split("#");
-            System.err.println(parts[0]);
             switch (parts[0])
             {       
                 case "LOGOUT" :
                     terminer = true;
+                    break;
+                    
+                case "GET_XY" :
+                    get_xy(parts);
+                    break;
+                    
+                case "SEND_WEIGHT" :
+                    send_weight(parts);
+                    break;
+                
+                case "GET_LIST" :
+                    get_list(parts);
+                    break;
+                    
+                case "SIGNAL_DEP" :
+                    signal_dep(parts);
                     break;
                     
                 default :
@@ -134,6 +149,102 @@ public class RunnableBOOMAP implements Runnable{
         return false;
     }
     
+    private void get_xy(String[] request)
+    {
+        String message = "ACK#";
+        
+        ResultSet rs = null;
+        
+        try {
+            rs = beanOracle.selection("X, Y", "PARC", "ETAT = 0"); //TO DO Etat = 1
+        } catch (SQLException ex) {
+            SendMsg("ERR#Probleme SQL");
+            System.err.println(ex.getStackTrace());
+            return;
+        }
+        System.err.println(request[3]);
+        String[] listContainer = request[3].split("@");
+        for(String s : listContainer)
+        {
+            try {
+                if(rs.next())
+                {
+                    if(!message.equals("ACK#"))
+                        message = message + "@";
+                    //TO DO etat 2 + set destination + societe du transporteur et transporteur + mouvement 
+                    message = message + rs.getString("X")+";"+rs.getString("Y");
+                }
+                else
+                {
+                    
+                }
+            } catch (SQLException ex) {
+                SendMsg("ERR#Probleme SQL");
+                System.err.println(ex.getStackTrace());
+                return;
+            }
+        }
+        
+        SendMsg(message);   
+    }
+    
+    private void get_list(String[] request)
+    {
+        ResultSet rs = null;
+        String transport = null;
+        
+        if(request[2].equals("1"))
+            transport = "TRAIN";
+        else
+            transport = "BATEAU";
+              
+        try {
+            rs = beanOracle.selection("ID_CONTAINER, X, Y", "PARC", "TRANSPORT = '"+transport+"' AND UPPER(DESTINATION) = UPPER('"+request[3]+"')");
+        } catch (SQLException ex) {
+            SendMsg("ERR#Acces a la BD impossible");
+            System.err.println("erreur: " + ex.getStackTrace().toString());
+            return;
+        }
+        
+        String message = "";
+        
+        try {
+            while(rs.next())
+            {
+                if(!message.isEmpty())
+                    message = message + "#";
+                
+                message = message + rs.getString("ID_CONTAINER") + "@" + rs.getString("X") + ";" + rs.getString("Y");
+            }
+        } catch (SQLException ex) {
+            SendMsg("ERR#Acces a la BD impossible");
+            System.err.println("test" + ex.getStackTrace().toString());
+            return;
+        }
+        
+        if(message.isEmpty())
+        {
+            SendMsg("ERR#Aucun container pour la destination");
+            return;
+        }
+        
+        SendMsg("ACK#"+message);
+    }
+    
+    private void signal_dep(String[] requete)
+    {
+        System.err.println(requete[1]);
+        
+        SendMsg("ACK#");
+    }
+    
+    private void send_weight(String[] requete)
+    {
+        //TO DO MAJ des infos sur le container
+        System.err.println(requete[1]);
+        SendMsg("ACK#");
+    }
+    
     
     /* Envoi d'un message au client */
     public void SendMsg(String msg)
@@ -141,7 +252,7 @@ public class RunnableBOOMAP implements Runnable{
         String chargeUtile = msg;
         int taille = chargeUtile.length();
         StringBuffer message = new StringBuffer(String.valueOf(taille) + "#" + chargeUtile);
-            
+        
         try
         {               
             dos.write(message.toString().getBytes());
