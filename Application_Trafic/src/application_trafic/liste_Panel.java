@@ -26,6 +26,7 @@ public class liste_Panel extends javax.swing.JPanel {
     public liste_Panel() {
         initComponents();
         resultList.setModel(new DefaultListModel());
+        errorLabel.setVisible(false);
     }
 
     /**
@@ -48,6 +49,8 @@ public class liste_Panel extends javax.swing.JPanel {
         menuButton = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         resultList = new javax.swing.JList();
+        errorLabel = new javax.swing.JLabel();
+        titre = new javax.swing.JLabel();
 
         rechercheTitre.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         rechercheTitre.setText("Recherche mouvements");
@@ -77,6 +80,13 @@ public class liste_Panel extends javax.swing.JPanel {
 
         jScrollPane2.setViewportView(resultList);
 
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabel.setText("jLabel1");
+
+        titre.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        titre.setText("id  ---  Container  ---   Transporteur  entrant --- date arrivée --- transporteur sortant --- poid --- date depart ---  destination --- societe");
+        titre.setToolTipText("");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -84,13 +94,6 @@ public class liste_Panel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(critereLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(rechercheCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(recherchePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(94, 94, 94))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -100,8 +103,19 @@ public class liste_Panel extends javax.swing.JPanel {
                                 .addComponent(rechercheTitre)
                                 .addGap(169, 169, 169)
                                 .addComponent(menuButton))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap())))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(errorLabel))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(titre)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(critereLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(rechercheCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(recherchePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 595, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(94, 94, 94))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -116,11 +130,15 @@ public class liste_Panel extends javax.swing.JPanel {
                         .addComponent(critereLabel)
                         .addComponent(rechercheCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(recherchePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(resultatLabel)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(titre)
+                .addGap(3, 3, 3)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(142, 142, 142))
+                .addGap(85, 85, 85)
+                .addComponent(errorLabel)
+                .addGap(43, 43, 43))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -143,18 +161,37 @@ public class liste_Panel extends javax.swing.JPanel {
     
     public void recherche(String msg)
     {
+        errorLabel.setVisible(false);
         GUI_Trafic frame = (GUI_Trafic)SwingUtilities.getWindowAncestor(this);
         
         frame.SendMsg(msg);
         ((DefaultListModel)resultList.getModel()).clear();
         
-        String str = frame.ReceiveMsg();
+        String[] reponse = frame.ReceiveMsg().split("#");
+        
+        if(reponse[0].equals("ERR"))
+        {
+            errorLabel.setText(reponse[1]);
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        ((DefaultListModel)resultList.getModel()).clear();
+
+        for(String s : reponse)
+        {
+            if(s.equals("ACK"))
+                continue;
+            
+            ((DefaultListModel)resultList.getModel()).addElement(s);
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel critereLabel;
     private application_trafic.recherchePanel.date_panel date_panel1;
     private application_trafic.recherchePanel.destination_panel destination_panel1;
+    private javax.swing.JLabel errorLabel;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton menuButton;
     private javax.swing.JComboBox rechercheCombo;
@@ -163,31 +200,7 @@ public class liste_Panel extends javax.swing.JPanel {
     private javax.swing.JList resultList;
     private javax.swing.JLabel resultatLabel;
     private application_trafic.recherchePanel.societe_panel societe_panel1;
+    private javax.swing.JLabel titre;
     // End of variables declaration//GEN-END:variables
-
-    public DefaultTableModel buildTableModel(ResultSet rs) throws SQLException{
-        
-        Vector<String> columnNames = new Vector<String>();
-        Vector<Vector<Object>> data = new Vector<Vector<Object>>();
-        
-        ResultSetMetaData metaData = rs.getMetaData();
-
-        int columnCount = metaData.getColumnCount();
-        for (int column = 1; column <= columnCount; column++) {
-            columnNames.add(metaData.getColumnName(column));
-        }
-
-        while (rs.next()) 
-        {
-            Vector<Object> vector = new Vector<Object>();
-            for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
-                vector.add(rs.getObject(columnIndex));
-            }
-            data.add(vector);
-        }
-
-        return(new DefaultTableModel(data, columnNames));
-    }
-
 
 }

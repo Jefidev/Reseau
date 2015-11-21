@@ -206,7 +206,7 @@ public class RunnableTraitementEntree implements Runnable
             }
         }
         catch(SQLException ex){
-            SendMsg("ERR#Base de donnée inaccessible");
+            SendMsg("ERR#Base de donnee inaccessible");
             System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
             return;
         }
@@ -217,12 +217,58 @@ public class RunnableTraitementEntree implements Runnable
     
     private void listOperation(String[] request)
     {
+        String Select = "ID_MOUVEMENT, MOUVEMENTS.ID_CONTAINER, ID_TRANSPORTEUR_ENTRANT, DATE_ARRIVEE, ID_TRANSPORTEUR_SORTANT, POIDS, DATE_DEPART, DESTINATION, ID_SOCIETE";
+        String From = "MOUVEMENTS INNER JOIN CONTAINERS ON MOUVEMENTS.ID_CONTAINER = CONTAINERS.ID_CONTAINER";
+        String Where = null;
+        
         if(request[1].equals("societe"))
+            Where = "CONTAINERS.ID_SOCIETE = '"+request[2]+"'";
+        if(request[1].equals("destination"))
+            Where = "DESTINATION = '"+request[2]+"'";
+        if(request[1].equals("date"))
+            Where = "To_date(DATE_ARRIVEE, 'DD/MM/YYYY') BETWEEN To_date('"+request[2]+"', 'DD/MM/YYYY') AND To_date('"+request[3]+"', 'DD/MM/YYYY')";
+        
+        //To_date(madate, 'DD/MM/YYYY')
+
+        
+        if(Where == null)
         {
-            
+            SendMsg("ERR#Recherche impossible sur ce critere");
         }
         
-        SendMsg("ERR#Recherche impossible sur ce critère");
+        ResultSet rs = null;
+            
+        try {
+            rs = beanOracle.selection(Select, From, Where);
+        } catch (SQLException ex) {
+            SendMsg("ERR#Base de donnee inaccessible");
+            System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
+            return;
+        }
+            
+        boolean empty = true;
+        String message = "";
+            
+        try {
+            while(rs.next())
+            {
+                empty = false;
+                message = message + rs.getString("ID_MOUVEMENT") + "  ---  " + rs.getString("ID_CONTAINER") + "  ---  " + rs.getString("ID_TRANSPORTEUR_ENTRANT") + "  ---  ";
+                message = message + rs.getString("DATE_ARRIVEE") + "  ---  " + rs.getString("ID_TRANSPORTEUR_SORTANT") + "  ---  " + rs.getString("POIDS") + "  ---  ";
+                message = message + rs.getString("DATE_DEPART") + "  ---  " + rs.getString("DESTINATION") + "  ---  " + rs.getString("ID_SOCIETE")+"#";
+            }
+        } catch (SQLException ex) {
+            SendMsg("ERR#Base de donnee inaccessible");
+            System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
+            return;
+        }
+        if(empty)
+        {
+            SendMsg("ERR#Aucun resultats pour la societe " + request[2]);
+            return;
+        }
+            
+        SendMsg("ACK#"+message);
     }
     
     

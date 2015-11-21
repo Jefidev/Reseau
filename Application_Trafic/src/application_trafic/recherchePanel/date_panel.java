@@ -5,6 +5,12 @@
  */
 package application_trafic.recherchePanel;
 
+import application_trafic.liste_Panel;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import javax.swing.JFormattedTextField;
+import javax.swing.text.DefaultFormatterFactory;
+
 /**
  *
  * @author John
@@ -16,6 +22,7 @@ public class date_panel extends javax.swing.JPanel {
      */
     public date_panel() {
         initComponents();
+        erreurLabel.setVisible(false);
     }
 
     /**
@@ -28,39 +35,96 @@ public class date_panel extends javax.swing.JPanel {
     private void initComponents() {
 
         rechercherButton = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
+        debtuLabel = new javax.swing.JLabel();
+        debtuLabel1 = new javax.swing.JLabel();
+        erreurLabel = new javax.swing.JLabel();
+        dateDebut = new javax.swing.JTextField();
+        dateFin = new javax.swing.JTextField();
 
         rechercherButton.setText("Rechercher");
+        rechercherButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rechercherButtonActionPerformed(evt);
+            }
+        });
 
-        jTextField1.setText("jTextField1");
+        debtuLabel.setText("Date debut : ");
+
+        debtuLabel1.setText("Date fin : ");
+
+        erreurLabel.setForeground(new java.awt.Color(255, 0, 0));
+        erreurLabel.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(rechercherButton)
-                .addGap(28, 28, 28))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(84, 84, 84)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(452, Short.MAX_VALUE))
+                .addGap(40, 40, 40)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(erreurLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(rechercherButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(debtuLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateDebut, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                        .addComponent(debtuLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dateFin, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)))
+                .addGap(53, 53, 53))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(24, Short.MAX_VALUE)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(debtuLabel)
+                    .addComponent(debtuLabel1)
+                    .addComponent(dateDebut, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(dateFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(rechercherButton)
-                .addContainerGap())
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(rechercherButton)
+                    .addComponent(erreurLabel))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void rechercherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rechercherButtonActionPerformed
+        erreurLabel.setVisible(false);
+        
+        if(dateDebut.getText().isEmpty())
+        {
+            erreurLabel.setVisible(true);
+            erreurLabel.setText("Une date de début doit être indiquée ");
+            return;
+        }
+        
+        if(dateFin.getText().isEmpty())
+        {
+            erreurLabel.setVisible(true);
+            erreurLabel.setText("Une date de fin doit être indiquée ");
+            return;
+        }
+        
+        liste_Panel parent = (liste_Panel)this.getParent().getParent();
+        
+        String m = "LIST_OPERATIONS#date#" + dateDebut.getText() + "#"+dateFin.getText();
+        
+        parent.recherche(m);
+    }//GEN-LAST:event_rechercherButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField dateDebut;
+    private javax.swing.JTextField dateFin;
+    private javax.swing.JLabel debtuLabel;
+    private javax.swing.JLabel debtuLabel1;
+    private javax.swing.JLabel erreurLabel;
     private javax.swing.JButton rechercherButton;
     // End of variables declaration//GEN-END:variables
 }
