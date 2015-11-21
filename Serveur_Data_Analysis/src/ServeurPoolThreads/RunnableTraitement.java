@@ -154,6 +154,22 @@ public class RunnableTraitement implements Runnable
                     GetGrCouleurComp(parts);
                     break;
                     
+                case ProtocolePIDEP.GET_STAT_INFER_TEST_CONF :
+                    GetStatInferTestConf(parts);
+                    break;
+                    
+                case ProtocolePIDEP.GET_STAT_INFER_TEST_HOMOG :
+                    GetStatInferTestHomog(parts);
+                    break;
+                    
+                case ProtocolePIDEP.GET_STAT_INFER_TEST_ANOVA :
+                    GetStatInferTestAnova(parts);
+                    break;
+                    
+                case ProtocolePIDEP.LOGOUT :
+                    terminer = true;
+                    break;
+                    
                 default :
                     terminer = true;
                     break;
@@ -162,58 +178,10 @@ public class RunnableTraitement implements Runnable
         
         System.out.println("RunnableTraitement : Fin du while et du client");
     }
-    
-    
-    /* ENVOI D'UN MESSAGE AU CLIENT */
-    public void SendMsg(String msg)
-    {
-        String chargeUtile = msg;
-        int taille = chargeUtile.length();
-        StringBuffer message = new StringBuffer(String.valueOf(taille) + "#" + chargeUtile);
-            
-        try
-        {               
-            dos.write(message.toString().getBytes());
-            dos.flush();
-        }
-        catch(IOException e)
-        {
-            System.err.println("RunnableTraitement : Erreur d'envoi de msg (IO) : " + e);
-        }
-    }
-    
-    
-    /* RECEPTION D'UN MESSAGE DU CLIENT */
-    public String ReceiveMsg()
-    {
-        byte b;
-        StringBuffer taille = new StringBuffer();
-        StringBuffer message = new StringBuffer();
-        
-        try
-        {
-            while ((b = dis.readByte()) != (byte)'#')
-            {      
-                if (b != (byte)'#')
-                    taille.append((char)b);
-            }
-            for (int i = 0; i < Integer.parseInt(taille.toString()); i++)
-            {
-                b = dis.readByte();
-                message.append((char)b);
-            }  
-        }
-        catch(IOException e)
-        {
-            terminer = true;
-            System.err.println("RunnableTraitement : ReceiveMsg : Erreur de reception de msg (IO) : " + e);
-        }
-            
-        return message.toString();
-    }
-    
+
     
     /* LOGIN (à partir de BD_COMPTA */
+    /* OUT : OUI/NON */
     public void Login()
     {      
         System.out.println("RunnableTraitement : DEBUT LOGIN");
@@ -278,7 +246,7 @@ public class RunnableTraitement implements Runnable
     
     
     /* STATITIQUE DESCRIPTIVE CONTINUE (moyenne, mode, médiane, écart-type */
-    /* In : Nb de containers sur lequels faire les stats + containers chargés ou déchargés */
+    /* IN : Nb de containers sur lequels faire les stats + containers chargés ou déchargés */
     /* OUT : moyenne, mode, médiane, écart-type OU NON#msgErreur */
     public void GetStatDescrCont(String[] parts)
     {
@@ -354,7 +322,8 @@ public class RunnableTraitement implements Runnable
     
     
     /* DIAGRAMME SECTORIEL DE REPARTITION DU NOMBRE DE CONTAINERS PAR DESTINATION POUR UNE ANNEE OU UN MOIS DONNE */
-    /* In : Année ou mois */
+    /* IN : Année ou mois */
+    /* OUT : OUI(+ HashMap des résultats)/NON */
     public void GetGrCouleurRep(String[] parts)
     {
         System.out.println("RunnableTraitement : DEBUT GETGRCOULEURREP");
@@ -413,7 +382,8 @@ public class RunnableTraitement implements Runnable
     
     
     /* HISTOGRAMME DE REPARTITION DU NOMBRE DE CONTAINERS PAR DESTINATION PAR TRIMESTRE POUR UNE ANNEE DONNEE */
-    /* In : Année */
+    /* IN : Année */
+    /* OUT : OUI(+ HashMap des résultats)/NON */
     public void GetGrCouleurComp(String[] parts)
     {
         System.out.println("RunnableTraitement : DEBUT GETGRCOULEURCOMP");
@@ -465,5 +435,81 @@ public class RunnableTraitement implements Runnable
         }
         
         System.out.println("RunnableTraitement : FIN GETGRCOULEURCOMP");
+    }
+    
+
+    /* TEST D'HYPOTHESE DE CONFORMITE */
+    /* Sujet : Le temps moyen de stationnement d'un container est supposé être de 10 jours; on veut tester s'il en est bien ainsi àpd un échantillon de containers */
+    /* IN : Nombre de containers de l'échantillon */
+    public void GetStatInferTestConf(String[] parts)
+    {
+        
+    }
+
+    
+    /* TEST D'HYPOTHESE D'HOMOGENEITE */
+    /* Sujet : Le temps moyen de stationnement d'un container est-il le même s'il est à destination de Duisbourg(D) ou Strasbourg(F) ? On veut tester s'il en est bien ainsi àpd échantillon de containers de chaque type */
+    /* IN : Nombre de containers des deux échantillons */
+    public void GetStatInferTestHomog(String[] parts)
+    {
+        
+    }
+
+    
+    /* TEST D'HYPOTHESE ANOVA */
+    /* Sujet : Le temps moyen de stationnement d'un container est-il le même selon les différentes destinations possibles ? On veut tester s'il en est bien ainsi àpd échantillon de containers de chaque type */
+    /* IN : Nombre de containers de tous les échantillons */
+    public void GetStatInferTestAnova(String[] parts)
+    {
+        
+    }
+    
+        
+    /* ENVOI D'UN MESSAGE AU CLIENT */
+    public void SendMsg(String msg)
+    {
+        String chargeUtile = msg;
+        int taille = chargeUtile.length();
+        StringBuffer message = new StringBuffer(String.valueOf(taille) + "#" + chargeUtile);
+            
+        try
+        {               
+            dos.write(message.toString().getBytes());
+            dos.flush();
+        }
+        catch(IOException e)
+        {
+            System.err.println("RunnableTraitement : Erreur d'envoi de msg (IO) : " + e);
+        }
+    }
+    
+    
+    /* RECEPTION D'UN MESSAGE DU CLIENT */
+    public String ReceiveMsg()
+    {
+        byte b;
+        StringBuffer taille = new StringBuffer();
+        StringBuffer message = new StringBuffer();
+        
+        try
+        {
+            while ((b = dis.readByte()) != (byte)'#')
+            {      
+                if (b != (byte)'#')
+                    taille.append((char)b);
+            }
+            for (int i = 0; i < Integer.parseInt(taille.toString()); i++)
+            {
+                b = dis.readByte();
+                message.append((char)b);
+            }  
+        }
+        catch(IOException e)
+        {
+            terminer = true;
+            System.err.println("RunnableTraitement : ReceiveMsg : Erreur de reception de msg (IO) : (Client déconnecté) " + e);
+        }
+            
+        return message.toString();
     }
 }
