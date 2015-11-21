@@ -3,9 +3,10 @@ package application_data_analysis;
 import javax.swing.SwingUtilities;
 
 
-public class Menu extends javax.swing.JPanel {
-
-    public Menu() {
+public class Menu extends javax.swing.JPanel
+{
+    public Menu()
+    {
         initComponents();
     }
 
@@ -142,17 +143,17 @@ public class Menu extends javax.swing.JPanel {
 
     private void StatInferTestConfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestConfButtonActionPerformed
         ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("GrCouleurComp");
+        app.ChangePanel("StatInferTestConf");
     }//GEN-LAST:event_StatInferTestConfButtonActionPerformed
 
     private void StatInferTestHomogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestHomogButtonActionPerformed
         ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("GrCouleurComp");
+        app.ChangePanel("StatInferTestHomog");
     }//GEN-LAST:event_StatInferTestHomogButtonActionPerformed
 
     private void StatInferTestAnovaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestAnovaButtonActionPerformed
         ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("GrCouleurComp");
+        app.ChangePanel("StatInferTestAnova");
     }//GEN-LAST:event_StatInferTestAnovaButtonActionPerformed
 
     private void QuitterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuitterButtonActionPerformed

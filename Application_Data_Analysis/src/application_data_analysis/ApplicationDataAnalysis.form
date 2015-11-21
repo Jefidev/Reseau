@@ -55,5 +55,26 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="application_data_analysis.StatInferTestConf" name="StatInferTestConf">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="StatInferTestConf"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="application_data_analysis.StatInferTestHomog" name="StatInferTestHomog">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="StatInferTestHomog"/>
+        </Constraint>
+      </Constraints>
+    </Component>
+    <Component class="application_data_analysis.StatInferTestAnova" name="StatInferTestAnova">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="StatInferTestAnova"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>

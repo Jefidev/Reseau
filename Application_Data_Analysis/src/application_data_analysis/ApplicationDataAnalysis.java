@@ -18,6 +18,9 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
         StatDescrCont = new application_data_analysis.StatDescrCont();
         GrCouleurRep = new application_data_analysis.GrCouleurRep();
         GrCouleurComp = new application_data_analysis.GrCouleurComp();
+        StatInferTestConf = new application_data_analysis.StatInferTestConf();
+        StatInferTestHomog = new application_data_analysis.StatInferTestHomog();
+        StatInferTestAnova = new application_data_analysis.StatInferTestAnova();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -25,6 +28,9 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
         getContentPane().add(StatDescrCont, "StatDescrCont");
         getContentPane().add(GrCouleurRep, "GrCouleurRep");
         getContentPane().add(GrCouleurComp, "GrCouleurComp");
+        getContentPane().add(StatInferTestConf, "StatInferTestConf");
+        getContentPane().add(StatInferTestHomog, "StatInferTestHomog");
+        getContentPane().add(StatInferTestAnova, "StatInferTestAnova");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -85,5 +91,8 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
     private application_data_analysis.GrCouleurRep GrCouleurRep;
     private application_data_analysis.Menu Menu;
     private application_data_analysis.StatDescrCont StatDescrCont;
+    private application_data_analysis.StatInferTestAnova StatInferTestAnova;
+    private application_data_analysis.StatInferTestConf StatInferTestConf;
+    private application_data_analysis.StatInferTestHomog StatInferTestHomog;
     // End of variables declaration//GEN-END:variables
 }
