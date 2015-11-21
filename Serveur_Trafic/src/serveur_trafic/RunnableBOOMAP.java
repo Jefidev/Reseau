@@ -156,7 +156,7 @@ public class RunnableBOOMAP implements Runnable{
         ResultSet rs = null;
         
         try {
-            rs = beanOracle.selection("X, Y", "PARC", "ETAT = 0"); //TO DO Etat = 1
+            rs = beanOracle.selection("X, Y", "PARC", "ETAT = 1");
         } catch (SQLException ex) {
             SendMsg("ERR#Probleme SQL");
             System.err.println(ex.getStackTrace());

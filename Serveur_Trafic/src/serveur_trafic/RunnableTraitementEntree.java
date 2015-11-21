@@ -5,6 +5,7 @@ import java.net.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -313,9 +314,10 @@ public class RunnableTraitementEntree implements Runnable
             System.err.println("Erreur SQL exception input lorry" + ex.getStackTrace());
             return;
         }
-        //TO DO
+        
         //On insert les containers ajoutés dans la BD et on leur met un numéro de réservation + on réserve leurs places
-        /*UUID resID =  UUID.randomUUID();
+        Random rand =  new Random();
+        int resID = rand.nextInt(999999);
         for(int i = 0; i < idList.length; i++)
         {
             String[] coord = emplacement.get(i).toString().split(";");
@@ -323,7 +325,7 @@ public class RunnableTraitementEntree implements Runnable
             HashMap<String, String> update = new HashMap();
             
             insertion.put("ID_CONTAINER", idList[i]);
-            insertion.put("RESERVATION", resID.toString());
+            insertion.put("RESERVATION", Integer.toString(resID));
             
             update.put("ETAT", "1");         
             
@@ -331,9 +333,9 @@ public class RunnableTraitementEntree implements Runnable
                 beanOracle.ecriture("CONTAINERS", insertion);
                 beanOracle.miseAJour("PARC", update, "X="+coord[0]+" AND Y=" + coord[1]);
             } catch (requeteException ex) {
-                System.err.println("Erreur d'insertion");
+                System.err.println("Erreur d'insertion ");
             }
-        }*/
+        }
         
         SendMsg(reponse);
     }
