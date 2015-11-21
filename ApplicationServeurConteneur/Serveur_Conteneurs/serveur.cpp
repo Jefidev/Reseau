@@ -74,6 +74,11 @@ int nbrSecBeforeShutdown = 0;
 pthread_cond_t condSleepThread;
 pthread_mutex_t mutexPause;
 
+//Variable pour la communication avec le serveur trafic
+int port_trafic;
+string ip_trafic;
+SocketClient* socketTrafic[MAXCLIENT];
+
 int main()
 {
     /*MISE EN PLACE DES SIGNAUX*/
@@ -118,6 +123,9 @@ int main()
     string host = fp.getValue("HOST");
     string port = fp.getValue("PORT");
     string isip = fp.getValue("ISIP");
+
+    port_trafic = atoi(fp.getValue("PORT_TRAFIC").c_str());
+    ip_trafic = fp.getValue("IP_TRAFIC");
 
     pthread_cond_init(&condSleepThread, NULL);
 
@@ -240,6 +248,28 @@ void* threadClient(void* p) //le thread lancé
 
         bool cont = true;
 
+        //Connexion au serveur trafic
+
+        if(ip_trafic == "localhost")
+            socketTrafic[clientTraite] = new SocketClient(ip_trafic, port_trafic, false);
+        else
+            socketTrafic[clientTraite] = new SocketClient(ip_trafic, port_trafic, true);
+
+        
+        socketTrafic[clientTraite]->connecter();
+        socketTrafic[clientTraite]->sendChar("LOGIN#serveur#serveur");
+
+        string typeReponse;
+        string reponse;
+
+        reponse = typeRequestParse(socketTrafic[clientTraite]->receiveChar(), &typeReponse);
+
+        if(typeReponse == "ERR")
+        {
+            cout << reponse << endl;
+            exit(0);
+        }
+
         while(cont) //boucle sur les demandes du client
         {
             string str;
@@ -272,6 +302,10 @@ void* threadClient(void* p) //le thread lancé
 void finConnexion(int cTraite, Socket* s) //On déconnecte le client (on le fait pour LOGOUT ou en cas de problème)
 {
     StructConnexion sc;
+
+    socketTrafic[cTraite]->sendChar("LOGOUT");
+    socketTrafic[cTraite]->finConnexion();
+    free(socketTrafic[cTraite]);
 
     s->sendChar(composeConnexion(LOGOUT, sc));
     s->finConnexion();
@@ -319,7 +353,6 @@ int login(Socket* s, int clientTraite)
             StructConnexion sc;
             FichierProp fp("login.csv", ';');
 
-            cout << "trame recue : " << str;
             sc = parseConnexion(str);
 
             string test = fp.getValue(sc.nom);

@@ -21,6 +21,17 @@ string typeRequestParse(string s, int* type)
 	return s.erase(0, token.size() + 1);
 }
 
+string typeRequestParse(string s, string* type)
+{
+	istringstream iss(s);
+	string token;
+
+	getline(iss, token, SEPARATION);
+	*type = token;
+
+	return s.erase(0, token.size() + 1);
+}
+
 string composeAckErr(int l, string m)
 {
 	string retour;

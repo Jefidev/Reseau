@@ -3,6 +3,7 @@
 #define SEPARATION '#'
 
 	string typeRequestParse(string s, int* type);
+	string typeRequestParse(string s, string* type);
 	string composeAckErr(int l, string m);
 #endif
 

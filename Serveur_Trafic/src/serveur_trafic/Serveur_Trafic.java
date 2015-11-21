@@ -24,10 +24,7 @@ public class Serveur_Trafic extends Thread{
     private SourceTaches tachesAExecuter;
     private ServerSocket SSocket = null;
     private int nbrThreads;
-    
-    private int port_upd;
-    private String ip_udp;
-    
+   
     public Serveur_Trafic(int p, SourceTaches st, int nt)
     {
         port = p;
@@ -58,9 +55,9 @@ public class Serveur_Trafic extends Thread{
         {
             try
             {
-                System.out.println("Serveur chat : attend un client");
+                System.out.println("Serveur trafic : attend un client sur le port " + port);
                 CSocket = SSocket.accept();
-                System.out.println("Serveur chat : Client dispo");
+                System.out.println("Serveur trafic : Client dispo");
             }
             catch(IOException e)
             {
@@ -117,9 +114,13 @@ public class Serveur_Trafic extends Thread{
         }
         
         int p = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_IN"));
+        int pb = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_RES"));
         
         Serveur_Trafic sc = new Serveur_Trafic(p, new ListeTaches(), 5);
         sc.start();
+        
+        Serveur_BOOMAP sb = new Serveur_BOOMAP(pb, new ListeTaches(), 5);
+        sb.start();
     }
     
 }
