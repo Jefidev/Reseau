@@ -44,7 +44,7 @@ public class ThreadReception extends Thread{
             
             message msg = new message(parts[2], parts[1], parts[0]);
             
-            if(!msg.getTag().equals("Tous") && msg.getTag().charAt(0) != 'I' && msg.getTag().charAt(0) != 'R')
+            if(!msg.getTag().equals("Tous") && !msg.getTag().equals("Infos") && msg.getTag().charAt(0) != 'R')
             {
                 if(parts.length < 4)
                     return;
