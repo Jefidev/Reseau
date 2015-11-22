@@ -105,7 +105,7 @@ int main()
     memset(&infoServeurUDP, 0, tailleSocksddr_in);
     infoServeurUDP.sin_family = AF_INET;
     infoServeurUDP.sin_port = htons(port_udp);
-    //memcpy(&infoServeurUDP.sin_addr, (char*)ip.c_str(), ip.size());
+    infoServeurUDP.sin_addr.s_addr = htonl(INADDR_ANY);
 
     socketHandleUDP = socket(AF_INET, SOCK_DGRAM, 0);
     if(socketHandleUDP == -1)
@@ -114,23 +114,22 @@ int main()
         exit(0);
     }
 
-    // On dit que c'est du multicast
+    //On dit qu'on peut réutiliser le port
+    int reusableFlag = 1;
+    setsockopt(socketHandleUDP, SOL_SOCKET, SO_REUSEADDR, (char*)&reusableFlag, sizeof(reusableFlag));
+
+    if(bind(socketHandleUDP, (struct sockaddr*)&infoServeurUDP, tailleSocksddr_in) == -1)
+    {
+        cout << "erreur bind " << errno << endl;
+        exit(0);
+    }
+
+    //Ajout au group multicast
     struct ip_mreq imr;
     imr.imr_multiaddr.s_addr = inet_addr(ip.c_str());
     imr.imr_interface.s_addr = htonl(port_udp);
 
     setsockopt(socketHandleUDP , IPPROTO_IP, IP_ADD_MEMBERSHIP, &imr, sizeof(imr));
-
-    //On dit qu'on peut réutiliser le port
-    int reusableFlag = 1;
-    setsockopt(socketHandleUDP, SOL_SOCKET, SO_REUSEADDR, (char*)&reusableFlag, sizeof(reusableFlag));
-
-
-    if(bind(socketHandleUDP, (struct sockaddr*)&infoServeurUDP, tailleSocksddr_in) == -1)
-    {
-        cout << "erreur bind " << endl;
-        exit(0);
-    }
 
     char messageUDP[1000];
     cout << "attente d'un receive" << endl;

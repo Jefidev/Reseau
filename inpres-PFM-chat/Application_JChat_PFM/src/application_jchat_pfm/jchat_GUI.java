@@ -323,7 +323,7 @@ public class jchat_GUI extends javax.swing.JFrame {
             {
                 idIsUsed =  false;
                 Random rand = new Random();
-                tag = "Q"+rand.nextInt(999);
+                tag = "Q"+rand.nextInt(99999);
                 
                 for(int i = 2; i < subjectList.getModel().getSize(); i++)//on verifie qu'une autre question n'est pas ouverte à ce tag
                     if(subjectList.getModel().getElementAt(i).equals(tag))
@@ -340,7 +340,7 @@ public class jchat_GUI extends javax.swing.JFrame {
             {
                 idIsUsed =  false;
                 Random rand = new Random();
-                tag = "I"+rand.nextInt(999);
+                tag = "I"+rand.nextInt(99999);
                 
                 for(int i = 2; i < subjectList.getModel().getSize(); i++)//on verifie qu'une autre question n'est pas ouverte à ce tag
                     if(subjectList.getModel().getElementAt(i).equals(tag))
