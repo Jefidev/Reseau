@@ -194,7 +194,7 @@ public class GUI_Trafic extends javax.swing.JFrame {
                     {
                         FileOutputStream Oflux = new FileOutputStream(pathProperties);
 
-                        paramCo.setProperty("PORT_SERVEUR", "31043");
+                        paramCo.setProperty("PORT_SERVEUR", "31042");
                         paramCo.setProperty("IP_SERVEUR", "localhost");
                         try {
                             paramCo.store(Oflux, null);
