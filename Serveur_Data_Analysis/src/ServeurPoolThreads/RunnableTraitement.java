@@ -176,6 +176,16 @@ public class RunnableTraitement implements Runnable
             }
         }
         
+        try
+        {
+            CSocket.close();
+            dis.close();
+            dos.close();
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Erreur de close : " + ex.getStackTrace());
+        }
         System.out.println("RunnableTraitement : Fin du while et du client");
     }
 

@@ -73,7 +73,7 @@ public class RunnableBOOMAP implements Runnable{
         }
         else
         {
-            SendMsg("ERR#Requète invalide");
+            SendMsg("ERR#Requete invalide");
             return;
         }
         
@@ -150,7 +150,7 @@ public class RunnableBOOMAP implements Runnable{
             return true;
         }
         else
-            SendMsg("ERR#Mot de passe incorrecte");
+            SendMsg("ERR#Mot de passe incorrect");
         
         return false;
     }
@@ -313,8 +313,6 @@ public class RunnableBOOMAP implements Runnable{
     
     private void signal_dep(String[] requete)
     {
-        //Insertion transporteur :
-        
         //Insert transporteur 
                     
         HashMap<String, String> insertTransporteur = new HashMap<>();
@@ -367,11 +365,9 @@ public class RunnableBOOMAP implements Runnable{
     }
     
     private void send_weight(String[] requete)
-    {
-        
+    {  
         for(String s : requete)
         {
-            
             System.err.println(s);
             if(s.equals("SEND_WEIGHT"))
                 continue;
