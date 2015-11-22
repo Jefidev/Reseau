@@ -312,7 +312,55 @@ public class RunnableBOOMAP implements Runnable{
     
     private void signal_dep(String[] requete)
     {
-        System.err.println(requete[1]);
+        //Insertion transporteur :
+        
+        //Insert transporteur 
+                    
+        HashMap<String, String> insertTransporteur = new HashMap<>();
+                    
+        insertTransporteur.put("ID_TRANSPORTEUR", requete[1]);
+        try {
+            beanOracle.ecriture("TRANSPORTEURS", insertTransporteur);
+        } catch (requeteException ex) {
+            System.err.println("Le transporteur existe deja");
+        }
+        
+        for(String coord : requete)
+        {
+            if(coord.equals(requete[1]) || coord.equals(requete[0]))
+                continue;
+            
+            //MAJ etat parc
+            String[] splitCoord = coord.split(";");
+            HashMap<String, String> updateParc = new HashMap();
+            updateParc.put("ETAT", "0");
+                    
+            try {
+                    beanOracle.miseAJour("PARC", updateParc, "X = "+splitCoord[0]+" AND Y = " + splitCoord[1]);
+            } catch (requeteException ex) {
+                System.err.println("echec update parc : " + ex.getMessage());
+            }
+            
+            
+            //MAJ mouvement
+            
+            //Insert mouvement
+                    
+            HashMap<String, String> insertMouvement = new HashMap<>();
+            Calendar cal = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+            insertMouvement.put("ID_TRANSPORTEUR_SORTANT", requete[1]);
+            insertMouvement.put("DATE_DEPART", sdf.format(cal.getTime()));
+            
+            String where = "ID_CONTAINER = (SELECT ID_CONTAINER FROM PARC WHERE X = "+splitCoord[0]+" AND Y = " + splitCoord[1]+")";
+            try {
+                beanOracle.miseAJour("MOUVEMENTS", insertMouvement, where);
+            } catch (requeteException ex) {
+                System.err.println("Le mouvement existe deja");
+            }
+        }
+        
+        
         
         SendMsg("ACK#");
     }

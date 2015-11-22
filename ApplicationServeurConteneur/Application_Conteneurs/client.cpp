@@ -366,9 +366,9 @@ void outputReady(SocketClient* sock)
 
     do
     {
-        cout << endl << "Moyen de transport (1 = train 0 = bateau) : ";
+        cout << endl << "Moyen de transport (1 = train 2 = bateau) : ";
         cin >> sor.type;
-    }while(sor.type != 0 && sor.type != 1);
+    }while(sor.type != 2 && sor.type != 1);
 
     cout << endl << endl << "ID du moyen de transport : ";
     cin >> sor.idTrainBateau;
