@@ -392,6 +392,7 @@ public class RunnableBOOMAP implements Runnable{
             
             HashMap<String, String> updateParc = new HashMap<>();
             updateParc.put("TRANSPORT", transport);
+            updateParc.put("POIDS", contTraite[2]);
             
             try {
                 beanOracle.miseAJour("PARC", updateParc, "ID_CONTAINER = '"+contTraite[0]+"'");
