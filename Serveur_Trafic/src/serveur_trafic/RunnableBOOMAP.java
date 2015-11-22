@@ -172,6 +172,7 @@ public class RunnableBOOMAP implements Runnable{
         String[] listContainer = request[3].split("@");
         for(String s : listContainer)
         {
+            System.err.println(s);
             try {
                 if(rs.next())
                 {
@@ -186,7 +187,7 @@ public class RunnableBOOMAP implements Runnable{
                     updateParc.put("ID_CONTAINER", infoContainer[0]);
                     Calendar cal = Calendar.getInstance();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
-                    updateParc.put("DATE_ARRIVEE", sdf.format(cal.getTime()));
+                    //updateParc.put("DATE_ARRIVEE", sdf.format(cal.getTime()));
                     updateParc.put("DESTINATION", infoContainer[1]);
                     
                     System.err.println(sdf.format(cal.getTime()));
@@ -227,7 +228,7 @@ public class RunnableBOOMAP implements Runnable{
                     insertMouvement.put("ID_MOUVEMENT", curMouvementId);
                     insertMouvement.put("ID_CONTAINER", infoContainer[0]);
                     insertMouvement.put("ID_TRANSPORTEUR_ENTRANT", request[1]);
-                    insertMouvement.put("DATE_ARRIVEE", sdf.format(cal.getTime()));
+                    //insertMouvement.put("DATE_ARRIVEE", sdf.format(cal.getTime()));
                     insertMouvement.put("DESTINATION", infoContainer[1]);
                     try {
                         beanOracle.ecriture("MOUVEMENTS", insertMouvement);
