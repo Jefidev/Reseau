@@ -340,27 +340,21 @@ public class RunnableBOOMAP implements Runnable{
                 System.err.println("echec update parc : " + ex.getMessage());
             }
             
-            
             //MAJ mouvement
-            
-            //Insert mouvement
-                    
-            HashMap<String, String> insertMouvement = new HashMap<>();
+            HashMap<String, String> updateMouvement = new HashMap<>();
             Calendar cal = Calendar.getInstance();
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
-            insertMouvement.put("ID_TRANSPORTEUR_SORTANT", requete[1]);
-            insertMouvement.put("DATE_DEPART", sdf.format(cal.getTime()));
+            updateMouvement.put("ID_TRANSPORTEUR_SORTANT", requete[1]);
+            updateMouvement.put("DATE_DEPART", sdf.format(cal.getTime()));
             
             String where = "ID_CONTAINER = (SELECT ID_CONTAINER FROM PARC WHERE X = "+splitCoord[0]+" AND Y = " + splitCoord[1]+")";
             try {
-                beanOracle.miseAJour("MOUVEMENTS", insertMouvement, where);
+                beanOracle.miseAJour("MOUVEMENTS", updateMouvement, where);
             } catch (requeteException ex) {
                 System.err.println("Le mouvement existe deja");
             }
         }
-        
-        
-        
+
         SendMsg("ACK#");
     }
     
