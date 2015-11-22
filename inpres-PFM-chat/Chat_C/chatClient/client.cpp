@@ -60,7 +60,7 @@ int main()
     }
     catch(ErrnoException er)
     {
-        cout << "Serveur hors ligne" << endl;
+        cout << "Serveur hors ligne" << er.getErrorCode() <<endl;
         exit(-1);
     }
 
@@ -114,12 +114,6 @@ int main()
         exit(0);
     }
 
-    if(bind(socketHandleUDP, (struct sockaddr*)&infoServeurUDP, tailleSocksddr_in) == -1)
-    {
-        cout << "erreur bind " << endl;
-        exit(0);
-    }
-
     // On dit que c'est du multicast
     struct ip_mreq imr;
     imr.imr_multiaddr.s_addr = inet_addr(ip.c_str());
@@ -127,8 +121,19 @@ int main()
 
     setsockopt(socketHandleUDP , IPPROTO_IP, IP_ADD_MEMBERSHIP, &imr, sizeof(imr));
 
-    char messageUDP[1000];
+    //On dit qu'on peut réutiliser le port
+    int reusableFlag = 1;
+    setsockopt(socketHandleUDP, SOL_SOCKET, SO_REUSEADDR, (char*)&reusableFlag, sizeof(reusableFlag));
 
+
+    if(bind(socketHandleUDP, (struct sockaddr*)&infoServeurUDP, tailleSocksddr_in) == -1)
+    {
+        cout << "erreur bind " << endl;
+        exit(0);
+    }
+
+    char messageUDP[1000];
+    cout << "attente d'un receive" << endl;
     recvfrom(socketHandleUDP, messageUDP, 1000, 0, (struct sockaddr*)&infoServeurUDP, &tailleSocksddr_in);
     cout << "coucou" << endl;
 

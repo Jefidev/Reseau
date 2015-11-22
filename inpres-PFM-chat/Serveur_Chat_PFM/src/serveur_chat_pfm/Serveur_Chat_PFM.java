@@ -9,10 +9,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Properties;
-import javax.swing.JOptionPane;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -36,6 +39,16 @@ public class Serveur_Chat_PFM extends Thread{
         
         port_upd = pu;
         ip_udp = ipu;
+        
+        MulticastSocket udp_sock = null;
+        try {
+            udp_sock = new MulticastSocket(pu);
+            udp_sock.joinGroup(InetAddress.getByName(ipu));
+        } catch (IOException ex) {
+            System.err.println("Serveur chat : Impossible de se connecter au chat");
+        }
+        ThreadReception backgroundReceptionTask = new ThreadReception(udp_sock);
+        backgroundReceptionTask.start();
     }
     
     public void run()
