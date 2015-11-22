@@ -13,10 +13,15 @@ import java.io.IOException;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
+import newBean.requeteException;
 
 /**
  *
@@ -27,6 +32,8 @@ public class RunnableBOOMAP implements Runnable{
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
     private BeanBDAccess beanOracle;
+    
+    private String curMouvementId;
 
     boolean first = true;
     
@@ -152,7 +159,6 @@ public class RunnableBOOMAP implements Runnable{
     private void get_xy(String[] request)
     {
         String message = "ACK#";
-        
         ResultSet rs = null;
         
         try {
@@ -171,7 +177,64 @@ public class RunnableBOOMAP implements Runnable{
                 {
                     if(!message.equals("ACK#"))
                         message = message + "@";
+                    
+                    String[] infoContainer = request[3].split(";");
+
                     //TO DO etat 2 + set destination + societe du transporteur et transporteur + mouvement 
+                    HashMap<String, String> updateParc = new HashMap();
+                    updateParc.put("ETAT", "2");
+                    updateParc.put("ID_CONTAINER", infoContainer[0]);
+                    Calendar cal = Calendar.getInstance();
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
+                    updateParc.put("DATE_ARRIVEE", sdf.format(cal.getTime()));
+                    updateParc.put("DESTINATION", infoContainer[1]);
+                    
+                    System.err.println(sdf.format(cal.getTime()));
+                    try {
+                        beanOracle.miseAJour("PARC", updateParc, "X = "+rs.getString("X")+" AND Y = " + rs.getString("Y"));
+                    } catch (requeteException ex) {
+                        System.err.println("echec update parc : " + ex.getMessage());
+                    }
+                    
+                    //insert societe
+                    HashMap<String, String> insertSociete = new HashMap<>();
+                    
+                    insertSociete.put("ID_SOCIETE", request[2]);
+                    try {
+                        beanOracle.ecriture("SOCIETES", insertSociete);
+                    } catch (requeteException ex) {
+                        System.err.println("La societe existe deja");
+                    }
+
+                    //Insert transporteur 
+                    
+                    HashMap<String, String> insertTransporteur = new HashMap<>();
+                    
+                    insertTransporteur.put("ID_TRANSPORTEUR", request[1]);
+                    insertTransporteur.put("ID_SOCIETE", request[2]);
+                    try {
+                        beanOracle.ecriture("TRANSPORTEURS", insertTransporteur);
+                    } catch (requeteException ex) {
+                        System.err.println("Le transporteur existe deja");
+                    }
+                    
+                    //Insert mouvement
+                    
+                    HashMap<String, String> insertMouvement = new HashMap<>();
+                    Random rand = new Random();
+                    int idMouvement = rand.nextInt(89892);
+                    curMouvementId = Integer.toString(idMouvement);
+                    insertMouvement.put("ID_MOUVEMENT", curMouvementId);
+                    insertMouvement.put("ID_CONTAINER", infoContainer[0]);
+                    insertMouvement.put("ID_TRANSPORTEUR_ENTRANT", request[1]);
+                    insertMouvement.put("DATE_ARRIVEE", sdf.format(cal.getTime()));
+                    insertMouvement.put("DESTINATION", infoContainer[1]);
+                    try {
+                        beanOracle.ecriture("MOUVEMENTS", insertMouvement);
+                    } catch (requeteException ex) {
+                        System.err.println("Le mouvement existe deja");
+                    }
+                    
                     message = message + rs.getString("X")+";"+rs.getString("Y");
                 }
                 else
@@ -240,8 +303,42 @@ public class RunnableBOOMAP implements Runnable{
     
     private void send_weight(String[] requete)
     {
-        //TO DO MAJ des infos sur le container
-        System.err.println(requete[1]);
+        
+        for(String s : requete)
+        {
+            
+            System.err.println(s);
+            if(s.equals("SEND_WEIGHT"))
+                continue;
+            
+            String[] contTraite = s.split(";");
+            String transport;
+            
+            if(contTraite[3].equals("1"))
+                transport = "TRAIN";
+            else
+                transport = "BATEAU";
+            
+            HashMap<String,String> updateMouvement = new HashMap<>();
+            
+            updateMouvement.put("POIDS", contTraite[2]);
+            
+            try {
+                beanOracle.miseAJour("MOUVEMENTS", updateMouvement, "ID_MOUVEMENT = '"+curMouvementId+"'");
+            } catch (requeteException ex) {
+                System.err.println("Aucun mouvement trouve");
+            }
+            
+            HashMap<String, String> updateParc = new HashMap<>();
+            updateParc.put("TRANSPORT", transport);
+            
+            try {
+                beanOracle.miseAJour("PARC", updateParc, "ID_CONTAINER = '"+contTraite[0]+"'");
+            } catch (requeteException ex) {
+                System.err.println("Aucun parc trouve");
+            }
+            
+        }
         SendMsg("ACK#");
     }
     

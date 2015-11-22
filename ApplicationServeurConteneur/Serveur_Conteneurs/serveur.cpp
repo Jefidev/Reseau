@@ -449,7 +449,7 @@ void inputDone(Socket*s, int clientTraite, string listContainer, string listCoor
         {
             sid = parseInputDone(str);
             
-            socketTrafic[clientTraite]->sendChar("SEND_WEIGHT#"+sid.id+"#"+Utility::intToString(sid.poids)+"#"+Utility::intToString(sid.transport));
+            socketTrafic[clientTraite]->sendChar("SEND_WEIGHT#"+sid.id+";"+Utility::intToString(sid.poids)+";"+Utility::intToString(sid.transport));
 
             string reponse;
             string typeReponse;

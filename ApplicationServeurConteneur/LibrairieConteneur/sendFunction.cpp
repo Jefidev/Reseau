@@ -46,7 +46,7 @@ string composeInputTruck(int l, StructInputTruck sc)
 	string retour;
 
 	retour = Utility::intToString(l);
-	retour = retour + SEPARATION + sc.immatriculation + SEPARATION + sc.idContainers;
+	retour = retour + SEPARATION + sc.immatriculation + SEPARATION + sc.societe+ SEPARATION +sc.idContainers;
 
 	return retour;
 }
