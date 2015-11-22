@@ -614,7 +614,7 @@ void handlerCont(int)
 
     len = sizeof addr;
 
-    for(int i = 0; i < MAXCLIENT; i++) // je préviens tous mes threads qu'il faut se mettre en pause
+    for(int i = 0; i < MAXCLIENT; i++) // signal pour débloquer les threads de la variable de condition
     {
         pthread_cond_signal(&condSleepThread);
 
@@ -708,10 +708,6 @@ void handlerAlarm(int)
     {
         if(socketUrgence[i] != NULL)
             socketUrgence[i]->sendChar("Serveur arrete");
-
-        /*if(listContAdd[i] != "")
-            parcFile.freeSpace(listContAdd[i]);*/ //TO DO ROLL BACK SERVEUR
-
     }
     pthread_mutex_unlock(&mutexParc);
 
