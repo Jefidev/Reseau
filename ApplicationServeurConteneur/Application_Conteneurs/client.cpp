@@ -315,9 +315,9 @@ void inputDone(SocketClient* sock)
 
         do
         {
-            cout << endl << "Moyen de transport (1 = train 0 = bateau) : ";
+            cout << endl << "Moyen de transport (1 = train 2 = bateau) : ";
             cin >> sid.transport;
-        }while(sid.transport != 0 && sid.transport != 1);
+        }while(sid.transport != 2 && sid.transport != 1);
 
 
         if(inPause)

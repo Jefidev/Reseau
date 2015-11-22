@@ -69,7 +69,7 @@ void handlerAlarm(int);
 
 bool servInPause = false;
 bool servShutdown = false;
-int nbrSecBeforeShutdown = 0;
+int nbrSecBeforeShutdown = 5;
 
 pthread_cond_t condSleepThread;
 pthread_mutex_t mutexPause;
