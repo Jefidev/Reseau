@@ -6,7 +6,7 @@ LIBPROP = ../Librairie/fichierProp
 LIBEX = ../Librairie/exceptions
 LIBLOG = ../Librairie/log
 
-OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o
+OBJSOCKET = $(LIBESOCK)/socket.o $(LIBESOCK)/socketClient.o threadReception.o
 OBJUTILITY = $(LIBPROP)/fichierProp.o $(LIB)/utility.o $(LIBLOG)/log.o
 OBJEXCEPTION = $(LIBEX)/errnoException.o $(LIBEX)/communicationException.o
 
@@ -49,6 +49,10 @@ $(LIBEX)/communicationException.o:	$(LIBEX)/communicationException.cpp
 $(LIBLOG)/log.o:	$(LIBLOG)/log.cpp
 					echo creation du log
 					$(CC) -c $(LIBLOG)/log.cpp
-					mv log.o $(LIBLOG)
+					mv log.o $(LIBLOG)$
+
+threadReception.o:	threadReception.cpp
+					echo creation threadReception
+					$(CC) -c threadReception.cpp
 
 			

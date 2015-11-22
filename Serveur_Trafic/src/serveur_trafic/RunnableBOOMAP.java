@@ -82,6 +82,7 @@ public class RunnableBOOMAP implements Runnable{
         while(!terminer)
         {
             parts = ReceiveMsg().split("#");
+            System.err.println(parts[0]);
             switch (parts[0])
             {       
                 case "LOGOUT" :

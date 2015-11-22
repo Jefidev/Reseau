@@ -7,6 +7,7 @@ package application_jchat_pfm;
 
 import java.io.*;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.net.Socket;
@@ -37,6 +38,8 @@ public class jchat_GUI extends javax.swing.JFrame {
     private ArrayList<message> messageList;
     private String curUser;
     private ThreadReception thr;
+    
+    private DatagramSocket sockEnvois;
 
     /**
      * Creates new form jchat_GUI
@@ -283,6 +286,7 @@ public class jchat_GUI extends javax.swing.JFrame {
             port_UDP = Integer.parseInt(parts[2]);//port envoyé par le serveur
             
             udp_sock = new MulticastSocket(port_UDP);
+            udp_sock.setBroadcast(true);
             udp_sock.joinGroup(ip_udp);
         } catch (UnknownHostException ex) {
             System.err.println("Erreur d'ouverture de la socket UDP " + ex);

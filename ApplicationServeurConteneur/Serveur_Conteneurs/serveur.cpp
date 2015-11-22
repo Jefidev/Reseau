@@ -395,8 +395,6 @@ void inputTruck(Socket*s, int clientTraite, string requete)
     string typeReponse;
     reponse = typeRequestParse(socketTrafic[clientTraite]->receiveChar(), &typeReponse);
 
-    //TO DO x;y$ liste rollback listContAdd[clientTraite]
-
     if(typeReponse ==  "ERR")
     {
         cout << typeReponse << reponse << endl;

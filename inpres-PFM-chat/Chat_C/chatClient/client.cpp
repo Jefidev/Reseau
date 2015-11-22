@@ -21,6 +21,7 @@ using namespace std;
 #include "../Librairie/socket/socketClient.h"
 #include "../Librairie/fichierProp/fichierProp.h"
 #include "../Librairie/exceptions/errnoException.h"
+#include "threadReception.h"
 
 int hashLogin(string c);
 string typeRequestParse(string s, string* type);
@@ -31,6 +32,9 @@ string curUser;
 struct sockaddr_in infoServeurUDP;
 
 int tailleSocksddr_in;
+
+string ip_group;
+int port_udp;
 
 int main()
 {
@@ -95,10 +99,9 @@ int main()
         exit(0);
     }
 
-    int port_udp;
-    string ip = parseIpPort(reponse, &port_udp);
+    ip_group = parseIpPort(reponse, &port_udp);
 
-    cout << endl << port_udp << "-----" << ip<<endl <<endl;
+    cout << endl << port_udp << "-----" << ip_group<<endl <<endl;
 
     //PREPARATION STRUCTURE INFOS SERVEUR
 
@@ -118,6 +121,10 @@ int main()
     int reusableFlag = 1;
     setsockopt(socketHandleUDP, SOL_SOCKET, SO_REUSEADDR, (char*)&reusableFlag, sizeof(reusableFlag));
 
+    //on autorise le broadcast
+    char broadcast = 'a';
+    setsockopt(socketHandleUDP, SOL_SOCKET, SO_BROADCAST, &broadcast, sizeof(broadcast));
+
     if(bind(socketHandleUDP, (struct sockaddr*)&infoServeurUDP, tailleSocksddr_in) == -1)
     {
         cout << "erreur bind " << errno << endl;
@@ -126,18 +133,32 @@ int main()
 
     //Ajout au group multicast
     struct ip_mreq imr;
-    imr.imr_multiaddr.s_addr = inet_addr(ip.c_str());
+    imr.imr_multiaddr.s_addr = inet_addr(ip_group.c_str());
     imr.imr_interface.s_addr = htonl(port_udp);
 
     setsockopt(socketHandleUDP , IPPROTO_IP, IP_ADD_MEMBERSHIP, &imr, sizeof(imr));
 
-    char messageUDP[1000];
-    cout << "attente d'un receive" << endl;
-    recvfrom(socketHandleUDP, messageUDP, 1000, 0, (struct sockaddr*)&infoServeurUDP, &tailleSocksddr_in);
-    cout << "coucou" << endl;
+    //demarrage du thread de reception
+    pthread_t t_reception;
+    pthread_create(&t_reception, NULL, reception, NULL);
 
-    while(-1 != recvfrom(socketHandleUDP, messageUDP, 1000, 0, (struct sockaddr*)&infoServeurUDP, &tailleSocksddr_in))
-        cout << messageUDP << endl;
+    char messageUDP[1000];
+    bool terminer = false;
+    while(!terminer)
+    {
+        char tmp[1000];
+        memset(messageUDP, '\0', sizeof(messageUDP));
+        string message;
+        cout << endl << "Message : ";
+        cin >> tmp;
+
+        strcpy(messageUDP, (char*)curUser.c_str());
+        strcat(messageUDP, "#Infos#");
+        strcat(messageUDP, tmp);
+
+        sendto(socketHandleUDP, messageUDP, 1000, 0, (struct sockaddr*)&infoServeurUDP, tailleSocksddr_in);
+    }
+    
 } 
 
 int hashLogin(string c)
