@@ -23,7 +23,7 @@ class message {
         
         DateFormat df = new SimpleDateFormat("HH:mm:ss");
         Calendar c = Calendar.getInstance();
-        message = "[" + df.format(c.getTime()) + "] "+u+" : "+m;
+        message = "[" + df.format(c.getTime()) + "] ("+t+") "+u+" : "+m;
     }
     
     public String getMessage()
@@ -36,7 +36,7 @@ class message {
         return tag;
     }
     
-    public void setTage(String s)
+    public void setTag(String s)
     {
         tag = s;
     }

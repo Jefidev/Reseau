@@ -52,7 +52,6 @@ public class jchat_GUI extends javax.swing.JFrame {
         
         DefaultListModel lm = new DefaultListModel();
         lm.addElement("Tous");
-        lm.addElement("Infos");
         subjectList.setModel(lm);
         subjectList.setSelectedIndex(0);
     }
@@ -303,7 +302,7 @@ public class jchat_GUI extends javax.swing.JFrame {
         erreurEnvoisLabel.setVisible(false);
         
         //Creation du tag pour le message
-        String tag = "Infos";
+        String tag = null;
         int digest = -1;
         if(typeMessageCombo.getSelectedIndex() == 2) // si on a sélectionner répondre
         {
@@ -332,6 +331,21 @@ public class jchat_GUI extends javax.swing.JFrame {
             }
             //On construit un digest sur la question
             digest = hashFunction(ecritureTextaArea.getText());
+        }
+        else //  ON génère un tag pour info
+        {
+            boolean idIsUsed = true;
+            
+            while(idIsUsed)
+            {
+                idIsUsed =  false;
+                Random rand = new Random();
+                tag = "I"+rand.nextInt(999);
+                
+                for(int i = 2; i < subjectList.getModel().getSize(); i++)//on verifie qu'une autre question n'est pas ouverte à ce tag
+                    if(subjectList.getModel().getElementAt(i).equals(tag))
+                        idIsUsed = true;
+            }
         }
 
         String message;

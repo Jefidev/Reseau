@@ -8,12 +8,8 @@ package application_jchat_pfm;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.MulticastSocket;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTextArea;
+
 
 /**
  *
@@ -51,7 +47,7 @@ public class ThreadReception extends Thread{
             
             message msg = new message(parts[2], parts[1], parts[0]);
             
-            if(!msg.getTag().equals("Tous") && !msg.getTag().equals("Infos") && msg.getTag().charAt(0) != 'R')
+            if(!msg.getTag().equals("Tous") && msg.getTag().charAt(0) != 'I' && msg.getTag().charAt(0) != 'R')
             {
                 if(parts.length < 4)
                     return;
@@ -63,7 +59,7 @@ public class ThreadReception extends Thread{
                 }
             }
             else if(msg.getTag().charAt(0) == 'R')
-                msg.setTage(msg.getTag().substring(1));
+                msg.setTag(msg.getTag().substring(1));
             
             listMessage.add(msg);
             GUI.refreshDisplay();
