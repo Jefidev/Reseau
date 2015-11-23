@@ -46,12 +46,12 @@ public class ThreadReception extends Thread{
             
             if(!msg.getTag().equals("Tous") && !msg.getTag().equals("Infos") && msg.getTag().charAt(0) != 'R')
             {
-                if(parts.length < 4)
+                if(parts.length < 4)    // La question n'a pas de digest
                     return;
                 
                 if(Integer.parseInt(parts[3]) != hashFunction(parts[2]))
                 {
-                    System.err.println("Message corrompus reçus ! ");
+                    System.err.println("Message corrompu reçu ! ");
                     return;
                 }
             }
