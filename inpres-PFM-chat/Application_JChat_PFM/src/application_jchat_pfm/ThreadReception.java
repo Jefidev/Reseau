@@ -43,6 +43,7 @@ public class ThreadReception extends Thread{
             }
             
             String str = new String(buf).trim();
+            System.err.println(str);
             String[] parts = str.split("#");
             
             message msg = new message(parts[2], parts[1], parts[0]);

@@ -7,15 +7,21 @@
 #include <cstdlib>
 #include <cstring>
 #include <unistd.h>
+#include <sstream>
 
 #include "threadReception.h"
 
 using namespace std;
 
+int hashQuestion(string c);
+
 extern int port_udp;
 extern string ip_group;
 
 extern int tailleSocksddr_in;
+
+extern string tabQuestion[500];
+extern int nbrQuestion;
 
 void* reception(void* p)
 {
@@ -55,7 +61,43 @@ void* reception(void* p)
 	char messageUDP[1000];
 	while(-1 != recvfrom(sd, messageUDP, 1000, 0, (struct sockaddr*)&localSock, &tailleSocksddr_in))
 	{
-        cout << messageUDP << endl;
+		string tag, user, message;
+
+		istringstream iss(messageUDP);//outils de decoupage
+		string token;
+
+		getline(iss, token, '#');
+		user = token;
+
+		getline(iss, token, '#');
+		tag = token;
+
+		getline(iss, token, '#');
+		message = token;
+
+		if(tag.at(0) == 'Q')// c'est une question
+		{
+			getline(iss, token, '#');
+			int hash = atoi(token.c_str());
+
+			if(hash != hashQuestion(message))
+				continue;
+			tabQuestion[nbrQuestion] = tag;
+			nbrQuestion++;
+		}
+
+        cout << endl <<"(" <<tag <<") ["<<user << "] : "<<message << endl;
     }
+}
+
+
+int hashQuestion(string c)
+{
+    int hash = 0;
+
+    for(int i = 0; i < c.size(); i++)
+        hash += c.at(i);
+
+    return hash%67;
 }
 

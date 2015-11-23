@@ -10,6 +10,8 @@
 #include <pthread.h>
 #include <time.h>
 #include <sstream>
+#include <stdio.h>
+#include <stdlib.h>
 
 #define FICHIER_PROP "properties.txt"
 #define SEPARATION '#'
@@ -26,6 +28,7 @@ using namespace std;
 int hashLogin(string c);
 string typeRequestParse(string s, string* type);
 string parseIpPort(string s, int* port);
+string intToString(int i);
 
 int socketHandleUDP;
 string curUser;
@@ -35,6 +38,9 @@ int tailleSocksddr_in;
 
 string ip_group;
 int port_udp;
+
+string tabQuestion[500];
+int nbrQuestion = 0;
 
 int main()
 {
@@ -132,6 +138,73 @@ int main()
     bool terminer = false;
     while(!terminer)
     {
+        char typeRequ[20];
+        int type = -1;
+        do
+        {
+            cout << "1 --> Infos    2 --> Question    3 --> repondre     4 --> terminer" << endl;
+            cin >> type;
+
+        }while(type != 1 && type != 2 && type != 3 && type != 4);
+
+        if(type == 1)//info
+        {
+            strcpy(typeRequ,"#Infos#\0");
+        }
+        else if(type == 2)//Nouvelle question
+        {
+            bool idExist = true;
+            string idQ;
+            while(idExist)
+            {
+                idExist = false;
+                srand(time(NULL));
+                int randNumber = rand()%9999;
+                idQ = "#Q" + intToString(randNumber) + "#";
+
+                for(int i = 0; i < nbrQuestion; i++)
+                {
+                    if(tabQuestion[i] == idQ)
+                    {
+                        idExist = true;
+                        break;
+                    }
+                }
+            }
+            strcpy(typeRequ, idQ.c_str());
+        }
+        else if(type == 3)//Reponse
+        {
+            string idQuestion;
+
+            cout << endl << "ID question concernee : ";
+            cin >> idQuestion;
+
+            bool idExist = false;
+
+            for(int i = 0; i < nbrQuestion; i++)//La question existe
+            {
+                if(tabQuestion[i] == idQuestion)
+                {
+                    idExist = true;
+                    break;
+                }
+            }
+            
+            if(!idExist)
+            {
+                cout << "Cette question n'existe pas" << endl;
+                continue;
+            }
+            idQuestion = "#R"+idQuestion+"#";
+            strcpy(typeRequ, idQuestion.c_str());
+        }
+        else
+        {
+            terminer = true;
+            break;
+        }
+
         char tmp[1000];
         memset(messageUDP, '\0', sizeof(messageUDP));
         string message;
@@ -139,9 +212,15 @@ int main()
         cin >> tmp;
 
         strcpy(messageUDP, (char*)curUser.c_str());
-        strcat(messageUDP, "#Infos#");
+        strcat(messageUDP, typeRequ);
         strcat(messageUDP, tmp);
 
+        if(type == 2)//On construit le hash
+        {
+            string hash = "#" + intToString(hashLogin(tmp));
+            strcat(messageUDP, hash.c_str());
+        } 
+        cout << messageUDP << endl;
         sendto(socketHandleUDP, messageUDP, 1000, 0, (struct sockaddr*)&infoServeurUDP, tailleSocksddr_in);
     }
     
@@ -181,5 +260,24 @@ string parseIpPort(string s, int* port)
     *port = atoi((char*)token.c_str());
 
     return ip;
+}
+
+
+string intToString(int i)
+{
+    string number;
+
+    while(i > 0)
+    {
+        int digit = i%10;
+
+        char digitToChar = digit + 48;  // on convertit le nombre isolé en son symbole dans la table ascii
+
+        i =  i / 10;
+
+        number = digitToChar + number;
+    }
+
+    return(number);
 }
 
