@@ -25,7 +25,6 @@ extern int nbrQuestion;
 
 void* reception(void* p)
 {
-
 	struct sockaddr_in localSock;
 	struct ip_mreq group;
 	int sd;
