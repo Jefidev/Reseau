@@ -155,6 +155,7 @@ public class RunnableBOOMAP implements Runnable{
         return false;
     }
     
+    /* IN : Immatriculation#Societe#Container où Container = Id;Destination@Id2;Destination2 */
     private void get_xy(String[] request)
     {
         String message = "ACK#";
@@ -208,11 +209,11 @@ public class RunnableBOOMAP implements Runnable{
                     //INSERTION DANS PARC
                     HashMap<String, String> updateParc = new HashMap();
                     updateParc.put("ETAT", "2");
-                    updateParc.put("ID_CONTAINER", infoContainer[0]);
+                    updateParc.put("ID_CONTAINER", infoContainer[0]);   // Id
                     Calendar cal = Calendar.getInstance();
                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
                     updateParc.put("DATE_ARRIVEE", sdf.format(cal.getTime()));
-                    updateParc.put("DESTINATION", infoContainer[1]);
+                    updateParc.put("DESTINATION", infoContainer[1]);    // Destination
                     
                     System.err.println(infoContainer[0] + "  " + infoContainer[1] + "  " + sdf.format(cal.getTime()));
                     try {
@@ -326,11 +327,11 @@ public class RunnableBOOMAP implements Runnable{
         
         for(String coord : requete)
         {
-            if(coord.equals(requete[1]) || coord.equals(requete[0]))
+            if(coord.equals(requete[1]) || coord.equals(requete[0]))    // On passe les 2 premiers champs
                 continue;
             
             //MAJ etat parc
-            String[] splitCoord = coord.split(";");
+            String[] splitCoord = coord.split(";"); // On récup X et Y
             HashMap<String, String> updateParc = new HashMap();
             updateParc.put("ETAT", "0");
                     
@@ -358,18 +359,19 @@ public class RunnableBOOMAP implements Runnable{
         SendMsg("ACK#");
     }
     
+    /* IN : IdContainer;Poids;TypeTransport#Suite... */
     private void send_weight(String[] requete)
     {  
         for(String s : requete)
         {
             System.err.println(s);
-            if(s.equals("SEND_WEIGHT"))
+            if(s.equals("SEND_WEIGHT")) // On passe le 1er champs
                 continue;
             
             String[] contTraite = s.split(";");
             String transport;
             
-            if(contTraite[3].equals("1"))
+            if(contTraite[3].equals("1"))   // Type de transport
                 transport = "TRAIN";
             else
                 transport = "BATEAU";
