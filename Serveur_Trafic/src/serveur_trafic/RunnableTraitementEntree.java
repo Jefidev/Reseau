@@ -231,13 +231,11 @@ public class RunnableTraitementEntree implements Runnable
             Where = "DESTINATION = '"+request[2]+"'";
         if(request[1].equals("date"))
             Where = "To_date(DATE_ARRIVEE, 'DD/MM/YYYY') BETWEEN To_date('"+request[2]+"', 'DD/MM/YYYY') AND To_date('"+request[3]+"', 'DD/MM/YYYY')";
-        
-        //To_date(madate, 'DD/MM/YYYY')
 
-        
         if(Where == null)
         {
             SendMsg("ERR#Recherche impossible sur ce critere");
+            return;
         }
         
         ResultSet rs = null;
