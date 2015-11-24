@@ -202,8 +202,14 @@ public class StatDescrCont extends javax.swing.JPanel
         try
         {
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
-            String mouvement;
+            if (nbContainers <= 0)
+            {
+                ErrorSaisieLabel.setText("Doit être un entier positif !");
+                ErrorSaisieLabel.setVisible(true);
+                return;
+            }
             
+            String mouvement;
             if (ChargesRB.isSelected())
                 mouvement = "OUT";
             else if (DechargesRB.isSelected())

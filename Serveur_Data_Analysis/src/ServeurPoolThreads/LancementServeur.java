@@ -22,14 +22,14 @@ public class LancementServeur
         
         try
         {
-            FileInputStream FIS = new FileInputStream("DBDataAnalysis.properties");
+            FileInputStream FIS = new FileInputStream("ServeurDataAnalysis.properties");
             prop.load(FIS);
         }
         catch(FileNotFoundException ex)
         {
             try 
             {
-                FileOutputStream FOS = new FileOutputStream("DBDataAnalysis.properties");
+                FileOutputStream FOS = new FileOutputStream("ServeurDataAnalysis.properties");
                 
                 prop.setProperty("Port", "31049");
                 prop.setProperty("NbThreads", "5");

@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.inference.TTest;
 
 
 public class RunnableTraitement implements Runnable
@@ -40,23 +41,23 @@ public class RunnableTraitement implements Runnable
         
         /* PROPERTIES */
         Properties prop = new Properties();
-        String Emplacement = "localhost";
-        int port = 1521;
-        String DBCompta = "COMPTA";
-        String DBTrafic = "TRAFIC";
-        String DBDecisions = "DECISIONS";
-        String DB = "XE";
+        String Emplacement;
+        int port;
+        String DBCompta;
+        String DBTrafic;
+        String DBDecisions;
+        String DB;
         
         try
         {
-            FileInputStream FIS = new FileInputStream("DataAnalysis.properties");
+            FileInputStream FIS = new FileInputStream("DBDataAnalysis.properties");
             prop.load(FIS);
         }
         catch(FileNotFoundException ex)
         {
             try 
             {
-                FileOutputStream FOS = new FileOutputStream("ServeurDataAnalysis.properties");
+                FileOutputStream FOS = new FileOutputStream("DBDataAnalysis.properties");
                 
                 prop.setProperty("Emplacement", "localhost");
                 prop.setProperty("Port", "1521");
@@ -477,7 +478,7 @@ public class RunnableTraitement implements Runnable
             String condition = "DATE_DEPART IS NOT NULL ORDER BY DBMS_RANDOM.VALUE";
             ResultSet ResultatDB = beanOracleTrafic.selection(select, "MOUVEMENTS", condition);
             
-     
+            
             // Vérification de la taille de l'échantillon
             int nbCont = Integer.parseInt(parts[1]);
             
@@ -492,50 +493,44 @@ public class RunnableTraitement implements Runnable
 
             if (size < nbCont)
             {
-                SendMsg("NON#L'echantillon ne peut actuellement pas depasser " + size + " pour cette condition");
+                SendMsg("NON#L'echantillon ne peut actuellement pas depasser " + size);
                 return;
             }
             
             
-            // Remplissage du tableau de poids
-            //double[] arrayPoids = new double[nbCont];
-            
+            // Remplissage du tableau de temps
+            double[] arrayTemps = new double[nbCont];
             ResultatDB.beforeFirst();
             for(int i = 0; i < nbCont && ResultatDB.next(); i++)
             {
-                System.out.println(ResultatDB.getDouble("POIDS"));
-                arrayPoids[i] = ResultatDB.getDouble("POIDS");
+                System.out.println(ResultatDB.getDouble(1));
+                arrayTemps[i] = ResultatDB.getDouble(1);
             }
-           
-            
-            // Calculs
-            DescriptiveStatistics ds = new DescriptiveStatistics(arrayPoids);
-            double moyenne = ds.getMean();
-            double ecartType = ds.getStandardDeviation();
-            double[] modetab = StatUtils.mode(arrayPoids);
-            double mediane = ds.getPercentile(50);
             
             
-            // Envoi des données
-            String mode = "[";
-            int i;
-            for(i = 0; i < (modetab.length - 1); i++)
-                mode += modetab[i] + ", ";
-            mode += modetab[i] + "]";
-                
-            String ChargeUtile = moyenne + "#" + mode + "#" + mediane + "#" + ecartType;
+            // Test
+            TTest test = new TTest();
+            double pvalue = test.tTest(10, arrayTemps);
+            String resultat;
+            if (0 <= pvalue && pvalue < 0.05)
+                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
+            else
+                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
+            
+            
+            // Envoi des données               
+            String ChargeUtile = pvalue + "#" + resultat;
             SendMsg(ChargeUtile);            
-            
             
 
             // Ecriture dans DBDecisions
+            System.err.println("pvalue = " + pvalue);
+            System.err.println("nbCont = " + nbCont);
+            System.err.println("resultat = " + resultat);
             HashMap map = new HashMap();
-            /*map.put("MOYENNE", moyenne);
-            map.put("MODE", mode);
-            map.put("MEDIANE", mediane);
-            map.put("ECARTTYPE", ecartType);
-            map.put("NBCONTAINERS", parts[2]);
-            map.put("MOUVEMENT", parts[1]);*/
+            map.put("PVALUE", pvalue);
+            map.put("NBCONTAINERS", nbCont);
+            map.put("RESULTAT", resultat);
             beanOracleDecisions.ecriture("RESULTATSTESTCONF", map);
         }
         catch (SQLException ex)
@@ -559,27 +554,27 @@ public class RunnableTraitement implements Runnable
     {
         System.out.println("RunnableTraitement : DEBUT GETSTATINFERTESTHOMOG");
         
-        try
+        /*try
         {
             // Ecriture dans DBDecisions
             HashMap map = new HashMap();
-            /*map.put("MOYENNE", moyenne);
+            map.put("MOYENNE", moyenne);
             map.put("MODE", mode);
             map.put("MEDIANE", mediane);
             map.put("ECARTTYPE", ecartType);
             map.put("NBCONTAINERS", parts[2]);
-            map.put("MOUVEMENT", parts[1]);*/
+            map.put("MOUVEMENT", parts[1]);
             beanOracleDecisions.ecriture("RESULTATSTESTHOMOG", map);
         }
-        /*catch (SQLException ex)
+        catch (SQLException ex)
         {
             SendMsg("NON#Probleme de recherche des donnees");
             System.err.println("RunnableTraitement : SQLexception GetStatInferTestHomog : " + ex.getMessage());
-        }*/
+        }
         catch (requeteException ex)
         {
             System.err.println("RunnableTraitement : requeteException GetStatInferTestHomog : " + ex.getMessage());
-        }
+        }*/
         
         System.out.println("RunnableTraitement : FIN GETSTATINFERTESTHOMOG");        
     }
@@ -592,27 +587,27 @@ public class RunnableTraitement implements Runnable
     {
         System.out.println("RunnableTraitement : DEBUT GETSTATINFERTESTANOVA");
         
-        try
+        /*try
         {
             // Ecriture dans DBDecisions
             HashMap map = new HashMap();
-            /*map.put("MOYENNE", moyenne);
+            map.put("MOYENNE", moyenne);
             map.put("MODE", mode);
             map.put("MEDIANE", mediane);
             map.put("ECARTTYPE", ecartType);
             map.put("NBCONTAINERS", parts[2]);
-            map.put("MOUVEMENT", parts[1]);*/
+            map.put("MOUVEMENT", parts[1]);
             beanOracleDecisions.ecriture("RESULTATSTESTANOVA", map);
         }
-        /*catch (SQLException ex)
+        catch (SQLException ex)
         {
             SendMsg("NON#Probleme de recherche des donnees");
             System.err.println("RunnableTraitement : SQLexception GetStatInferTestAnova : " + ex.getMessage());
-        }*/
+        }
         catch (requeteException ex)
         {
             System.err.println("RunnableTraitement : requeteException GetStatInferTestAnova : " + ex.getMessage());
-        }
+        }*/
         
         System.out.println("RunnableTraitement : FIN GETSTATINFERTESTANOVA");        
     }

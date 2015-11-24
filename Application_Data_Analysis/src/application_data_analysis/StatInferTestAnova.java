@@ -123,7 +123,7 @@ public class StatInferTestAnova extends javax.swing.JPanel
         {
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
 
-            Utility.SendMsg(ProtocolePIDEP.GET_STAT_INFER_TEST_HOMOG, NbContainersTF.getText());
+            Utility.SendMsg(ProtocolePIDEP.GET_STAT_INFER_TEST_ANOVA, NbContainersTF.getText());
 
             // Réponse
             String reponse = Utility.ReceiveMsg();

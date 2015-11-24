@@ -125,6 +125,8 @@ public class BeanBDAccess implements Serializable{
                 
             url = "insert into " + from + champs + " values " + valeurs;
             
+            System.err.println(url);
+            
         try
         {
             PreparedStatement pStmt = conBD.prepareStatement(url);

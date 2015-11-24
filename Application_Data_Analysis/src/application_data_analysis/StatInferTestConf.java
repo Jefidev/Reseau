@@ -9,6 +9,9 @@ public class StatInferTestConf extends javax.swing.JPanel
     {
         initComponents();
         ErrorSaisieLabel.setVisible(false);
+        pvalueLabel.setVisible(false);
+        pvalueReponseLabel.setVisible(false);
+        ResultatLabel.setVisible(false);
     }
 
     @SuppressWarnings("unchecked")
@@ -23,6 +26,9 @@ public class StatInferTestConf extends javax.swing.JPanel
         TesterButton = new javax.swing.JButton();
         Sujet2Label = new javax.swing.JLabel();
         RetourMenuButton = new javax.swing.JButton();
+        pvalueLabel = new javax.swing.JLabel();
+        pvalueReponseLabel = new javax.swing.JLabel();
+        ResultatLabel = new javax.swing.JLabel();
 
         TitreLabel.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
         TitreLabel.setForeground(new java.awt.Color(0, 0, 255));
@@ -53,6 +59,12 @@ public class StatInferTestConf extends javax.swing.JPanel
                 RetourMenuButtonActionPerformed(evt);
             }
         });
+
+        pvalueLabel.setText("P-value : ");
+
+        pvalueReponseLabel.setText("jLabel1");
+
+        ResultatLabel.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -85,7 +97,15 @@ public class StatInferTestConf extends javax.swing.JPanel
                                 .addGap(159, 159, 159))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(RetourMenuButton)
-                                .addContainerGap())))))
+                                .addContainerGap())))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(pvalueLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pvalueReponseLabel))
+                            .addComponent(ResultatLabel))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -102,7 +122,13 @@ public class StatInferTestConf extends javax.swing.JPanel
                     .addComponent(ErrorSaisieLabel)
                     .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(TesterButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(pvalueLabel)
+                    .addComponent(pvalueReponseLabel))
+                .addGap(18, 18, 18)
+                .addComponent(ResultatLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                 .addComponent(RetourMenuButton)
                 .addContainerGap())
         );
@@ -116,16 +142,34 @@ public class StatInferTestConf extends javax.swing.JPanel
     private void TesterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TesterButtonActionPerformed
                 
         ErrorSaisieLabel.setVisible(false);
+        pvalueLabel.setVisible(false);
+        pvalueReponseLabel.setVisible(false);
+        ResultatLabel.setVisible(false);
         
         try
         {
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
+            if (nbContainers <= 0)
+            {
+                ErrorSaisieLabel.setVisible(true);
+                return;
+            }
 
-            Utility.SendMsg(ProtocolePIDEP.GET_STAT_INFER_TEST_HOMOG, NbContainersTF.getText());
+            Utility.SendMsg(ProtocolePIDEP.GET_STAT_INFER_TEST_CONF, NbContainersTF.getText());
 
             // Réponse
             String reponse = Utility.ReceiveMsg();
             String[] parts = reponse.split("#");
+            
+            if (!parts[0].equals("NON"))
+            {
+                pvalueReponseLabel.setText(parts[0]);
+                pvalueReponseLabel.setVisible(true);
+                pvalueLabel.setVisible(true);
+                
+            }
+            ResultatLabel.setText(parts[1]);
+            ResultatLabel.setVisible(true);
         }
         catch (NumberFormatException ex)
         {
@@ -138,10 +182,13 @@ public class StatInferTestConf extends javax.swing.JPanel
     private javax.swing.JLabel ErrorSaisieLabel;
     private javax.swing.JLabel NbContainersLabel;
     private javax.swing.JTextField NbContainersTF;
+    private javax.swing.JLabel ResultatLabel;
     private javax.swing.JButton RetourMenuButton;
     private javax.swing.JLabel Sujet2Label;
     private javax.swing.JLabel SujetLabel;
     private javax.swing.JButton TesterButton;
     private javax.swing.JLabel TitreLabel;
+    private javax.swing.JLabel pvalueLabel;
+    private javax.swing.JLabel pvalueReponseLabel;
     // End of variables declaration//GEN-END:variables
 }
