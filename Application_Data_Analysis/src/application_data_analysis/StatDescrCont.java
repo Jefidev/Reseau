@@ -60,7 +60,7 @@ public class StatDescrCont extends javax.swing.JPanel
 
         MedianeLabel.setText("Médiane =");
 
-        ModeLabel.setText("Mode =");
+        ModeLabel.setText("Mode(s) =");
 
         EcartTypeReponseLabel.setText("jLabel4");
 

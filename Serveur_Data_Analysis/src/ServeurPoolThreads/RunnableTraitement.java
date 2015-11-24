@@ -325,7 +325,7 @@ public class RunnableTraitement implements Runnable
             // Ecriture dans DBDecisions
             HashMap map = new HashMap();
             map.put("MOYENNE", moyenne);
-            map.put("MODE", mode);
+            map.put("MODES", mode);
             map.put("MEDIANE", mediane);
             map.put("ECARTTYPE", ecartType);
             map.put("NBCONTAINERS", parts[2]);

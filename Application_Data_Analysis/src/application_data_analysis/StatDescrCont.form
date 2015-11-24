@@ -218,7 +218,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="ModeLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Mode ="/>
+        <Property name="text" type="java.lang.String" value="Mode(s) ="/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="EcartTypeReponseLabel">
