@@ -20,7 +20,7 @@ public class RunnableTraitement implements Runnable
     private DataOutputStream dos = null;
     private BeanBDAccess beanOracleCompta;
     private BeanBDAccess beanOracleTrafic;
-    //private BeanBDAccess beanOracleDesicions;
+    private BeanBDAccess beanOracleDecisions;
 
     
     public RunnableTraitement(Socket s)
@@ -44,7 +44,7 @@ public class RunnableTraitement implements Runnable
         int port = 1521;
         String DBCompta = "COMPTA";
         String DBTrafic = "TRAFIC";
-        //String DBDecisions = "DECISIONS";
+        String DBDecisions = "DECISIONS";
         String DB = "XE";
         
         try
@@ -62,7 +62,7 @@ public class RunnableTraitement implements Runnable
                 prop.setProperty("Port", "1521");
                 prop.setProperty("DBCompta", "COMPTA");
                 prop.setProperty("DBTrafic", "TRAFIC");
-                //prop.setProperty("DBDecisions", "DECISIONS");
+                prop.setProperty("DBDecisions", "DECISIONS");
                 prop.setProperty("DB", "XE");
                               
                 try
@@ -92,19 +92,19 @@ public class RunnableTraitement implements Runnable
         port = Integer.parseInt(prop.getProperty("Port"));
         DBCompta = prop.getProperty("DBCompta");
         DBTrafic = prop.getProperty("DBTrafic");
-        //DBDecisions = prop.getProperty("DBDecisions");
+        DBDecisions = prop.getProperty("DBDecisions");
         DB = prop.getProperty("DB");
         
         
         /* BEANS */
         beanOracleCompta = new BeanBDAccess();
         beanOracleTrafic = new BeanBDAccess();
-        //beanOracleDecisions = new BeanBDAccess();
+        beanOracleDecisions = new BeanBDAccess();
         try
         {
             beanOracleCompta.connexionOracle(Emplacement, port, DBCompta, DBCompta, DB);
             beanOracleTrafic.connexionOracle(Emplacement, port, DBTrafic, DBTrafic, DB);
-            //beanOracleDecisions.connexionOracle(Emplacement, port, DBDecisions, DBDecisions, DB);
+            beanOracleDecisions.connexionOracle(Emplacement, port, DBDecisions, DBDecisions, DB);
         }
         catch (ClassNotFoundException ex)
         {
@@ -320,11 +320,25 @@ public class RunnableTraitement implements Runnable
                 
             String ChargeUtile = moyenne + "#" + mode + "#" + mediane + "#" + ecartType;
             SendMsg(ChargeUtile);
+            
+            // Ecriture dans DBDecisions
+            HashMap map = new HashMap();
+            map.put("MOYENNE", moyenne);
+            map.put("MODE", mode);
+            map.put("MEDIANE", mediane);
+            map.put("ECARTTYPE", ecartType);
+            map.put("NBCONTAINERS", parts[2]);
+            map.put("MOUVEMENT", parts[1]);
+            beanOracleDecisions.ecriture("RESULTATSSTATDESCR", map);
         }
         catch (SQLException ex)
         {
             SendMsg("NON#Probleme de recherche des donnees");
             System.err.println("RunnableTraitement : SQLexception GetStatDescrCont : " + ex.getMessage());
+        }
+        catch (requeteException ex)
+        {
+            System.err.println("RunnableTraitement : requeteException GetStatDescrCont : " + ex.getMessage());
         }
         
         System.out.println("RunnableTraitement : FIN GETSTATDESCRCONT");
@@ -453,7 +467,31 @@ public class RunnableTraitement implements Runnable
     /* IN : Nombre de containers de l'échantillon */
     public void GetStatInferTestConf(String[] parts)
     {
+        System.out.println("RunnableTraitement : DEBUT GETSTATINFERTESTCONF");
         
+        try
+        {
+            // Ecriture dans DBDecisions
+            HashMap map = new HashMap();
+            /*map.put("MOYENNE", moyenne);
+            map.put("MODE", mode);
+            map.put("MEDIANE", mediane);
+            map.put("ECARTTYPE", ecartType);
+            map.put("NBCONTAINERS", parts[2]);
+            map.put("MOUVEMENT", parts[1]);*/
+            beanOracleDecisions.ecriture("RESULTATSTESTCONF", map);
+        }
+        /*catch (SQLException ex)
+        {
+            SendMsg("NON#Probleme de recherche des donnees");
+            System.err.println("RunnableTraitement : SQLexception GetStatInferTestConf : " + ex.getMessage());
+        }*/
+        catch (requeteException ex)
+        {
+            System.err.println("RunnableTraitement : requeteException GetStatInferTestConf : " + ex.getMessage());
+        }
+        
+        System.out.println("RunnableTraitement : FIN GETSTATINFERTESTCONF");
     }
 
     
@@ -462,7 +500,31 @@ public class RunnableTraitement implements Runnable
     /* IN : Nombre de containers des deux échantillons */
     public void GetStatInferTestHomog(String[] parts)
     {
+        System.out.println("RunnableTraitement : DEBUT GETSTATINFERTESTHOMOG");
         
+        try
+        {
+            // Ecriture dans DBDecisions
+            HashMap map = new HashMap();
+            /*map.put("MOYENNE", moyenne);
+            map.put("MODE", mode);
+            map.put("MEDIANE", mediane);
+            map.put("ECARTTYPE", ecartType);
+            map.put("NBCONTAINERS", parts[2]);
+            map.put("MOUVEMENT", parts[1]);*/
+            beanOracleDecisions.ecriture("RESULTATSTESTHOMOG", map);
+        }
+        /*catch (SQLException ex)
+        {
+            SendMsg("NON#Probleme de recherche des donnees");
+            System.err.println("RunnableTraitement : SQLexception GetStatInferTestHomog : " + ex.getMessage());
+        }*/
+        catch (requeteException ex)
+        {
+            System.err.println("RunnableTraitement : requeteException GetStatInferTestHomog : " + ex.getMessage());
+        }
+        
+        System.out.println("RunnableTraitement : FIN GETSTATINFERTESTHOMOG");        
     }
 
     
@@ -471,7 +533,31 @@ public class RunnableTraitement implements Runnable
     /* IN : Nombre de containers de tous les échantillons */
     public void GetStatInferTestAnova(String[] parts)
     {
+        System.out.println("RunnableTraitement : DEBUT GETSTATINFERTESTANOVA");
         
+        try
+        {
+            // Ecriture dans DBDecisions
+            HashMap map = new HashMap();
+            /*map.put("MOYENNE", moyenne);
+            map.put("MODE", mode);
+            map.put("MEDIANE", mediane);
+            map.put("ECARTTYPE", ecartType);
+            map.put("NBCONTAINERS", parts[2]);
+            map.put("MOUVEMENT", parts[1]);*/
+            beanOracleDecisions.ecriture("RESULTATSTESTANOVA", map);
+        }
+        /*catch (SQLException ex)
+        {
+            SendMsg("NON#Probleme de recherche des donnees");
+            System.err.println("RunnableTraitement : SQLexception GetStatInferTestAnova : " + ex.getMessage());
+        }*/
+        catch (requeteException ex)
+        {
+            System.err.println("RunnableTraitement : requeteException GetStatInferTestAnova : " + ex.getMessage());
+        }
+        
+        System.out.println("RunnableTraitement : FIN GETSTATINFERTESTANOVA");        
     }
     
         
