@@ -99,6 +99,9 @@ public class Login extends javax.swing.JDialog
 
         try
         {   
+            if (PwdPF.getPassword().length == 0 || LoginTF.getText().isEmpty())
+                return;
+            
             // sels
             long temps = (new Date()).getTime();
             double aleatoire = Math.random();
@@ -131,7 +134,6 @@ public class Login extends javax.swing.JDialog
             {
                 ApplicationDataAnalysis a = (ApplicationDataAnalysis) this.getParent();
                 a.isConnected = true;
-                this.dispose();
             }
             else
                 ErrorLabel.setVisible(true);
