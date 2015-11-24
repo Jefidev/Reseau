@@ -134,6 +134,7 @@ public class Login extends javax.swing.JDialog
             {
                 ApplicationDataAnalysis a = (ApplicationDataAnalysis) this.getParent();
                 a.isConnected = true;
+                this.dispose();
             }
             else
                 ErrorLabel.setVisible(true);

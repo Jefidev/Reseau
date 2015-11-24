@@ -158,8 +158,7 @@ public class Menu extends javax.swing.JPanel
 
     private void QuitterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuitterButtonActionPerformed
         Utility.SendMsg(ProtocolePIDEP.LOGOUT, null);
-        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
-        app.dispose();
+        System.exit(0);
     }//GEN-LAST:event_QuitterButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
