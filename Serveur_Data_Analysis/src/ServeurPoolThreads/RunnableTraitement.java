@@ -286,13 +286,13 @@ public class RunnableTraitement implements Runnable
                     
             ResultatDB.last();
             int size = ResultatDB.getRow();
-            System.out.println("size : " + size);
 
             if (size < nbCont)
             {
                 SendMsg("NON#L'echantillon ne peut actuellement pas depasser " + size + " pour cette condition");
                 return;
             }
+            
             
             // Remplissage du tableau de poids
             ResultatDB.beforeFirst();
@@ -320,6 +320,7 @@ public class RunnableTraitement implements Runnable
                 
             String ChargeUtile = moyenne + "#" + mode + "#" + mediane + "#" + ecartType;
             SendMsg(ChargeUtile);
+            
             
             // Ecriture dans DBDecisions
             HashMap map = new HashMap();
@@ -471,6 +472,62 @@ public class RunnableTraitement implements Runnable
         
         try
         {
+            // Base de données
+            String select = "TO_DATE(DATE_DEPART, 'DD/MM/YYYY') - TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY')";
+            String condition = "DATE_DEPART IS NOT NULL ORDER BY DBMS_RANDOM.VALUE";
+            ResultSet ResultatDB = beanOracleTrafic.selection(select, "MOUVEMENTS", condition);
+            
+     
+            // Vérification de la taille de l'échantillon
+            int nbCont = Integer.parseInt(parts[1]);
+            
+            if (!ResultatDB.next())
+            {
+                SendMsg("NON#Aucune donnee correspondante aux parametres demandes");
+                return;
+            }
+                    
+            ResultatDB.last();
+            int size = ResultatDB.getRow();
+
+            if (size < nbCont)
+            {
+                SendMsg("NON#L'echantillon ne peut actuellement pas depasser " + size + " pour cette condition");
+                return;
+            }
+            
+            
+            // Remplissage du tableau de poids
+            //double[] arrayPoids = new double[nbCont];
+            
+            ResultatDB.beforeFirst();
+            for(int i = 0; i < nbCont && ResultatDB.next(); i++)
+            {
+                System.out.println(ResultatDB.getDouble("POIDS"));
+                arrayPoids[i] = ResultatDB.getDouble("POIDS");
+            }
+           
+            
+            // Calculs
+            DescriptiveStatistics ds = new DescriptiveStatistics(arrayPoids);
+            double moyenne = ds.getMean();
+            double ecartType = ds.getStandardDeviation();
+            double[] modetab = StatUtils.mode(arrayPoids);
+            double mediane = ds.getPercentile(50);
+            
+            
+            // Envoi des données
+            String mode = "[";
+            int i;
+            for(i = 0; i < (modetab.length - 1); i++)
+                mode += modetab[i] + ", ";
+            mode += modetab[i] + "]";
+                
+            String ChargeUtile = moyenne + "#" + mode + "#" + mediane + "#" + ecartType;
+            SendMsg(ChargeUtile);            
+            
+            
+
             // Ecriture dans DBDecisions
             HashMap map = new HashMap();
             /*map.put("MOYENNE", moyenne);
@@ -481,11 +538,11 @@ public class RunnableTraitement implements Runnable
             map.put("MOUVEMENT", parts[1]);*/
             beanOracleDecisions.ecriture("RESULTATSTESTCONF", map);
         }
-        /*catch (SQLException ex)
+        catch (SQLException ex)
         {
             SendMsg("NON#Probleme de recherche des donnees");
             System.err.println("RunnableTraitement : SQLexception GetStatInferTestConf : " + ex.getMessage());
-        }*/
+        }
         catch (requeteException ex)
         {
             System.err.println("RunnableTraitement : requeteException GetStatInferTestConf : " + ex.getMessage());
