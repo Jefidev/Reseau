@@ -329,8 +329,8 @@ public class RunnableTraitement implements Runnable
             map.put("MODES", mode);
             map.put("MEDIANE", mediane);
             map.put("ECARTTYPE", ecartType);
-            map.put("NBCONTAINERS", parts[2]);
-            map.put("MOUVEMENT", parts[1]);
+            map.put("NBCONTAINERS", parts[1]);
+            map.put("MOUVEMENT", parts[2]);
             beanOracleDecisions.ecriture("RESULTATSSTATDESCR", map);
         }
         catch (SQLException ex)
