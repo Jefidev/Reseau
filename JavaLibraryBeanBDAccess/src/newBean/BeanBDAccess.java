@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
-import oracle.jdbc.OracleTypes;
 
 
 public class BeanBDAccess implements Serializable{
@@ -14,7 +13,9 @@ public class BeanBDAccess implements Serializable{
     private Connection conBD = null;
     private String curUser;
     
+    
     public BeanBDAccess(){}
+    
     
     public void connexionMySQl(String ip, int port, String user, String pwd, String bd) throws ClassNotFoundException, SQLException, connexionException
     {
@@ -28,6 +29,7 @@ public class BeanBDAccess implements Serializable{
         conBD.setAutoCommit(false);
     }
     
+    
     public void connexionOracle(String ip, int port, String user, String pwd, String bd) throws ClassNotFoundException, SQLException, connexionException
     {
         if(conBD != null)
@@ -40,6 +42,7 @@ public class BeanBDAccess implements Serializable{
         conBD.setAutoCommit(false);
     }
     
+    
     public void connexionCSV() throws ClassNotFoundException, SQLException, connexionException
     {
         if(conBD != null)
@@ -49,6 +52,7 @@ public class BeanBDAccess implements Serializable{
         conBD = DriverManager.getConnection("jdbc:jstels:csv:.?separator=;");
         conBD.setAutoCommit(false);
     }
+    
     
     public ArrayList<String> tablesDisponibles() throws requeteException
     {
@@ -78,6 +82,7 @@ public class BeanBDAccess implements Serializable{
         return null;
     }
     
+    
     public ResultSet selection(String select, String from, String where) throws SQLException
     {
         String url;
@@ -96,6 +101,7 @@ public class BeanBDAccess implements Serializable{
         return rs;
     }
     
+    
     public synchronized void ecriture(String from, HashMap donnees) throws requeteException
     {
         String url;
@@ -111,7 +117,10 @@ public class BeanBDAccess implements Serializable{
                 Object cle = it.next();
                     
                 champs = champs + cle.toString();
-                valeurs = valeurs + "'" + donnees.get(cle).toString() + "'";
+                if (donnees.get(cle) instanceof Double ||donnees.get(cle) instanceof Float)
+                    valeurs = valeurs + donnees.get(cle).toString();
+                else
+                    valeurs = valeurs + "'" + donnees.get(cle).toString() + "'";
                     
                 if (it.hasNext())
                 {
@@ -124,8 +133,6 @@ public class BeanBDAccess implements Serializable{
             valeurs = valeurs + ")";
                 
             url = "insert into " + from + champs + " values " + valeurs;
-            
-            System.err.println(url);
             
         try
         {
@@ -147,6 +154,7 @@ public class BeanBDAccess implements Serializable{
         }
     }
     
+        
     public synchronized void miseAJour(String from, HashMap donnees, String where) throws requeteException
     {
         String url;
@@ -158,7 +166,10 @@ public class BeanBDAccess implements Serializable{
         while(it.hasNext())
         {
             Object cle = it.next();
-            valeurs = valeurs + cle.toString() + " = '"+ donnees.get(cle).toString() + "'";
+            if (donnees.get(cle) instanceof Double ||donnees.get(cle) instanceof Float)
+                    valeurs = valeurs + cle.toString() + " = " + donnees.get(cle).toString();
+                else
+                    valeurs = valeurs + cle.toString() + " = '" + donnees.get(cle).toString() + "'";
                     
             if (it.hasNext())
             {
@@ -188,21 +199,25 @@ public class BeanBDAccess implements Serializable{
         }
     }
     
+    
     public void finConnexion() throws SQLException
     {
         conBD.close();
         conBD = null;
     }
    
+    
     public Connection getConnexion()
     {
         return conBD;
     }
     
+    
     public void commit() throws SQLException
     {
         conBD.commit();
     }
+    
     
     public void rollback() throws SQLException
     {

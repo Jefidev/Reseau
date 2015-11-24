@@ -524,23 +524,16 @@ public class RunnableTraitement implements Runnable
             
 
             // Ecriture dans DBDecisions
-            System.err.println("pvalue = " + pvalue);
-            System.err.println("nbCont = " + nbCont);
-            System.err.println("resultat = " + resultat);
-            HashMap map = new HashMap();
+            /*HashMap map = new HashMap();
             map.put("PVALUE", pvalue);
             map.put("NBCONTAINERS", nbCont);
             map.put("RESULTAT", resultat);
-            beanOracleDecisions.ecriture("RESULTATSTESTCONF", map);
+            beanOracleDecisions.ecriture("RESULTATSTESTCONF", map);*/
         }
         catch (SQLException ex)
         {
             SendMsg("NON#Probleme de recherche des donnees");
             System.err.println("RunnableTraitement : SQLexception GetStatInferTestConf : " + ex.getMessage());
-        }
-        catch (requeteException ex)
-        {
-            System.err.println("RunnableTraitement : requeteException GetStatInferTestConf : " + ex.getMessage());
         }
         
         System.out.println("RunnableTraitement : FIN GETSTATINFERTESTCONF");
