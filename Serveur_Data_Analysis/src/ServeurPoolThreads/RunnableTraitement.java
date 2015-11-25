@@ -513,7 +513,7 @@ public class RunnableTraitement implements Runnable
             TTest test = new TTest();
             double pvalue = test.tTest(10, arrayTemps);
             String resultat;
-            if (0 <= pvalue && pvalue < 0.025)  // Bilatéral
+            if (pvalue < 0.025)  // Bilatéral
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
             else
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
@@ -594,7 +594,7 @@ public class RunnableTraitement implements Runnable
             }
             if (i < nbCont)
             {
-                SendMsg("NON#L'echantillon A (" + destA + "ne peut actuellement pas depasser " + i);
+                SendMsg("NON#L'echantillon A (" + destA + ") ne peut actuellement pas depasser " + i);
                 return;
             }
             while(ResultatDB.getString(2).equals(destA) && ResultatDB.next());
@@ -614,7 +614,7 @@ public class RunnableTraitement implements Runnable
             TTest test = new TTest();
             double pvalue = test.tTest(arrayTempsA, arrayTempsB);
             String resultat;
-            if (0 <= pvalue && pvalue < 0.025)  // Bilatéral
+            if (pvalue < 0.025)  // Bilatéral
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
             else
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
@@ -677,9 +677,22 @@ public class RunnableTraitement implements Runnable
             
             // Remplissage des tableaux de temps
             HashMap<Integer, Object> mapTemps = new HashMap();
-            double[] arrayTemps = new double[nbCont];
             
+            // boucle sur la destination
+                double[] arrayTemps = new double[nbCont];
+                int i;
+                for(i = 0; i < nbCont; i++)
+                    arrayTemps[i] = ResultatDB.getDouble(1);
+                if(i < nbCont)
+                {
+                    SendMsg("NON#L'echantillon (" + ResultatDB.getString("DESTINATION") + ") ne peut actuellement pas depasser " + i);
+                    return;
+                }
+                    
             
+                
+                
+                
             /*if(i < nbCont)
             {
                 SendMsg("NON#L'echantillon A (" + ResultatDB.getString("DESTINATION") + "ne peut actuellement pas depasser " + i);

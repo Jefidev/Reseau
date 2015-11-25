@@ -195,9 +195,9 @@ public class StatInferTestHomog extends javax.swing.JPanel
                 return;
             }
             
-            if(DestinationATF.getText().isEmpty() || DestinationBTF.getText().isEmpty())
+            if(DestinationATF.getText().isEmpty() || DestinationBTF.getText().isEmpty() || DestinationATF.getText().equals(DestinationBTF.getText()))
             {
-                ErrorSaisieLabel.setText("Entrer deux destinations !");
+                ErrorSaisieLabel.setText("Entrer deux destinations différentes !");
                 ErrorSaisieLabel.setVisible(true);
                 return;
             }                
