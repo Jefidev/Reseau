@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Properties;
 import org.apache.commons.math3.stat.StatUtils;
 import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
+import org.apache.commons.math3.stat.inference.OneWayAnova;
 import org.apache.commons.math3.stat.inference.TTest;
 
 
@@ -507,7 +508,7 @@ public class RunnableTraitement implements Runnable
                 arrayTemps[i] = ResultatDB.getDouble(1);
             }
             
-            
+                
             // Test
             TTest test = new TTest();
             double pvalue = test.tTest(10, arrayTemps);
@@ -582,9 +583,9 @@ public class RunnableTraitement implements Runnable
             
             int i;
             ResultatDB.beforeFirst();
-            for(i = 0; i < nbCont && ResultatDB.next() && ResultatDB.getString(2).equals(destA); i++)
+            for(i = 0; i < nbCont && ResultatDB.next() && ResultatDB.getString("DESTINATION").equals(destA); i++)
             {
-                System.out.println(ResultatDB.getDouble(2));
+                System.out.println(ResultatDB.getDouble(1));
                 arrayTempsA[i] = ResultatDB.getDouble(1);
             }
             if (i < nbCont)
@@ -672,14 +673,14 @@ public class RunnableTraitement implements Runnable
             
             
             // Remplissage des tableaux de temps
-            double[] arrayTempsA = new double[nbCont];
-            double[] arrayTempsB = new double[nbCont];
-            String destA = parts[2];
-            String destB = parts[3];
-            if(parts[2].compareTo(parts[3]) > 0)
+            HashMap<Integer, Object> mapTemps = new HashMap();
+            double[] arrayTemps = new double[nbCont];
+            
+            
+            /*if(i < nbCont)
             {
-                destA = parts[3];
-                destB = parts[2];
+                SendMsg("NON#L'echantillon A (" + ResultatDB.getString("DESTINATION") + "ne peut actuellement pas depasser " + i);
+                return;
             }
             
             int i;
@@ -705,12 +706,12 @@ public class RunnableTraitement implements Runnable
             {
                 SendMsg("NON#L'echantillon B (" + destB + ") ne peut actuellement pas depasser " + i);
                 return;
-            }
+            }*/
             
 
             // Test
-            TTest test = new TTest();
-            double pvalue = test.tTest(arrayTempsA, arrayTempsB);
+            //OneWayAnova test = new OneWayAnova();
+            //double pvalue = test.anovaPValue(null/*Collection de double[]*/);
             String resultat;
             if (0 <= pvalue && pvalue < 0.05)
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
@@ -735,10 +736,10 @@ public class RunnableTraitement implements Runnable
             SendMsg("NON#Probleme de recherche des donnees");
             System.err.println("RunnableTraitement : SQLexception GetStatInferTestAnova : " + ex.getMessage());
         }
-        catch (requeteException ex)
+        /*catch (requeteException ex)
         {
             System.err.println("RunnableTraitement : requeteException GetStatInferTestAnova : " + ex.getMessage());
-        }
+        }*/
         
         System.out.println("RunnableTraitement : FIN GETSTATINFERTESTANOVA");        
     }

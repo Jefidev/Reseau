@@ -43,7 +43,7 @@ public class StatInferTestAnova extends javax.swing.JPanel
 
         ErrorSaisieLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         ErrorSaisieLabel.setForeground(new java.awt.Color(255, 0, 0));
-        ErrorSaisieLabel.setText("Doit être un entier positif !");
+        ErrorSaisieLabel.setText("Doit être un entier positif (>1) !");
 
         TesterButton.setText("Tester");
         TesterButton.addActionListener(new java.awt.event.ActionListener() {
@@ -75,23 +75,6 @@ public class StatInferTestAnova extends javax.swing.JPanel
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(NbContainersLabel)
-                                .addGap(18, 18, 18)
-                                .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(TesterButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
-                                .addComponent(ErrorSaisieLabel))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(Sujet1Label)
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(RetourMenuButton))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(155, 155, 155)
@@ -107,7 +90,24 @@ public class StatInferTestAnova extends javax.swing.JPanel
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(pvalueReponseLabel))
                                     .addComponent(ResultatLabel))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(NbContainersLabel)
+                                .addGap(18, 18, 18)
+                                .addComponent(NbContainersTF, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(TesterButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
+                                .addComponent(ErrorSaisieLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(Sujet1Label)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(RetourMenuButton)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -152,7 +152,7 @@ public class StatInferTestAnova extends javax.swing.JPanel
         try
         {
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
-            if (nbContainers <= 0)
+            if (nbContainers < 2)
             {
                 ErrorSaisieLabel.setVisible(true);
                 return;

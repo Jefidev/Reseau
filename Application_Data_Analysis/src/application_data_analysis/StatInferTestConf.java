@@ -41,7 +41,7 @@ public class StatInferTestConf extends javax.swing.JPanel
 
         ErrorSaisieLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         ErrorSaisieLabel.setForeground(new java.awt.Color(255, 0, 0));
-        ErrorSaisieLabel.setText("Doit être un entier positif !");
+        ErrorSaisieLabel.setText("Doit être un entier positif (>1) !");
 
         TesterButton.setText("Tester");
         TesterButton.addActionListener(new java.awt.event.ActionListener() {
@@ -149,7 +149,7 @@ public class StatInferTestConf extends javax.swing.JPanel
         try
         {
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
-            if (nbContainers <= 0)
+            if (nbContainers < 2)
             {
                 ErrorSaisieLabel.setVisible(true);
                 return;

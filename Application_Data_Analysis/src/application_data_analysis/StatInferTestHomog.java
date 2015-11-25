@@ -190,7 +190,7 @@ public class StatInferTestHomog extends javax.swing.JPanel
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
             if (nbContainers <= 0)
             {
-                ErrorSaisieLabel.setText("Doit être un entier positif !");
+                ErrorSaisieLabel.setText("Doit être un entier positif (>1) !");
                 ErrorSaisieLabel.setVisible(true);
                 return;
             }
@@ -215,14 +215,13 @@ public class StatInferTestHomog extends javax.swing.JPanel
                 pvalueReponseLabel.setText(parts[0]);
                 pvalueReponseLabel.setVisible(true);
                 pvalueLabel.setVisible(true);
-                
             }
             ResultatLabel.setText(parts[1]);
             ResultatLabel.setVisible(true);
         }
         catch (NumberFormatException ex)
         {
-            ErrorSaisieLabel.setText("Doit être un entier positif !");
+            ErrorSaisieLabel.setText("Doit être un entier positif (>1) !");
             ErrorSaisieLabel.setVisible(true);
         }
     }//GEN-LAST:event_TesterButtonActionPerformed
