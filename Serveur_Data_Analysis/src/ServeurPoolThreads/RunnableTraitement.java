@@ -561,8 +561,6 @@ public class RunnableTraitement implements Runnable
 
                         
             // Vérification de la taille de l'échantillon
-            int nbCont = Integer.parseInt(parts[1]);
-            
             if (!ResultatDB.next())
             {
                 SendMsg("NON#Aucune donnee correspondante aux parametres demandes");
@@ -571,6 +569,7 @@ public class RunnableTraitement implements Runnable
             
             
             // Remplissage des tableaux de temps
+            int nbCont = Integer.parseInt(parts[1]);
             double[] arrayTempsA = new double[nbCont];
             double[] arrayTempsB = new double[nbCont];
             String destA, destB;
@@ -597,7 +596,7 @@ public class RunnableTraitement implements Runnable
                 SendMsg("NON#L'echantillon A (" + destA + ") ne peut actuellement pas depasser " + i);
                 return;
             }
-            while(ResultatDB.getString(2).equals(destA) && ResultatDB.next());
+            while(ResultatDB.getString("DESTINATION").equals(destA) && ResultatDB.next());
             for(i = 0; i < nbCont && ResultatDB.next(); i++)
             {
                 System.out.println(ResultatDB.getDouble(1));
@@ -664,29 +663,35 @@ public class RunnableTraitement implements Runnable
 
                         
             // Vérification de la taille de l'échantillon
-            int nbCont = Integer.parseInt(parts[1]);
-            
             /*if (!ResultatDB.next())
             {
                 SendMsg("NON#Aucune donnee correspondante aux parametres demandes");
                 return;
-            }*/
+            }*/            
             while(ResultatDB.next())
                 System.out.println(ResultatDB.getDouble(1) + " --- " + ResultatDB.getString(2));
             
             
             // Remplissage des tableaux de temps
+            int nbCont = Integer.parseInt(parts[1]);
             ArrayList<double[]> ListTemps = new ArrayList<>();
             
+            ResultatDB.first();
+            String destination = ResultatDB.getString("DESTINATION");
             ResultatDB.beforeFirst();
-            // boucle sur la destination
-            for()
+            
+            while(!ResultatDB.isAfterLast())
             {
                 double[] arrayTemps = new double[nbCont];
                 int i;
                 
-                for(i = 0; i < nbCont && ResultatDB.next(); i++)
+                System.out.println(destination);
+                
+                for(i = 0; i < nbCont && ResultatDB.next() && ResultatDB.getString("DESTINATION").equals(destination); i++)
+                {
                     arrayTemps[i] = ResultatDB.getDouble(1);
+                    System.out.println(ResultatDB.getDouble(1) + " --- " + ResultatDB.getString("DESTINATION"));
+                }
                 
                 if(i < nbCont)
                 {
@@ -696,43 +701,10 @@ public class RunnableTraitement implements Runnable
                 
                 ListTemps.add(arrayTemps);
                 
-                // Passer les derniers temps avec la même destination
-            }
-                    
-            
+                while(ResultatDB.getString("DESTINATION").equals(destination) && ResultatDB.next());
                 
-                
-                
-            /*if(i < nbCont)
-            {
-                SendMsg("NON#L'echantillon A (" + ResultatDB.getString("DESTINATION") + "ne peut actuellement pas depasser " + i);
-                return;
+                destination = ResultatDB.getString("DESTINATION");
             }
-            
-            int i;
-            ResultatDB.beforeFirst();
-            for(i = 0; i < nbCont && ResultatDB.next() && ResultatDB.getString(2).equals(destA); i++)
-            {
-                System.out.println(ResultatDB.getDouble(2));
-                arrayTempsA[i] = ResultatDB.getDouble(1);
-            }
-            if (i < nbCont)
-            {
-                SendMsg("NON#L'echantillon A (" + destA + "ne peut actuellement pas depasser " + i);
-                return;
-            }
-            while(ResultatDB.next() && ResultatDB.getString(2).equals(destA));
-            ResultatDB.previous();
-            for(i = 0; i < nbCont && ResultatDB.next(); i++)
-            {
-                System.out.println(ResultatDB.getDouble(1));
-                arrayTempsB[i] = ResultatDB.getDouble(1);
-            }
-            if (i < nbCont)
-            {
-                SendMsg("NON#L'echantillon B (" + destB + ") ne peut actuellement pas depasser " + i);
-                return;
-            }*/
             
 
             // Test
@@ -762,10 +734,10 @@ public class RunnableTraitement implements Runnable
             SendMsg("NON#Probleme de recherche des donnees");
             System.err.println("RunnableTraitement : SQLexception GetStatInferTestAnova : " + ex.getMessage());
         }
-        /*catch (requeteException ex)
+        catch (requeteException ex)
         {
             System.err.println("RunnableTraitement : requeteException GetStatInferTestAnova : " + ex.getMessage());
-        }*/
+        }
         
         System.out.println("RunnableTraitement : FIN GETSTATINFERTESTANOVA");        
     }
