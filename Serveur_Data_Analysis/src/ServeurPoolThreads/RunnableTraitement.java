@@ -562,13 +562,11 @@ public class RunnableTraitement implements Runnable
             // Vérification de la taille de l'échantillon
             int nbCont = Integer.parseInt(parts[1]);
             
-            /*if (!ResultatDB.next())
+            if (!ResultatDB.next())
             {
                 SendMsg("NON#Aucune donnee correspondante aux parametres demandes");
                 return;
-            }*/
-            while(ResultatDB.next())
-                System.out.println(ResultatDB.getDouble(1) + " --- " + ResultatDB.getString(2));
+            }
             
             
             // Remplissage des tableaux de temps
@@ -653,8 +651,78 @@ public class RunnableTraitement implements Runnable
     {
         System.out.println("RunnableTraitement : DEBUT GETSTATINFERTESTANOVA");
         
-        /*try
+        try
         {
+            // Base de données
+            String select = "TO_DATE(DATE_DEPART, 'DD/MM/YYYY') - TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'), DESTINATION";
+            String condition = "DATE_DEPART IS NOT NULL ORDER BY DESTINATION, DBMS_RANDOM.VALUE";
+            ResultSet ResultatDB = beanOracleTrafic.selection(select, "MOUVEMENTS", condition);
+
+                        
+            // Vérification de la taille de l'échantillon
+            int nbCont = Integer.parseInt(parts[1]);
+            
+            /*if (!ResultatDB.next())
+            {
+                SendMsg("NON#Aucune donnee correspondante aux parametres demandes");
+                return;
+            }*/
+            while(ResultatDB.next())
+                System.out.println(ResultatDB.getDouble(1) + " --- " + ResultatDB.getString(2));
+            
+            
+            // Remplissage des tableaux de temps
+            double[] arrayTempsA = new double[nbCont];
+            double[] arrayTempsB = new double[nbCont];
+            String destA = parts[2];
+            String destB = parts[3];
+            if(parts[2].compareTo(parts[3]) > 0)
+            {
+                destA = parts[3];
+                destB = parts[2];
+            }
+            
+            int i;
+            ResultatDB.beforeFirst();
+            for(i = 0; i < nbCont && ResultatDB.next() && ResultatDB.getString(2).equals(destA); i++)
+            {
+                System.out.println(ResultatDB.getDouble(2));
+                arrayTempsA[i] = ResultatDB.getDouble(1);
+            }
+            if (i < nbCont)
+            {
+                SendMsg("NON#L'echantillon A (" + destA + "ne peut actuellement pas depasser " + i);
+                return;
+            }
+            while(ResultatDB.next() && ResultatDB.getString(2).equals(destA));
+            ResultatDB.previous();
+            for(i = 0; i < nbCont && ResultatDB.next(); i++)
+            {
+                System.out.println(ResultatDB.getDouble(1));
+                arrayTempsB[i] = ResultatDB.getDouble(1);
+            }
+            if (i < nbCont)
+            {
+                SendMsg("NON#L'echantillon B (" + destB + ") ne peut actuellement pas depasser " + i);
+                return;
+            }
+            
+
+            // Test
+            TTest test = new TTest();
+            double pvalue = test.tTest(arrayTempsA, arrayTempsB);
+            String resultat;
+            if (0 <= pvalue && pvalue < 0.05)
+                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
+            else
+                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
+            
+            
+            // Envoi des données               
+            String ChargeUtile = pvalue + "#" + resultat;
+            SendMsg(ChargeUtile);
+            
+            
             // Ecriture dans DBDecisions
             HashMap map = new HashMap();
             map.put("PVALUE", pvalue);
@@ -670,7 +738,7 @@ public class RunnableTraitement implements Runnable
         catch (requeteException ex)
         {
             System.err.println("RunnableTraitement : requeteException GetStatInferTestAnova : " + ex.getMessage());
-        }*/
+        }
         
         System.out.println("RunnableTraitement : FIN GETSTATINFERTESTANOVA");        
     }
