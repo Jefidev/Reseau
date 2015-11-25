@@ -513,7 +513,7 @@ public class RunnableTraitement implements Runnable
             TTest test = new TTest();
             double pvalue = test.tTest(10, arrayTemps);
             String resultat;
-            if (0 <= pvalue && pvalue < 0.05)
+            if (0 <= pvalue && pvalue < 0.025)  // Bilatéral
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
             else
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
@@ -556,7 +556,7 @@ public class RunnableTraitement implements Runnable
         {
             // Base de données
             String select = "TO_DATE(DATE_DEPART, 'DD/MM/YYYY') - TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'), DESTINATION";
-            String condition = "DATE_DEPART IS NOT NULL AND (DESTINATION = 'Seraing' OR DESTINATION = 'Verviers') ORDER BY DESTINATION, DBMS_RANDOM.VALUE";
+            String condition = "DATE_DEPART IS NOT NULL AND (DESTINATION = '" + parts[2] + "' OR DESTINATION = '" + parts[3] + "') ORDER BY DESTINATION, DBMS_RANDOM.VALUE";
             ResultSet ResultatDB = beanOracleTrafic.selection(select, "MOUVEMENTS", condition);
 
                         
@@ -573,12 +573,16 @@ public class RunnableTraitement implements Runnable
             // Remplissage des tableaux de temps
             double[] arrayTempsA = new double[nbCont];
             double[] arrayTempsB = new double[nbCont];
-            String destA = parts[2];
-            String destB = parts[3];
+            String destA, destB;
             if(parts[2].compareTo(parts[3]) > 0)
             {
                 destA = parts[3];
                 destB = parts[2];
+            }
+            else
+            {
+                destA = parts[2];
+                destB = parts[3];
             }
             
             int i;
@@ -593,8 +597,7 @@ public class RunnableTraitement implements Runnable
                 SendMsg("NON#L'echantillon A (" + destA + "ne peut actuellement pas depasser " + i);
                 return;
             }
-            while(ResultatDB.next() && ResultatDB.getString(2).equals(destA));
-            ResultatDB.previous();
+            while(ResultatDB.getString(2).equals(destA) && ResultatDB.next());
             for(i = 0; i < nbCont && ResultatDB.next(); i++)
             {
                 System.out.println(ResultatDB.getDouble(1));
@@ -611,7 +614,7 @@ public class RunnableTraitement implements Runnable
             TTest test = new TTest();
             double pvalue = test.tTest(arrayTempsA, arrayTempsB);
             String resultat;
-            if (0 <= pvalue && pvalue < 0.05)
+            if (0 <= pvalue && pvalue < 0.025)  // Bilatéral
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
             else
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
