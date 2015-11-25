@@ -180,9 +180,17 @@ public class StatInferTestHomog extends javax.swing.JPanel
             int nbContainers = Integer.parseInt(NbContainersTF.getText());
             if (nbContainers <= 0)
             {
+                ErrorSaisieLabel.setText("Doit être un entier positif !");
                 ErrorSaisieLabel.setVisible(true);
                 return;
             }
+            
+            if(DestinationATF.getText().isEmpty() || DestinationBTF.getText().isEmpty())
+            {
+                ErrorSaisieLabel.setText("Entrer deux destinations !");
+                ErrorSaisieLabel.setVisible(true);
+                return;
+            }                
             
             String ChargeUtile = NbContainersTF.getText() + "#" + DestinationATF.getText() + "#" + DestinationBTF.getText();
 
@@ -204,6 +212,7 @@ public class StatInferTestHomog extends javax.swing.JPanel
         }
         catch (NumberFormatException ex)
         {
+            ErrorSaisieLabel.setText("Doit être un entier positif !");
             ErrorSaisieLabel.setVisible(true);
         }
     }//GEN-LAST:event_TesterButtonActionPerformed

@@ -44,7 +44,7 @@ public class ApplicationDataAnalysis extends javax.swing.JFrame
 
         // Lancement du login
         (new Login(this, true)).setVisible(true);
-        System.err.println("isConnected = " + isConnected);
+        System.out.println("isConnected = " + isConnected);
         if (!isConnected)
             System.exit(0);
     }

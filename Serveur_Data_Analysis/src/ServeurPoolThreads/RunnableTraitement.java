@@ -524,16 +524,20 @@ public class RunnableTraitement implements Runnable
             
 
             // Ecriture dans DBDecisions
-            /*HashMap map = new HashMap();
+            HashMap map = new HashMap();
             map.put("PVALUE", pvalue);
             map.put("NBCONTAINERS", nbCont);
             map.put("RESULTAT", resultat);
-            beanOracleDecisions.ecriture("RESULTATSTESTCONF", map);*/
+            beanOracleDecisions.ecriture("RESULTATSTESTCONF", map);
         }
         catch (SQLException ex)
         {
             SendMsg("NON#Probleme de recherche des donnees");
             System.err.println("RunnableTraitement : SQLexception GetStatInferTestConf : " + ex.getMessage());
+        }
+        catch (requeteException ex)
+        {
+            System.err.println("RunnableTraitement : requeteException GetStatDescrCont : " + ex.getMessage());
         }
         
         System.out.println("RunnableTraitement : FIN GETSTATINFERTESTCONF");
@@ -541,22 +545,91 @@ public class RunnableTraitement implements Runnable
 
     
     /* TEST D'HYPOTHESE D'HOMOGENEITE */
-    /* Sujet : Le temps moyen de stationnement d'un container est-il le même s'il est à destination de Duisbourg(D) ou Strasbourg(F) ? On veut tester s'il en est bien ainsi àpd échantillon de containers de chaque type */
-    /* IN : Nombre de containers des deux échantillons */
+    /* Sujet : Le temps moyen de stationnement d'un container est-il le même s'il est à destination de VilleA ou de VilleB ? On veut tester s'il en est bien ainsi àpd échantillon de containers de chaque type */
+    /* IN : Nombre de containers des deux échantillons + Destination A + Destination B */
     public void GetStatInferTestHomog(String[] parts)
     {
         System.out.println("RunnableTraitement : DEBUT GETSTATINFERTESTHOMOG");
         
-        /*try
+        try
         {
+            // Base de données
+            String select = "TO_DATE(DATE_DEPART, 'DD/MM/YYYY') - TO_DATE(DATE_ARRIVEE, 'DD/MM/YYYY'), DESTINATION";
+            String condition = "DATE_DEPART IS NOT NULL AND (DESTINATION = 'Seraing' OR DESTINATION = 'Verviers') ORDER BY DESTINATION, DBMS_RANDOM.VALUE";
+            ResultSet ResultatDB = beanOracleTrafic.selection(select, "MOUVEMENTS", condition);
+
+                        
+            // Vérification de la taille de l'échantillon
+            int nbCont = Integer.parseInt(parts[1]);
+            
+            /*if (!ResultatDB.next())
+            {
+                SendMsg("NON#Aucune donnee correspondante aux parametres demandes");
+                return;
+            }*/
+            while(ResultatDB.next())
+                System.out.println(ResultatDB.getDouble(1) + " --- " + ResultatDB.getString(2));
+            
+            
+            // Remplissage des tableaux de temps
+            double[] arrayTempsA = new double[nbCont];
+            double[] arrayTempsB = new double[nbCont];
+            String destA = parts[2];
+            String destB = parts[3];
+            if(parts[2].compareTo(parts[3]) > 0)
+            {
+                destA = parts[3];
+                destB = parts[2];
+            }
+            
+            int i;
+            ResultatDB.beforeFirst();
+            for(i = 0; i < nbCont && ResultatDB.next() && ResultatDB.getString(2).equals(destA); i++)
+            {
+                System.out.println(ResultatDB.getDouble(2));
+                arrayTempsA[i] = ResultatDB.getDouble(1);
+            }
+            if (i < nbCont)
+            {
+                SendMsg("NON#L'echantillon A (" + destA + "ne peut actuellement pas depasser " + i);
+                return;
+            }
+            while(ResultatDB.next() && ResultatDB.getString(2).equals(destA));
+            ResultatDB.previous();
+            for(i = 0; i < nbCont && ResultatDB.next(); i++)
+            {
+                System.out.println(ResultatDB.getDouble(1));
+                arrayTempsB[i] = ResultatDB.getDouble(1);
+            }
+            if (i < nbCont)
+            {
+                SendMsg("NON#L'echantillon B (" + destB + ") ne peut actuellement pas depasser " + i);
+                return;
+            }
+            
+
+            // Test
+            TTest test = new TTest();
+            double pvalue = test.tTest(arrayTempsA, arrayTempsB);
+            String resultat;
+            if (0 <= pvalue && pvalue < 0.05)
+                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
+            else
+                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
+            
+            
+            // Envoi des données               
+            String ChargeUtile = pvalue + "#" + resultat;
+            SendMsg(ChargeUtile); 
+            
+            
             // Ecriture dans DBDecisions
             HashMap map = new HashMap();
-            map.put("MOYENNE", moyenne);
-            map.put("MODE", mode);
-            map.put("MEDIANE", mediane);
-            map.put("ECARTTYPE", ecartType);
-            map.put("NBCONTAINERS", parts[2]);
-            map.put("MOUVEMENT", parts[1]);
+            map.put("PVALUE", pvalue);
+            map.put("NBCONTAINERS", nbCont);
+            map.put("DESTINATIONA", parts[2]);
+            map.put("DESTINATIONB", parts[3]);
+            map.put("RESULTAT", resultat);
             beanOracleDecisions.ecriture("RESULTATSTESTHOMOG", map);
         }
         catch (SQLException ex)
@@ -567,7 +640,7 @@ public class RunnableTraitement implements Runnable
         catch (requeteException ex)
         {
             System.err.println("RunnableTraitement : requeteException GetStatInferTestHomog : " + ex.getMessage());
-        }*/
+        }
         
         System.out.println("RunnableTraitement : FIN GETSTATINFERTESTHOMOG");        
     }
@@ -584,12 +657,9 @@ public class RunnableTraitement implements Runnable
         {
             // Ecriture dans DBDecisions
             HashMap map = new HashMap();
-            map.put("MOYENNE", moyenne);
-            map.put("MODE", mode);
-            map.put("MEDIANE", mediane);
-            map.put("ECARTTYPE", ecartType);
-            map.put("NBCONTAINERS", parts[2]);
-            map.put("MOUVEMENT", parts[1]);
+            map.put("PVALUE", pvalue);
+            map.put("NBCONTAINERS", nbCont);
+            map.put("RESULTAT", resultat);
             beanOracleDecisions.ecriture("RESULTATSTESTANOVA", map);
         }
         catch (SQLException ex)
