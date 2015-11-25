@@ -676,18 +676,28 @@ public class RunnableTraitement implements Runnable
             
             
             // Remplissage des tableaux de temps
-            HashMap<Integer, Object> mapTemps = new HashMap();
+            ArrayList<double[]> ListTemps = new ArrayList<>();
             
+            ResultatDB.beforeFirst();
             // boucle sur la destination
+            for()
+            {
                 double[] arrayTemps = new double[nbCont];
                 int i;
-                for(i = 0; i < nbCont; i++)
+                
+                for(i = 0; i < nbCont && ResultatDB.next(); i++)
                     arrayTemps[i] = ResultatDB.getDouble(1);
+                
                 if(i < nbCont)
                 {
                     SendMsg("NON#L'echantillon (" + ResultatDB.getString("DESTINATION") + ") ne peut actuellement pas depasser " + i);
                     return;
                 }
+                
+                ListTemps.add(arrayTemps);
+                
+                // Passer les derniers temps avec la même destination
+            }
                     
             
                 
@@ -726,10 +736,10 @@ public class RunnableTraitement implements Runnable
             
 
             // Test
-            //OneWayAnova test = new OneWayAnova();
-            //double pvalue = test.anovaPValue(null/*Collection de double[]*/);
+            OneWayAnova test = new OneWayAnova();
+            double pvalue = test.anovaPValue(ListTemps);
             String resultat;
-            if (0 <= pvalue && pvalue < 0.05)
+            if (pvalue < 0.05)
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
             else
                 resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
