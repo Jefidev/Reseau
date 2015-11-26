@@ -663,13 +663,11 @@ public class RunnableTraitement implements Runnable
 
                         
             // Vérification de la taille de l'échantillon
-            /*if (!ResultatDB.next())
+            if (!ResultatDB.next())
             {
                 SendMsg("NON#Aucune donnee correspondante aux parametres demandes");
                 return;
-            }*/            
-            while(ResultatDB.next())
-                System.out.println(ResultatDB.getDouble(1) + " --- " + ResultatDB.getString(2));
+            }
             
             
             // Remplissage des tableaux de temps
@@ -680,7 +678,7 @@ public class RunnableTraitement implements Runnable
             String destination = ResultatDB.getString("DESTINATION");
             ResultatDB.beforeFirst();
             
-            while(!ResultatDB.isAfterLast())
+            while(!ResultatDB.isLast())
             {
                 double[] arrayTemps = new double[nbCont];
                 int i;
@@ -703,7 +701,11 @@ public class RunnableTraitement implements Runnable
                 
                 while(ResultatDB.getString("DESTINATION").equals(destination) && ResultatDB.next());
                 
+                if (ResultatDB.isAfterLast())
+                    break;
+                
                 destination = ResultatDB.getString("DESTINATION");
+                ResultatDB.previous();  // Car en recommençant le while dans le for => rs.next()
             }
             
 
