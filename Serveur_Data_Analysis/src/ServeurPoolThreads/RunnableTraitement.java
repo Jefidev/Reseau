@@ -614,9 +614,9 @@ public class RunnableTraitement implements Runnable
             double pvalue = test.tTest(arrayTempsA, arrayTempsB);
             String resultat;
             if (pvalue < 0.025)  // Bilatéral
-                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
+                resultat = "L hypothese (le temps moyen de stationnement d un container est pareil pour les 2 destinations) est a rejeter.";
             else
-                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
+                resultat = "L hypothese (le temps moyen de stationnement d un container est pareil pour les 2 destinations) est a accepter.";
             
             
             // Envoi des données               
@@ -713,10 +713,10 @@ public class RunnableTraitement implements Runnable
             OneWayAnova test = new OneWayAnova();
             double pvalue = test.anovaPValue(ListTemps);
             String resultat;
-            if (pvalue < 0.05)
-                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a rejeter.";
+            if (pvalue < 0.025) // Bilatéral
+                resultat = "L hypothese (le temps moyen de stationnement d un container est pareil pour toutes les destinations) est a rejeter.";
             else
-                resultat = "L hypothese (le temps moyen de stationnement d un container est de 10 jours) est a accepter.";
+                resultat = "L hypothese (le temps moyen de stationnement d un container est pareil pour toutes les destinations) est a accepter.";
             
             
             // Envoi des données               
