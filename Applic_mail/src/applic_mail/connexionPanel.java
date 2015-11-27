@@ -5,6 +5,8 @@
  */
 package applic_mail;
 
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author John
@@ -49,6 +51,11 @@ public class connexionPanel extends javax.swing.JPanel {
         errorLabel.setText("jLabel1");
 
         connexionButton.setText("Connexion");
+        connexionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                connexionButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -91,6 +98,10 @@ public class connexionPanel extends javax.swing.JPanel {
                 .addContainerGap(202, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
+        GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
+    }//GEN-LAST:event_connexionButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

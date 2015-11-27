@@ -19,6 +19,7 @@ import javax.mail.Session;
 public class GUI_Mail extends javax.swing.JFrame {
     
     private String host;
+    private Session sess;
 
     /**
      * Creates new form GUI_Mail
@@ -31,12 +32,17 @@ public class GUI_Mail extends javax.swing.JFrame {
         prop.put("mail.pop3.host", host);
         prop.put("mail.disable.top", true);
         
-        Session sess = Session.getDefaultInstance(prop, null);
+        sess = Session.getDefaultInstance(prop, null);
     }
     
     public String getHost()
     {
         return host;
+    }
+    
+    public Session getSession()
+    {
+        return sess;
     }
     
     public void readProp()
@@ -92,18 +98,11 @@ public class GUI_Mail extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        connexionPanel1 = new applic_mail.connexionPanel();
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 699, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 401, Short.MAX_VALUE)
-        );
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new java.awt.CardLayout());
+        getContentPane().add(connexionPanel1, "connexion");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -144,5 +143,6 @@ public class GUI_Mail extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private applic_mail.connexionPanel connexionPanel1;
     // End of variables declaration//GEN-END:variables
 }
