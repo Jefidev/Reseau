@@ -5,6 +5,9 @@
  */
 package applic_mail;
 
+import javax.mail.MessagingException;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Store;
 import javax.swing.SwingUtilities;
 
 /**
@@ -93,14 +96,48 @@ public class connexionPanel extends javax.swing.JPanel {
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(connexionButton)
-                .addGap(7, 7, 7)
+                .addGap(18, 18, 18)
                 .addComponent(errorLabel)
-                .addContainerGap(202, Short.MAX_VALUE))
+                .addContainerGap(140, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
+        
+        errorLabel.setVisible(false);
+        if(loginTextField.getText().isEmpty())
+        {
+            errorLabel.setText("Vous devez rentrer un login");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        if(passwordField.getText().isEmpty())
+        {
+            errorLabel.setText("Vous devez rentrer un mot de passe");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
         GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
+        Store st = null;
+        try {
+            st = container.getSession().getStore("pop3");
+            st.connect(container.getHost(), loginTextField.getText(), passwordField.getText());
+            container.setFolder(st.getFolder("INBOX"));
+        } 
+        catch (NoSuchProviderException ex) 
+        {
+            ex.printStackTrace();
+            return;
+        } 
+        catch (MessagingException ex) 
+        {
+            ex.printStackTrace();
+            return;
+        }
+        
+        container.changeLayout("inbox");
     }//GEN-LAST:event_connexionButtonActionPerformed
 
 

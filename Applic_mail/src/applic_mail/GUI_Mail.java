@@ -5,11 +5,16 @@
  */
 package applic_mail;
 
+import java.awt.CardLayout;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.Folder;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 
 /**
@@ -20,6 +25,7 @@ public class GUI_Mail extends javax.swing.JFrame {
     
     private String host;
     private Session sess;
+    private Folder inbox;
 
     /**
      * Creates new form GUI_Mail
@@ -43,6 +49,23 @@ public class GUI_Mail extends javax.swing.JFrame {
     public Session getSession()
     {
         return sess;
+    }
+    
+    public void setFolder(Folder f)
+    {
+        inbox = f;
+        try {
+            inboxPanel1.setMessage(f.getMessages());
+        } catch (MessagingException ex) {
+            Logger.getLogger(GUI_Mail.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    //Methode permettant de changer le panel affiché
+    public void changeLayout(String nomCard)
+    {
+        CardLayout card = (CardLayout) this.getContentPane().getLayout();
+        card.show(this.getContentPane(), nomCard);
     }
     
     public void readProp()
@@ -99,10 +122,12 @@ public class GUI_Mail extends javax.swing.JFrame {
     private void initComponents() {
 
         connexionPanel1 = new applic_mail.connexionPanel();
+        inboxPanel1 = new applic_mail.inboxPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
         getContentPane().add(connexionPanel1, "connexion");
+        getContentPane().add(inboxPanel1, "inbox");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -144,5 +169,6 @@ public class GUI_Mail extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private applic_mail.connexionPanel connexionPanel1;
+    private applic_mail.inboxPanel inboxPanel1;
     // End of variables declaration//GEN-END:variables
 }
