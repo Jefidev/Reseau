@@ -23,21 +23,21 @@
 
   <Layout class="org.netbeans.modules.form.compat2.layouts.DesignCardLayout"/>
   <SubComponents>
-    <Component class="applic_mail.connexionPanel" name="connexionPanel1">
+    <Component class="applic_mail.connexionPanel" name="connexionPanel">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
           <CardConstraints cardName="connexion"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="applic_mail.inboxPanel" name="inboxPanel1">
+    <Component class="applic_mail.inboxPanel" name="inboxPanel">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
           <CardConstraints cardName="inbox"/>
         </Constraint>
       </Constraints>
     </Component>
-    <Component class="applic_mail.sendMessagePanel" name="sendMessagePanel1">
+    <Component class="applic_mail.sendMessagePanel" name="sendMessagePanel">
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
           <CardConstraints cardName="nouveauMessage"/>

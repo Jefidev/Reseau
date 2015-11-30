@@ -7,8 +7,10 @@ package applic_mail;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Store;
 import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
 
@@ -17,6 +19,9 @@ import javax.swing.SwingUtilities;
  * @author John
  */
 public class inboxPanel extends javax.swing.JPanel {
+    
+    private Store storeMail;
+    private Message[] messageList;
 
     /**
      * Creates new form inboxPanel
@@ -26,10 +31,24 @@ public class inboxPanel extends javax.swing.JPanel {
         inboxList.setModel(new DefaultListModel());
     }
     
-    public void setMessage(Message[] msg)
+    public void setStore(Store s)
     {
+        storeMail = s;
+    }
+    
+    public void refresh()
+    {
+        try {
+            Folder fichierMail = storeMail.getFolder("INBOX");
+            fichierMail.open(Folder.READ_ONLY);
+            messageList = fichierMail.getMessages();
+        } catch (MessagingException ex) {
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message d'erreur
+        }
+        
         DefaultListModel l = (DefaultListModel) inboxList.getModel();
-        for(Message m : msg)
+        l.clear();
+        for(Message m : messageList)
         {
             try {
                 l.addElement(m.getSubject());
@@ -52,6 +71,7 @@ public class inboxPanel extends javax.swing.JPanel {
         inboxList = new javax.swing.JList();
         inboxLabel = new javax.swing.JLabel();
         nouveauButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         jScrollPane1.setViewportView(inboxList);
 
@@ -64,6 +84,13 @@ public class inboxPanel extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -71,12 +98,14 @@ public class inboxPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(inboxLabel)
-                        .addGap(99, 99, 99)
-                        .addComponent(nouveauButton))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(478, Short.MAX_VALUE))
+                        .addGap(121, 121, 121)
+                        .addComponent(nouveauButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jButton1)))
+                .addContainerGap(373, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -84,7 +113,8 @@ public class inboxPanel extends javax.swing.JPanel {
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inboxLabel)
-                    .addComponent(nouveauButton))
+                    .addComponent(nouveauButton)
+                    .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE)
                 .addContainerGap())
@@ -96,10 +126,15 @@ public class inboxPanel extends javax.swing.JPanel {
         container.changeLayout("nouveauMessage");
     }//GEN-LAST:event_nouveauButtonActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        refresh();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel inboxLabel;
     private javax.swing.JList inboxList;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton nouveauButton;
     // End of variables declaration//GEN-END:variables

@@ -124,7 +124,7 @@ public class connexionPanel extends javax.swing.JPanel {
         try {
             st = container.getSession().getStore("pop3");
             st.connect(container.getHost(), loginTextField.getText(), passwordField.getText());
-            container.setFolder(st.getFolder("INBOX"));
+            container.setStore(st);
         } 
         catch (NoSuchProviderException ex) 
         {

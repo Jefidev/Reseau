@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javax.mail.Folder;
 import javax.mail.MessagingException;
 import javax.mail.Session;
+import javax.mail.Store;
 
 /**
  *
@@ -25,7 +26,7 @@ public class GUI_Mail extends javax.swing.JFrame {
     
     private String host;
     private Session sess;
-    private Folder inbox;
+    private Store mailStore;
     private String mailAdress = "finkje@u2.tech.hepl.local";
 
     /**
@@ -58,15 +59,10 @@ public class GUI_Mail extends javax.swing.JFrame {
         return mailAdress;
     }
     
-    public void setFolder(Folder f)
+    public void setStore(Store s)
     {
-        inbox = f;
-        
-        try {
-            inbox.open(Folder.READ_ONLY);
-        } catch (MessagingException ex) {
-            Logger.getLogger(GUI_Mail.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
-        }
+        mailStore = s;
+        inboxPanel.setStore(s);
     }
     
     //Methode permettant de changer le panel affiché
@@ -129,15 +125,15 @@ public class GUI_Mail extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        connexionPanel1 = new applic_mail.connexionPanel();
-        inboxPanel1 = new applic_mail.inboxPanel();
-        sendMessagePanel1 = new applic_mail.sendMessagePanel();
+        connexionPanel = new applic_mail.connexionPanel();
+        inboxPanel = new applic_mail.inboxPanel();
+        sendMessagePanel = new applic_mail.sendMessagePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
-        getContentPane().add(connexionPanel1, "connexion");
-        getContentPane().add(inboxPanel1, "inbox");
-        getContentPane().add(sendMessagePanel1, "nouveauMessage");
+        getContentPane().add(connexionPanel, "connexion");
+        getContentPane().add(inboxPanel, "inbox");
+        getContentPane().add(sendMessagePanel, "nouveauMessage");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -178,8 +174,8 @@ public class GUI_Mail extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private applic_mail.connexionPanel connexionPanel1;
-    private applic_mail.inboxPanel inboxPanel1;
-    private applic_mail.sendMessagePanel sendMessagePanel1;
+    private applic_mail.connexionPanel connexionPanel;
+    private applic_mail.inboxPanel inboxPanel;
+    private applic_mail.sendMessagePanel sendMessagePanel;
     // End of variables declaration//GEN-END:variables
 }
