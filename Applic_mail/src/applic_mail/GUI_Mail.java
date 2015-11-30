@@ -61,12 +61,11 @@ public class GUI_Mail extends javax.swing.JFrame {
     public void setFolder(Folder f)
     {
         inbox = f;
-
+        
         try {
             inbox.open(Folder.READ_ONLY);
-            inboxPanel1.setMessage(f.getMessages());
         } catch (MessagingException ex) {
-            Logger.getLogger(GUI_Mail.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GUI_Mail.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
         }
     }
     

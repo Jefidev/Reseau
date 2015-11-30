@@ -26,6 +26,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
     public sendMessagePanel() {
         initComponents();
         errorLabel.setVisible(false);
+        okLabel.setVisible(false);
     }
 
     /**
@@ -45,6 +46,8 @@ public class sendMessagePanel extends javax.swing.JPanel {
         destinataireTextField = new javax.swing.JTextField();
         destinataireLabel = new javax.swing.JLabel();
         errorLabel = new javax.swing.JLabel();
+        inboxButton = new javax.swing.JButton();
+        okLabel = new javax.swing.JLabel();
 
         messageTextArea.setColumns(20);
         messageTextArea.setRows(5);
@@ -64,6 +67,16 @@ public class sendMessagePanel extends javax.swing.JPanel {
         errorLabel.setForeground(new java.awt.Color(255, 0, 51));
         errorLabel.setText("jLabel1");
 
+        inboxButton.setText("Inbox");
+        inboxButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inboxButtonActionPerformed(evt);
+            }
+        });
+
+        okLabel.setForeground(new java.awt.Color(51, 204, 0));
+        okLabel.setText("Le mail est envoyé");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -75,7 +88,11 @@ public class sendMessagePanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(errorLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(envoyerButton))
+                        .addComponent(okLabel)
+                        .addGap(134, 134, 134)
+                        .addComponent(inboxButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(envoyerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(destinataireLabel)
@@ -102,7 +119,9 @@ public class sendMessagePanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(envoyerButton)
-                    .addComponent(errorLabel))
+                    .addComponent(errorLabel)
+                    .addComponent(inboxButton)
+                    .addComponent(okLabel))
                 .addGap(24, 24, 24))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -110,6 +129,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
     private void envoyerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerButtonActionPerformed
     
         errorLabel.setVisible(false);
+        okLabel.setVisible(false);
         
         if(sujetTextField.getText().isEmpty())
         {
@@ -150,7 +170,14 @@ public class sendMessagePanel extends javax.swing.JPanel {
            ex.printStackTrace();
         }
         
+        okLabel.setVisible(true);
+        
     }//GEN-LAST:event_envoyerButtonActionPerformed
+
+    private void inboxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inboxButtonActionPerformed
+       GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
+       container.changeLayout("inbox");
+    }//GEN-LAST:event_inboxButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -158,8 +185,10 @@ public class sendMessagePanel extends javax.swing.JPanel {
     private javax.swing.JTextField destinataireTextField;
     private javax.swing.JButton envoyerButton;
     private javax.swing.JLabel errorLabel;
+    private javax.swing.JButton inboxButton;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea messageTextArea;
+    private javax.swing.JLabel okLabel;
     private javax.swing.JLabel sujetLabel;
     private javax.swing.JTextField sujetTextField;
     // End of variables declaration//GEN-END:variables

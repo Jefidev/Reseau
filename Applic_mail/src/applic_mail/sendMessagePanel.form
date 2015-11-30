@@ -23,7 +23,11 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="errorLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="envoyerButton" min="-2" max="-2" attributes="0"/>
+                      <Component id="okLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="134" max="-2" attributes="0"/>
+                      <Component id="inboxButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="envoyerButton" min="-2" pref="115" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
@@ -60,6 +64,8 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="envoyerButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="errorLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="inboxButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="okLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
           </Group>
@@ -110,6 +116,22 @@
           <Color blue="33" green="0" red="ff" type="rgb"/>
         </Property>
         <Property name="text" type="java.lang.String" value="jLabel1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="inboxButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Inbox"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="inboxButtonActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="okLabel">
+      <Properties>
+        <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+          <Color blue="0" green="cc" red="33" type="rgb"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Le mail est envoy&#xe9;"/>
       </Properties>
     </Component>
   </SubComponents>
