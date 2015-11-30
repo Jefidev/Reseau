@@ -27,7 +27,8 @@ public class ThreadPooling extends Thread{
         while(true)
         {
             try {
-                Thread.sleep(240000);//Toutes les 2 minutes
+                //Thread.sleep(240000);//Toutes les 4 minutes
+                Thread.sleep(30000);
             } catch (InterruptedException ex) {
                 System.err.println("Sleep interrompu");
             }

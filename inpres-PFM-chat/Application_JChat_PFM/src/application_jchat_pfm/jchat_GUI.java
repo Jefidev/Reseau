@@ -10,6 +10,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -284,10 +285,13 @@ public class jchat_GUI extends javax.swing.JFrame {
             //On va créer la socket UDP
             ip_udp = InetAddress.getByName(parts[1]);
             port_UDP = Integer.parseInt(parts[2]);//port envoyé par le serveur
-            
+            System.out.println(ip_udp + " ----- " + port_UDP);
             udp_sock = new MulticastSocket(port_UDP);
             udp_sock.setBroadcast(true);
             udp_sock.joinGroup(ip_udp);
+            
+            //Pour forcer l'interface à utiliser
+            //udp_sock.setNetworkInterface(NetworkInterface.getBy...);
         } catch (UnknownHostException ex) {
             System.err.println("Erreur d'ouverture de la socket UDP " + ex);
         } catch (IOException ex) {

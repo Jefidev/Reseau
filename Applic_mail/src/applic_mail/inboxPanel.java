@@ -6,6 +6,7 @@
 package applic_mail;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.Address;
@@ -172,8 +173,10 @@ public class inboxPanel extends javax.swing.JPanel {
                 from += " "+a.toString();
             }
             fromLabel.setText(from);
-  
-            receiveDateLabel.setText("test: " + m.getReceivedDate().toString());
+            
+            //Date de reception
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            receiveDateLabel.setText("test: " + df.format(m.getReceivedDate()));
         } catch (IOException ex) {
             Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MessagingException ex) {
