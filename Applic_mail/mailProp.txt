@@ -1,2 +1,2 @@
 #Fri Nov 27 15:25:33 CET 2015
-MAIL_HOST=pop.gmail.com
+MAIL_HOST=10.59.26.134

@@ -26,6 +26,7 @@ public class GUI_Mail extends javax.swing.JFrame {
     private String host;
     private Session sess;
     private Folder inbox;
+    private String mailAdress = "finkje@u2.tech.hepl.local";
 
     /**
      * Creates new form GUI_Mail
@@ -36,6 +37,7 @@ public class GUI_Mail extends javax.swing.JFrame {
         
         Properties prop = System.getProperties();
         prop.put("mail.pop3.host", host);
+        prop.put("mail.smtp.host", host);
         prop.put("mail.disable.top", true);
         
         sess = Session.getDefaultInstance(prop, null);
@@ -51,10 +53,17 @@ public class GUI_Mail extends javax.swing.JFrame {
         return sess;
     }
     
+    public String getMailAdress()
+    {
+        return mailAdress;
+    }
+    
     public void setFolder(Folder f)
     {
         inbox = f;
+
         try {
+            inbox.open(Folder.READ_ONLY);
             inboxPanel1.setMessage(f.getMessages());
         } catch (MessagingException ex) {
             Logger.getLogger(GUI_Mail.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,11 +132,13 @@ public class GUI_Mail extends javax.swing.JFrame {
 
         connexionPanel1 = new applic_mail.connexionPanel();
         inboxPanel1 = new applic_mail.inboxPanel();
+        sendMessagePanel1 = new applic_mail.sendMessagePanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
         getContentPane().add(connexionPanel1, "connexion");
         getContentPane().add(inboxPanel1, "inbox");
+        getContentPane().add(sendMessagePanel1, "nouveauMessage");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -170,5 +181,6 @@ public class GUI_Mail extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private applic_mail.connexionPanel connexionPanel1;
     private applic_mail.inboxPanel inboxPanel1;
+    private applic_mail.sendMessagePanel sendMessagePanel1;
     // End of variables declaration//GEN-END:variables
 }

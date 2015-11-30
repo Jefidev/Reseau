@@ -37,5 +37,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="applic_mail.sendMessagePanel" name="sendMessagePanel1">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="nouveauMessage"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>
