@@ -5,16 +5,13 @@
  */
 package applic_mail;
 
+import classLibrary.ThreadPooling;
 import java.awt.CardLayout;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.mail.Folder;
-import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
 
@@ -58,11 +55,16 @@ public class GUI_Mail extends javax.swing.JFrame {
     {
         return mailAdress;
     }
-    
+    //Le store reçus = connexion acceptée
     public void setStore(Store s)
     {
         mailStore = s;
+        //On envoit le store au panneau inbox (le store contient, entre autre, les messages reçus)
         inboxPanel.setStore(s);
+        inboxPanel.refresh();
+        //On lance le thread qui va voir si des messages ont été reçus toutes les 5 min.
+        ThreadPooling tp = new ThreadPooling(inboxPanel);
+        tp.start();
     }
     
     //Methode permettant de changer le panel affiché

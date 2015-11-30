@@ -5,10 +5,35 @@
  */
 package classLibrary;
 
+import applic_mail.inboxPanel;
+
 /**
  *
  * @author John
  */
 public class ThreadPooling extends Thread{
+    
+    private inboxPanel panel;
+    
+    public ThreadPooling(inboxPanel ip)
+    {
+        panel = ip;
+    }
+    
+    
+    @Override
+    public void run()
+    {
+        while(true)
+        {
+            try {
+                Thread.sleep(240000);//Toutes les 2 minutes
+            } catch (InterruptedException ex) {
+                System.err.println("Sleep interrompu");
+            }
+            
+            panel.refresh();
+        }
+    }
     
 }
