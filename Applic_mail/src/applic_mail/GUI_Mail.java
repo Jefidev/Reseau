@@ -41,6 +41,11 @@ public class GUI_Mail extends javax.swing.JFrame {
         sess = Session.getDefaultInstance(prop, null);
     }
     
+    public void setMailAdress(String ma)
+    {
+        mailAdress = ma;
+    }
+    
     public String getHost()
     {
         return host;

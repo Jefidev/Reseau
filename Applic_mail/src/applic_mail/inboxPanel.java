@@ -6,7 +6,6 @@
 package applic_mail;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.Address;
@@ -82,6 +81,7 @@ public class inboxPanel extends javax.swing.JPanel {
         contenusTextArea = new javax.swing.JTextArea();
         fromLabel = new javax.swing.JLabel();
         receiveDateLabel = new javax.swing.JLabel();
+        logoutButton = new javax.swing.JButton();
 
         inboxList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -109,6 +109,13 @@ public class inboxPanel extends javax.swing.JPanel {
 
         receiveDateLabel.setToolTipText("");
 
+        logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -129,7 +136,9 @@ public class inboxPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(inboxLabel)
                         .addGap(121, 121, 121)
-                        .addComponent(nouveauButton)))
+                        .addComponent(nouveauButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(logoutButton)))
                 .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
@@ -138,7 +147,8 @@ public class inboxPanel extends javax.swing.JPanel {
                 .addGap(8, 8, 8)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inboxLabel)
-                    .addComponent(nouveauButton))
+                    .addComponent(nouveauButton)
+                    .addComponent(logoutButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
@@ -174,15 +184,27 @@ public class inboxPanel extends javax.swing.JPanel {
             }
             fromLabel.setText(from);
             
-            //Date de reception
-            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            receiveDateLabel.setText("test: " + df.format(m.getReceivedDate()));
+            //Date de reception TO DO
+            //SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            //receiveDateLabel.setText("test: " + df.format(m.getSentDate()));
         } catch (IOException ex) {
             Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MessagingException ex) {
             Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_inboxListMouseClicked
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        
+        try {
+            storeMail.close();
+        } catch (MessagingException ex) {
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
+        }
+        
+        GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
+        container.changeLayout("connexion");
+    }//GEN-LAST:event_logoutButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -192,6 +214,7 @@ public class inboxPanel extends javax.swing.JPanel {
     private javax.swing.JList inboxList;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton logoutButton;
     private javax.swing.JButton nouveauButton;
     private javax.swing.JLabel receiveDateLabel;
     // End of variables declaration//GEN-END:variables
