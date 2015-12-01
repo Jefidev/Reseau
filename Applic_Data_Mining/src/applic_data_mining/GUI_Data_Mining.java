@@ -10,9 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import org.apache.commons.math3.stat.inference.TTest;
 
 /**
  *
@@ -27,7 +27,13 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
      */
     public GUI_Data_Mining() {
         initComponents();
+        resetErrorLabel();
+    }
+    
+    public final void resetErrorLabel()
+    {
         errorLabel.setVisible(false);
+        errorLabelEnonce1.setVisible(false);
     }
 
     /**
@@ -45,6 +51,14 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         fichierLabel = new javax.swing.JLabel();
         importationButton = new javax.swing.JButton();
         errorLabel = new javax.swing.JLabel();
+        enonce1Label = new javax.swing.JLabel();
+        cmTF = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        choixParcelleCombo = new javax.swing.JComboBox();
+        verifierHauteur = new javax.swing.JButton();
+        errorLabelEnonce1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jComboBox1 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -72,29 +86,65 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         errorLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorLabel.setText("jLabel1");
 
+        enonce1Label.setText("La hauteur des pieds est de ");
+
+        jLabel1.setText("CM pour la parcelle");
+
+        choixParcelleCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nord", "Sud", "Est", "Ouest" }));
+
+        verifierHauteur.setText("Vérifier");
+        verifierHauteur.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifierHauteurActionPerformed(evt);
+            }
+        });
+
+        errorLabelEnonce1.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabelEnonce1.setText("jLabel2");
+
+        jLabel2.setText("La hauteur de pied est-elle similaire pour la parcelle ");
+        jLabel2.setToolTipText("");
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(202, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(titreLabel)
                 .addGap(182, 182, 182))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fichierLabel)
-                            .addComponent(errorLabel))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(filePathTextArea)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Choisir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(importationButton)
-                        .addGap(76, 76, 76))))
+                        .addGap(76, 76, 76))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fichierLabel)
+                            .addComponent(errorLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(enonce1Label)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cmTF, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(choixParcelleCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(verifierHauteur))
+                            .addComponent(errorLabelEnonce1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(129, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -110,7 +160,20 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                     .addComponent(importationButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errorLabel)
-                .addContainerGap(253, Short.MAX_VALUE))
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(enonce1Label)
+                    .addComponent(cmTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(choixParcelleCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(verifierHauteur))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorLabelEnonce1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(145, Short.MAX_VALUE))
         );
 
         pack();
@@ -131,12 +194,13 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
 
     private void importationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importationButtonActionPerformed
         
-        errorLabel.setVisible(false);
+        resetErrorLabel();
         
         if(filePathTextArea.getText().isEmpty())
         {
             errorLabel.setText("Vous devez choisir un fichier à importer");
             errorLabel.setVisible(true);
+            return;
         }
         
         BufferedReader readFile = null;
@@ -147,6 +211,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         {
             errorLabel.setText("Impossible d'ouvrir le fichier");
             errorLabel.setVisible(true);
+            return;
         }
         
         String ligne;
@@ -212,12 +277,66 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             errorLabel.setText("Impossible de lire le fichier");
             errorLabel.setVisible(true);
         }
-        
-        //Affichage tableau
-        for(Mais m : donneesMais)
-            System.out.println(m);
-
     }//GEN-LAST:event_importationButtonActionPerformed
+
+    private void verifierHauteurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierHauteurActionPerformed
+        resetErrorLabel();
+        
+        if(donneesMais == null)
+        {
+            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        //Recuperation de la taille dans le textField
+        int taille;
+        
+        try
+        {
+            taille = Integer.parseInt(cmTF.getText());
+        }
+        catch(NumberFormatException ex)
+        {
+            errorLabelEnonce1.setText("Vous devez rentrer un nombre de centimetre valide");
+            errorLabelEnonce1.setVisible(true);
+            return;
+        }
+        
+        //Recuperation des donnees pour le calcul (hauteur des plans sur la parcelle choisie)
+        ArrayList<Double> tabTemp = new ArrayList<>();
+        for(Mais m : donneesMais)
+        {
+            if(m.getParcelle().equals(choixParcelleCombo.getSelectedItem().toString()))
+            {
+               if(m.getHauteur() != -1)//Si la hauteur est connue
+                   tabTemp.add((double)m.getHauteur());
+            } 
+        }
+        
+        //On prepare un tableau por ttest
+        double[] tabTest = new double[tabTemp.size()];
+        
+        int indice = 0;
+        for(double d : tabTemp)
+        {
+            tabTest[indice] = d;
+            indice++;
+        }
+        
+        //Test
+        TTest test = new TTest();
+        double pvalue = test.tTest(taille, tabTest);
+        
+        //Affichage dialog résultat
+        String hypothese = "\"La hauteur des pieds de la parcelle " + choixParcelleCombo.getSelectedItem().toString() + " est de "+taille+"cm\"";
+        
+        if(pvalue < 0.025)
+            JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est a rejeter. (pvalue : " + pvalue + ")" );
+        else
+            JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
+  
+    }//GEN-LAST:event_verifierHauteurActionPerformed
 
     /**
      * @param args the command line arguments
@@ -256,10 +375,18 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton Choisir;
+    private javax.swing.JComboBox choixParcelleCombo;
+    private javax.swing.JTextField cmTF;
+    private javax.swing.JLabel enonce1Label;
     private javax.swing.JLabel errorLabel;
+    private javax.swing.JLabel errorLabelEnonce1;
     private javax.swing.JLabel fichierLabel;
     private javax.swing.JTextField filePathTextArea;
     private javax.swing.JButton importationButton;
+    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel titreLabel;
+    private javax.swing.JButton verifierHauteur;
     // End of variables declaration//GEN-END:variables
 }
