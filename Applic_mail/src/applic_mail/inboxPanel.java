@@ -5,15 +5,23 @@
  */
 package applic_mail;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.mail.Address;
+import javax.mail.Flags;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.Store;
 import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
@@ -24,6 +32,7 @@ public class inboxPanel extends javax.swing.JPanel {
     
     private Store storeMail;
     private Message[] messageList;
+    private Folder fichierMail;
 
     /**
      * Creates new form inboxPanel
@@ -36,17 +45,25 @@ public class inboxPanel extends javax.swing.JPanel {
     public void setStore(Store s)
     {
         storeMail = s;
+        
+        try {
+            fichierMail = storeMail.getFolder("INBOX");
+            fichierMail.open(Folder.READ_WRITE);
+        } catch (MessagingException ex) {
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur;
+        }
     }
     
     public synchronized void refresh()
     {
         
         try {
-            Folder fichierMail = storeMail.getFolder("INBOX");
+            if(fichierMail.isOpen())
+                fichierMail.close(true);
             
-            fichierMail.open(Folder.READ_ONLY);
+            fichierMail = storeMail.getFolder("INBOX");
+            fichierMail.open(Folder.READ_WRITE);
             messageList = fichierMail.getMessages();
-            
         } catch (MessagingException ex) {
             Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message d'erreur
         }
@@ -73,6 +90,7 @@ public class inboxPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         inboxList = new javax.swing.JList();
         inboxLabel = new javax.swing.JLabel();
@@ -82,6 +100,10 @@ public class inboxPanel extends javax.swing.JPanel {
         fromLabel = new javax.swing.JLabel();
         receiveDateLabel = new javax.swing.JLabel();
         logoutButton = new javax.swing.JButton();
+        supprimerButton = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
+
+        jButton1.setText("jButton1");
 
         inboxList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -116,6 +138,20 @@ public class inboxPanel extends javax.swing.JPanel {
             }
         });
 
+        supprimerButton.setText("Supprimer");
+        supprimerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                supprimerButtonActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("jButton2");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -137,7 +173,11 @@ public class inboxPanel extends javax.swing.JPanel {
                         .addComponent(inboxLabel)
                         .addGap(121, 121, 121)
                         .addComponent(nouveauButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(supprimerButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addGap(18, 18, 18)
                         .addComponent(logoutButton)))
                 .addGap(21, 21, 21))
         );
@@ -148,13 +188,15 @@ public class inboxPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(inboxLabel)
                     .addComponent(nouveauButton)
-                    .addComponent(logoutButton))
+                    .addComponent(logoutButton)
+                    .addComponent(supprimerButton)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(fromLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
                         .addComponent(receiveDateLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -166,15 +208,95 @@ public class inboxPanel extends javax.swing.JPanel {
         GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
         container.changeLayout("nouveauMessage");
     }//GEN-LAST:event_nouveauButtonActionPerformed
+    
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        
+        try {
+            fichierMail.close(true);
+            storeMail.close();
+        } catch (MessagingException ex) {
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
+        }
+        
+        GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
+        container.changeLayout("connexion");
+    }//GEN-LAST:event_logoutButtonActionPerformed
 
+    private void supprimerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprimerButtonActionPerformed
+        if(inboxList.getSelectedIndex() < 0)
+            return;
+        
+        Message m = messageList[inboxList.getSelectedIndex()];
+        
+        int optionDialogue = JOptionPane.YES_NO_OPTION;
+        try {
+            JOptionPane.showConfirmDialog(null, "Voulez vous vraiment supprimer ce mail : " + m.getSubject(),"Demande suppression" ,optionDialogue);
+        } catch (MessagingException ex) {
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
+        }
+        
+        if(optionDialogue == JOptionPane.YES_OPTION)
+        {
+            try {
+                m.setFlag(Flags.Flag.DELETED, true);
+            } catch (MessagingException ex) {
+                Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message d'erreur
+            }
+        }
+    }//GEN-LAST:event_supprimerButtonActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        refresh();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+//Affichage des messages quand on en sélectionne un avec la souris
     private void inboxListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inboxListMouseClicked
         if(inboxList.getSelectedIndex() < 0)
             return;
         
         Message m = messageList[inboxList.getSelectedIndex()];
+        
         try {
-            if(m.isMimeType("text/plain"))
+            if(m.isMimeType("text/plain"))//Le mail est juste du texte
                 contenusTextArea.setText(m.getContent().toString());
+            else//Le mail est composé de plusieurs parties
+            {
+                Multipart contenu = (Multipart)m.getContent();
+                
+                int nbrDeMorceaux = contenu.getCount();
+                
+                for(int cpt = 0; cpt < nbrDeMorceaux; cpt++)
+                {
+                    Part morceau = contenu.getBodyPart(cpt);
+                    
+                    //Récupération de l'emplacement dela pièce jointe (dans le mail ou sur un serveur distant)
+                    String disposition  = morceau.getDisposition();
+                    
+                    if(morceau.isMimeType("text/plain"))//Si c'est du text
+                    {
+                        contenusTextArea.setText(morceau.getContent().toString());
+                    }
+                    
+                    if(disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT))
+                    {
+                        InputStream is = morceau.getInputStream();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        int carac;
+                        
+                        while((carac = is.read()) != -1)
+                            baos.write(carac);
+                        
+                        baos.flush();
+                        
+                        String fileName = morceau.getFileName();
+                        
+                        FileOutputStream fos = new FileOutputStream(fileName);
+                        
+                        baos.writeTo(fos);
+                        fos.close();
+                    }
+                }
+            }
             
             //Parcours de la liste des personnes qui ont envoyé un mail
             String from = "From : ";
@@ -185,8 +307,8 @@ public class inboxPanel extends javax.swing.JPanel {
             fromLabel.setText(from);
             
             //Date de reception TO DO
-            //SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            //receiveDateLabel.setText("test: " + df.format(m.getSentDate()));
+            SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            receiveDateLabel.setText(df.format(m.getSentDate()));
         } catch (IOException ex) {
             Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (MessagingException ex) {
@@ -194,28 +316,19 @@ public class inboxPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_inboxListMouseClicked
 
-    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
-        
-        try {
-            storeMail.close();
-        } catch (MessagingException ex) {
-            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
-        }
-        
-        GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
-        container.changeLayout("connexion");
-    }//GEN-LAST:event_logoutButtonActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea contenusTextArea;
     private javax.swing.JLabel fromLabel;
     private javax.swing.JLabel inboxLabel;
     private javax.swing.JList inboxList;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JButton logoutButton;
     private javax.swing.JButton nouveauButton;
     private javax.swing.JLabel receiveDateLabel;
+    private javax.swing.JButton supprimerButton;
     // End of variables declaration//GEN-END:variables
 }

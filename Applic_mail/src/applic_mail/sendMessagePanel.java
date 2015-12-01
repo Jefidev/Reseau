@@ -5,13 +5,23 @@
  */
 package applic_mail;
 
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
+import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
 /**
@@ -19,6 +29,8 @@ import javax.swing.SwingUtilities;
  * @author John
  */
 public class sendMessagePanel extends javax.swing.JPanel {
+    
+    private MimeBodyPart pieceJointe;
 
     /**
      * Creates new form sendMessagePanel
@@ -48,6 +60,8 @@ public class sendMessagePanel extends javax.swing.JPanel {
         errorLabel = new javax.swing.JLabel();
         inboxButton = new javax.swing.JButton();
         okLabel = new javax.swing.JLabel();
+        ajouterButton = new javax.swing.JButton();
+        pieceJointeLabel = new javax.swing.JLabel();
 
         messageTextArea.setColumns(20);
         messageTextArea.setRows(5);
@@ -77,6 +91,15 @@ public class sendMessagePanel extends javax.swing.JPanel {
         okLabel.setForeground(new java.awt.Color(51, 204, 0));
         okLabel.setText("Le mail est envoyé");
 
+        ajouterButton.setText("Ajouter pièce jointe");
+        ajouterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ajouterButtonActionPerformed(evt);
+            }
+        });
+
+        pieceJointeLabel.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,7 +123,12 @@ public class sendMessagePanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(destinataireTextField, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(sujetTextField))))
+                            .addComponent(sujetTextField)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(ajouterButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pieceJointeLabel)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -114,8 +142,12 @@ public class sendMessagePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(sujetTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(sujetLabel))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ajouterButton)
+                    .addComponent(pieceJointeLabel))
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(envoyerButton)
@@ -146,16 +178,27 @@ public class sendMessagePanel extends javax.swing.JPanel {
         GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
         Session sess = container.getSession();
         
-        MimeMessage message = new MimeMessage(sess);
+        MimeMessage messageComplet = new MimeMessage(sess);
         
         try 
         {
-            message.setFrom(new InternetAddress(container.getMailAdress()));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(destinataireTextField.getText()));
-            message.setSubject(sujetTextField.getText());
-            message.setText(messageTextArea.getText());
+            messageComplet.setFrom(new InternetAddress(container.getMailAdress()));
+            messageComplet.setRecipient(Message.RecipientType.TO, new InternetAddress(destinataireTextField.getText()));
+            messageComplet.setSubject(sujetTextField.getText());
+            messageComplet.setSentDate(new Date());
             
-            Transport.send(message);
+            Multipart contenu = new MimeMultipart();
+            
+            MimeBodyPart corpsMessage = new MimeBodyPart();
+            corpsMessage.setText(messageTextArea.getText());
+            
+            contenu.addBodyPart(corpsMessage);
+            
+            if(pieceJointe != null)
+                contenu.addBodyPart(pieceJointe);
+            
+            Transport.send(messageComplet);
+            pieceJointe = null;
         } 
         catch (AddressException ex) 
         {
@@ -171,16 +214,45 @@ public class sendMessagePanel extends javax.swing.JPanel {
         }
         
         okLabel.setVisible(true);
+        destinataireTextField.setText("");
+        sujetTextField.setText("");
+        messageTextArea.setText("");
         
     }//GEN-LAST:event_envoyerButtonActionPerformed
 
     private void inboxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inboxButtonActionPerformed
-       GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
-       container.changeLayout("inbox");
+
+        errorLabel.setVisible(false);
+        okLabel.setVisible(false);
+        
+        GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
+        container.changeLayout("inbox");
     }//GEN-LAST:event_inboxButtonActionPerformed
+
+    private void ajouterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterButtonActionPerformed
+        JFileChooser jfc = new JFileChooser();
+        jfc.showDialog(this, "Choix pièce jointe");
+        
+        //Si aucun fichier n'a été selectionné on return
+        if(jfc.getSelectedFile() == null)
+            return;
+        
+        String filePath = jfc.getSelectedFile().getAbsolutePath();
+        
+        //Creation de la partie de message contenant la pièce jointe
+        pieceJointe = new MimeBodyPart();
+        DataSource ds = new FileDataSource(filePath);
+        try {
+            pieceJointe.setDataHandler(new DataHandler(ds));
+            pieceJointe.setFileName(filePath);
+        } catch (MessagingException ex) {
+            Logger.getLogger(sendMessagePanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
+        }
+    }//GEN-LAST:event_ajouterButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ajouterButton;
     private javax.swing.JLabel destinataireLabel;
     private javax.swing.JTextField destinataireTextField;
     private javax.swing.JButton envoyerButton;
@@ -189,6 +261,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea messageTextArea;
     private javax.swing.JLabel okLabel;
+    private javax.swing.JLabel pieceJointeLabel;
     private javax.swing.JLabel sujetLabel;
     private javax.swing.JTextField sujetTextField;
     // End of variables declaration//GEN-END:variables
