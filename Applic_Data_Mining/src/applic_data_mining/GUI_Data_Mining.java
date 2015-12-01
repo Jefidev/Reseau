@@ -5,17 +5,29 @@
  */
 package applic_data_mining;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+
 /**
  *
  * @author Jerome
  */
 public class GUI_Data_Mining extends javax.swing.JFrame {
-
+    
+    private ArrayList<Mais> donneesMais;
+    
     /**
      * Creates new form GUI_Data_Mining
      */
     public GUI_Data_Mining() {
         initComponents();
+        errorLabel.setVisible(false);
     }
 
     /**
@@ -27,21 +39,185 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        Choisir = new javax.swing.JButton();
+        filePathTextArea = new javax.swing.JTextField();
+        titreLabel = new javax.swing.JLabel();
+        fichierLabel = new javax.swing.JLabel();
+        importationButton = new javax.swing.JButton();
+        errorLabel = new javax.swing.JLabel();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        Choisir.setText("Choisir");
+        Choisir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ChoisirActionPerformed(evt);
+            }
+        });
+
+        filePathTextArea.setEditable(false);
+
+        titreLabel.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        titreLabel.setText("Appli Data Mining");
+
+        fichierLabel.setText("Fichier de donnée :");
+
+        importationButton.setText("Importer");
+        importationButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                importationButtonActionPerformed(evt);
+            }
+        });
+
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabel.setText("jLabel1");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(202, Short.MAX_VALUE)
+                .addComponent(titreLabel)
+                .addGap(182, 182, 182))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fichierLabel)
+                            .addComponent(errorLabel))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(filePathTextArea)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Choisir)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(importationButton)
+                        .addGap(76, 76, 76))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(titreLabel)
+                .addGap(17, 17, 17)
+                .addComponent(fichierLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Choisir)
+                    .addComponent(filePathTextArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(importationButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorLabel)
+                .addContainerGap(253, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void ChoisirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChoisirActionPerformed
+        //Affichage d'une dialog pour choisir un fichier à parser
+        JFileChooser jfc = new JFileChooser();
+        jfc.showDialog(this, "Fichier Maïs");
+        
+        //Si aucun fichier n'a été selectionné on return
+        if(jfc.getSelectedFile() == null)
+            return;
+        //on stock le path dans la textArea
+        filePathTextArea.setText(jfc.getSelectedFile().getAbsolutePath());
+        
+    }//GEN-LAST:event_ChoisirActionPerformed
+
+    private void importationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importationButtonActionPerformed
+        
+        errorLabel.setVisible(false);
+        
+        if(filePathTextArea.getText().isEmpty())
+        {
+            errorLabel.setText("Vous devez choisir un fichier à importer");
+            errorLabel.setVisible(true);
+        }
+        
+        BufferedReader readFile = null;
+        try {
+            readFile = new BufferedReader(new FileReader(filePathTextArea.getText()));
+        } 
+        catch (FileNotFoundException ex) 
+        {
+            errorLabel.setText("Impossible d'ouvrir le fichier");
+            errorLabel.setVisible(true);
+        }
+        
+        String ligne;
+        donneesMais = new ArrayList<>();
+        //Lecture du fichier ligne par ligne
+        try {
+            while((ligne = readFile.readLine()) != null)
+            {
+                //split de la chaine sur les tabulations
+                //Contenus 15 champs -> champs utilisés : [1]Hauteur, [2]Masse, [3]NbrGrains, 
+                //[7] Enracinement, [10]Parcelle, [11] Hauteur J7
+                String[] champ = ligne.split("\\t");
+                
+                //On test pour savoir si ce n'est pas l'entête du fichier
+                if(champ[0].equalsIgnoreCase("Individu"))
+                    continue;
+                
+                //Pas assez de données pour le champs lu -> on zap
+                if(champ.length != 15)
+                    continue;
+                
+                //TRAITEMENT DES DONNEES
+                int hauteur, masse, nbrGrain, hauteurJ7;
+                String enracinement, parcelle;
+                
+                //Remplissage des champs (NA = valeur inconnue)
+                if(champ[1].equalsIgnoreCase("NA"))
+                    hauteur = -1;
+                else
+                    hauteur = Integer.parseInt(champ[1]);
+                
+                if(champ[2].equalsIgnoreCase("NA"))
+                    masse = -1;
+                else
+                    masse = Integer.parseInt(champ[2]);
+                
+                if(champ[3].equalsIgnoreCase("NA"))
+                    nbrGrain = -1;
+                else
+                    nbrGrain = Integer.parseInt(champ[3]);
+                
+                if(champ[7].equalsIgnoreCase("NA"))
+                    enracinement = null;
+                else
+                    enracinement = champ[7];
+                
+                if(champ[10].equalsIgnoreCase("NA"))
+                    parcelle = null;
+                else
+                    parcelle = champ[10];
+                
+                if(champ[11].equalsIgnoreCase("NA"))
+                    hauteurJ7 = -1;
+                else
+                    hauteurJ7 =  Integer.parseInt(champ[11]);
+                
+                //Nouvel objet maïs et remplissage tableau
+                
+                donneesMais.add(new Mais(hauteur, hauteurJ7, parcelle, enracinement, masse, nbrGrain));
+                
+            }
+        } catch (IOException ex) {
+            errorLabel.setText("Impossible de lire le fichier");
+            errorLabel.setVisible(true);
+        }
+        
+        //Affichage tableau
+        for(Mais m : donneesMais)
+            System.out.println(m);
+
+    }//GEN-LAST:event_importationButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,5 +255,11 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Choisir;
+    private javax.swing.JLabel errorLabel;
+    private javax.swing.JLabel fichierLabel;
+    private javax.swing.JTextField filePathTextArea;
+    private javax.swing.JButton importationButton;
+    private javax.swing.JLabel titreLabel;
     // End of variables declaration//GEN-END:variables
 }
