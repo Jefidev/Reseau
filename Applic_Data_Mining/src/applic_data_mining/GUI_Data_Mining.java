@@ -10,11 +10,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import org.apache.commons.math3.exception.DimensionMismatchException;
 import org.apache.commons.math3.stat.inference.OneWayAnova;
 import org.apache.commons.math3.stat.inference.TTest;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.statistics.Statistics;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
 /**
  *
@@ -75,6 +83,11 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         enracinementCombo = new javax.swing.JComboBox();
         verifierEnracinementButton = new javax.swing.JButton();
         errorEnracinementLabel = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        parcelle5Combo = new javax.swing.JComboBox();
+        verifierQ5 = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
+        verifierQ6Button = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -164,6 +177,26 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         errorEnracinementLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorEnracinementLabel.setText("Pas assez de valeurs pour cet enracinement");
 
+        jLabel6.setText("La hauteur dépend-elle de la masse dans la parcelle ");
+
+        parcelle5Combo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nord", "Sud", "Est", "Ouest" }));
+
+        verifierQ5.setText("Vérifier");
+        verifierQ5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifierQ5ActionPerformed(evt);
+            }
+        });
+
+        jLabel7.setText("Le nombre de grains dépend-il de la hauteur ?");
+
+        verifierQ6Button.setText("Vérifier");
+        verifierQ6Button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifierQ6ButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -221,7 +254,17 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                                 .addComponent(enracinementCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(verifierEnracinementButton))
-                            .addComponent(errorEnracinementLabel))
+                            .addComponent(errorEnracinementLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(parcelle5Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(verifierQ5))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(verifierQ6Button)))
                         .addContainerGap(34, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -269,7 +312,16 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                     .addComponent(verifierEnracinementButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(errorEnracinementLabel)
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(parcelle5Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(verifierQ5))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(verifierQ6Button))
+                .addContainerGap(38, Short.MAX_VALUE))
         );
 
         pack();
@@ -288,6 +340,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         
     }//GEN-LAST:event_ChoisirActionPerformed
 
+    
+    
+    
     private void importationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_importationButtonActionPerformed
         
         resetErrorLabel();
@@ -377,6 +432,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         parseokLabel.setVisible(true);
     }//GEN-LAST:event_importationButtonActionPerformed
 
+    
+    
+    
     private void verifierHauteurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierHauteurActionPerformed
         resetErrorLabel();
         
@@ -436,6 +494,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
   
     }//GEN-LAST:event_verifierHauteurActionPerformed
 
+    
+    
+    
     private void verifierSimilaireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierSimilaireActionPerformed
         
         resetErrorLabel();
@@ -501,6 +562,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
     }//GEN-LAST:event_verifierSimilaireActionPerformed
 
+    
+    
+    
     private void verifier4ParcellesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifier4ParcellesButtonActionPerformed
         resetErrorLabel();
         
@@ -581,6 +645,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
     }//GEN-LAST:event_verifier4ParcellesButtonActionPerformed
 
+    
+    
+    
     private void verifierEnracinementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierEnracinementButtonActionPerformed
         resetErrorLabel();
         
@@ -672,8 +739,166 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est a rejeter. (pvalue : " + pvalue + ")" );
         else
             JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
+        
+        
     }//GEN-LAST:event_verifierEnracinementButtonActionPerformed
+    
+    
+    
+    
+    //La hauteur dépend elle de la masse dans une parcelle donnée ?
+    private void verifierQ5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierQ5ActionPerformed
+        
+        resetErrorLabel();
+        
+        if(donneesMais == null)
+        {
+            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        //Recuperation des donnees.
+        
+        ArrayList<Double> hauteurTemp = new ArrayList<>();
+        ArrayList<Double> masseTemp = new ArrayList<>();
+        
+        for(Mais m : donneesMais)
+        {
+            //Si on ne connait pas la hauteur ou la masse
+            if(m.getHauteur() == -1 || m.getMasse() == -1)
+                continue;
+            
+            //Si ce n'est pas la bonne parcelle
+            if(!m.getParcelle().equalsIgnoreCase(parcelle5Combo.getSelectedItem().toString()))
+                continue;
+            
+            hauteurTemp.add((double)m.getHauteur());
+            masseTemp.add((double)m.getMasse());
+        }
+        
 
+        
+        Number[] masseTab = new Double[hauteurTemp.size()];
+        Number[] hauteurTab = new Double[hauteurTemp.size()];
+        //pour le graph
+        XYSeries xys = new XYSeries("Relation hauteur/masse parcelle " + parcelle5Combo.getSelectedItem());
+        
+        for(int cpt = 0; cpt < hauteurTemp.size(); cpt++)
+        {
+            masseTab[cpt] = masseTemp.get(cpt);
+            hauteurTab[cpt] = hauteurTemp.get(cpt);
+            xys.add(masseTab[cpt], hauteurTab[cpt]);
+        }
+
+        //Calcul de la correlation
+        double r = Statistics.getCorrelation(masseTab, hauteurTab);
+        String result = getCorrelationText(r);
+        
+        XYSeriesCollection xyCollection = new XYSeriesCollection();
+        xyCollection.addSeries(xys);
+        
+        JFreeChart jfc = ChartFactory.createScatterPlot("Relation hauteur/masse parcelle " + parcelle5Combo.getSelectedItem() + " (" +result+")", 
+                "Masse",
+                "Hauteur", 
+                xyCollection, 
+                PlotOrientation.VERTICAL, true, true, false);
+        
+        ChartPanel cp = new ChartPanel(jfc);
+        JDialog graph = new JDialog(this, true);
+        
+        graph.setSize(600, 600);
+        graph.setContentPane(cp);
+        graph.setTitle("Relation hauteur/masse parcelle " + parcelle5Combo.getSelectedItem());
+        graph.setVisible(true);
+    }//GEN-LAST:event_verifierQ5ActionPerformed
+
+    
+    
+    
+    //Le nombre de grains dépend-il de la hauteur ?
+    private void verifierQ6ButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierQ6ButtonActionPerformed
+        resetErrorLabel();
+        
+        if(donneesMais == null)
+        {
+            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        //Recuperation des donnees.
+        
+        ArrayList<Double> hauteurTemp = new ArrayList<>();
+        ArrayList<Double> nbrGrainsTemp = new ArrayList<>();
+        
+        for(Mais m : donneesMais)
+        {
+            //Si on ne connait pas la hauteur ou la masse
+            if(m.getHauteur() == -1 || m.getNbrGrains() == -1)
+                continue;
+            
+            //Si ce n'est pas la bonne parcelle
+            if(!m.getParcelle().equalsIgnoreCase(parcelle5Combo.getSelectedItem().toString()))
+                continue;
+            
+            hauteurTemp.add((double)m.getHauteur());
+            nbrGrainsTemp.add((double)m.getNbrGrains());
+        }
+        
+
+        
+        Number[] nbrGrainsTab = new Double[hauteurTemp.size()];
+        Number[] hauteurTab = new Double[hauteurTemp.size()];
+        //pour le graph
+        XYSeries xys = new XYSeries("Relation nombre de grains/masse parcelle " + parcelle5Combo.getSelectedItem());
+        
+        for(int cpt = 0; cpt < hauteurTemp.size(); cpt++)
+        {
+            nbrGrainsTab[cpt] = nbrGrainsTemp.get(cpt);
+            hauteurTab[cpt] = hauteurTemp.get(cpt);
+            xys.add(nbrGrainsTab[cpt], hauteurTab[cpt]);
+        }
+
+        //Calcul de la correlation
+        double r = Statistics.getCorrelation(nbrGrainsTab, hauteurTab);
+        String result = getCorrelationText(r);
+        
+        XYSeriesCollection xyCollection = new XYSeriesCollection();
+        xyCollection.addSeries(xys);
+        
+        JFreeChart jfc = ChartFactory.createScatterPlot("Relation nombre de grains/hauteur parcelle (" +result+")", 
+                "Nombre de grains",
+                "Hauteur", 
+                xyCollection, 
+                PlotOrientation.VERTICAL, true, true, false);
+        
+        ChartPanel cp = new ChartPanel(jfc);
+        JDialog graph = new JDialog(this, true);
+        
+        graph.setSize(600, 600);
+        graph.setContentPane(cp);
+        graph.setTitle("Relation nombre de grains/masse parcelle " + parcelle5Combo.getSelectedItem());
+        graph.setVisible(true);
+    }//GEN-LAST:event_verifierQ6ButtonActionPerformed
+    
+    
+    
+    //Renvois une phrase qui correspond à la signification de la correlation
+    private String getCorrelationText(double r)
+    {
+        if(r < 0.2)
+            return "Aucune corrélation";
+        else if(r < 0.3)
+            return "Lien faible";
+        else if(r < 0.6)
+            return "Lien modéré";
+        else if(r < 0.7)
+            return "Lien fort";
+        else
+            return "Lien très fort";
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -727,6 +952,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JComboBox parcelle5Combo;
     private javax.swing.JComboBox parcelleSimilaire1;
     private javax.swing.JComboBox parcelleSimilaire2;
     private javax.swing.JLabel parseokLabel;
@@ -734,6 +962,8 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     private javax.swing.JButton verifier4ParcellesButton;
     private javax.swing.JButton verifierEnracinementButton;
     private javax.swing.JButton verifierHauteur;
+    private javax.swing.JButton verifierQ5;
+    private javax.swing.JButton verifierQ6Button;
     private javax.swing.JButton verifierSimilaire;
     // End of variables declaration//GEN-END:variables
 }

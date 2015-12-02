@@ -84,6 +84,18 @@
                               <Component id="verifierEnracinementButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Component id="errorEnracinementLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="parcelle5Combo" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="verifierQ5" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="verifierQ6Button" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
                       <EmptySpace pref="34" max="32767" attributes="0"/>
                   </Group>
@@ -142,7 +154,18 @@
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="errorEnracinementLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="39" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="parcelle5Combo" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="verifierQ5" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="verifierQ6Button" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="38" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -335,6 +358,44 @@
         </Property>
         <Property name="text" type="java.lang.String" value="Pas assez de valeurs pour cet enracinement"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel6">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="La hauteur d&#xe9;pend-elle de la masse dans la parcelle "/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="parcelle5Combo">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="4">
+            <StringItem index="0" value="Nord"/>
+            <StringItem index="1" value="Sud"/>
+            <StringItem index="2" value="Est"/>
+            <StringItem index="3" value="Ouest"/>
+          </StringArray>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="verifierQ5">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="V&#xe9;rifier"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="verifierQ5ActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel7">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Le nombre de grains d&#xe9;pend-il de la hauteur ?"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="verifierQ6Button">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="V&#xe9;rifier"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="verifierQ6ButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
