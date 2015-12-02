@@ -39,6 +39,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
         initComponents();
         errorLabel.setVisible(false);
         okLabel.setVisible(false);
+        pieceJointeLabel.setVisible(false);
     }
 
     /**
@@ -197,6 +198,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
             if(pieceJointe != null)
                 contenu.addBodyPart(pieceJointe);
             
+            messageComplet.setContent(contenu);
             Transport.send(messageComplet);
             pieceJointe = null;
         } 
@@ -213,43 +215,68 @@ public class sendMessagePanel extends javax.swing.JPanel {
            ex.printStackTrace();
         }
         
-        okLabel.setVisible(true);
-        destinataireTextField.setText("");
-        sujetTextField.setText("");
-        messageTextArea.setText("");
+        resetForm();
         
     }//GEN-LAST:event_envoyerButtonActionPerformed
 
     private void inboxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inboxButtonActionPerformed
 
-        errorLabel.setVisible(false);
-        okLabel.setVisible(false);
+        resetForm();
         
         GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
         container.changeLayout("inbox");
     }//GEN-LAST:event_inboxButtonActionPerformed
 
     private void ajouterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterButtonActionPerformed
-        JFileChooser jfc = new JFileChooser();
-        jfc.showDialog(this, "Choix pièce jointe");
         
-        //Si aucun fichier n'a été selectionné on return
-        if(jfc.getSelectedFile() == null)
-            return;
-        
-        String filePath = jfc.getSelectedFile().getAbsolutePath();
-        
-        //Creation de la partie de message contenant la pièce jointe
-        pieceJointe = new MimeBodyPart();
-        DataSource ds = new FileDataSource(filePath);
-        try {
-            pieceJointe.setDataHandler(new DataHandler(ds));
-            pieceJointe.setFileName(filePath);
-        } catch (MessagingException ex) {
-            Logger.getLogger(sendMessagePanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
-        }
-    }//GEN-LAST:event_ajouterButtonActionPerformed
+        //On ajoute une pièce jointe
+        if(ajouterButton.getText().equalsIgnoreCase("Ajouter pièce jointe"))
+        {
+            JFileChooser jfc = new JFileChooser();
+            jfc.showDialog(this, "Choix pièce jointe");
 
+            //Si aucun fichier n'a été selectionné on return
+            if(jfc.getSelectedFile() == null)
+                return;
+
+            String filePath = jfc.getSelectedFile().getAbsolutePath();
+
+            //Creation de la partie de message contenant la pièce jointe
+            pieceJointe = new MimeBodyPart();
+            DataSource ds = new FileDataSource(filePath);
+            try {
+                pieceJointe.setDataHandler(new DataHandler(ds));
+                pieceJointe.setFileName(filePath);
+            } catch (MessagingException ex) {
+                Logger.getLogger(sendMessagePanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
+            }
+           
+            //Changement bouton
+            pieceJointeLabel.setVisible(true);
+            pieceJointeLabel.setText(filePath);
+            ajouterButton.setText("Supprimer piece jointe");
+            return;
+        }
+        
+        //Si on supprime la pièce jointe
+        
+        pieceJointeLabel.setVisible(false);
+        pieceJointe = null;
+        ajouterButton.setText("Ajouter pièce jointe");
+    }//GEN-LAST:event_ajouterButtonActionPerformed
+    
+    private void resetForm()
+    {
+        errorLabel.setVisible(false);
+        okLabel.setVisible(false);
+        pieceJointeLabel.setVisible(false);
+        pieceJointe = null;
+        
+        ajouterButton.setText("Ajouter pièce jointe");
+        destinataireTextField.setText("");
+        sujetTextField.setText("");
+        messageTextArea.setText("");
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ajouterButton;

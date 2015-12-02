@@ -143,6 +143,7 @@ public class connexionPanel extends javax.swing.JPanel {
             return;
         }
         
+        container.setUser(loginTextField.getText());
         loginTextField.setText("");
         passwordField.setText("");
         
