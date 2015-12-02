@@ -33,7 +33,7 @@ public class ThreadPooling extends Thread{
                 System.err.println("Sleep interrompu");
             }
             
-            panel.refresh();
+            panel.refreshMailList();
         }
     }
     

@@ -24,7 +24,8 @@ public class GUI_Mail extends javax.swing.JFrame {
     private String host;
     private Session sess;
     private Store mailStore;
-    private String mailAdress = "finkje@u2.tech.hepl.local";
+    private String mailAdress;
+    private String curUser;
 
     /**
      * Creates new form GUI_Mail
@@ -56,6 +57,15 @@ public class GUI_Mail extends javax.swing.JFrame {
         return sess;
     }
     
+    public void setUser(String u)
+    {
+        curUser = u;
+        mailAdress = u+"@u2.tech.hepl.local";
+        
+        //Creation d'une directory pour les pieces jointes du user si c'est necessaire
+        inboxPanel.createDirectory(u);
+    }
+    
     public String getMailAdress()
     {
         return mailAdress;
@@ -66,7 +76,7 @@ public class GUI_Mail extends javax.swing.JFrame {
         mailStore = s;
         //On envoit le store au panneau inbox (le store contient, entre autre, les messages reçus)
         inboxPanel.setStore(s);
-        inboxPanel.refresh();
+        inboxPanel.refreshMailList();
         //On lance le thread qui va voir si des messages ont été reçus toutes les 5 min.
         ThreadPooling tp = new ThreadPooling(inboxPanel);
         tp.start();
