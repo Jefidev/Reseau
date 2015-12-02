@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import org.apache.commons.math3.exception.DimensionMismatchException;
+import org.apache.commons.math3.stat.inference.OneWayAnova;
 import org.apache.commons.math3.stat.inference.TTest;
 
 /**
@@ -34,6 +36,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     {
         errorLabel.setVisible(false);
         errorLabelEnonce1.setVisible(false);
+        errorSimilaireLabel.setVisible(false);
+        parseokLabel.setVisible(false);
+        errorEnracinementLabel.setVisible(false);
     }
 
     /**
@@ -58,7 +63,18 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         verifierHauteur = new javax.swing.JButton();
         errorLabelEnonce1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
+        parcelleSimilaire1 = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
+        parcelleSimilaire2 = new javax.swing.JComboBox();
+        verifierSimilaire = new javax.swing.JButton();
+        errorSimilaireLabel = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        verifier4ParcellesButton = new javax.swing.JButton();
+        parseokLabel = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        enracinementCombo = new javax.swing.JComboBox();
+        verifierEnracinementButton = new javax.swing.JButton();
+        errorEnracinementLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -105,7 +121,48 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         jLabel2.setText("La hauteur de pied est-elle similaire pour la parcelle ");
         jLabel2.setToolTipText("");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        parcelleSimilaire1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nord", "Sud", "Est", "Ouest" }));
+
+        jLabel3.setText("et la ");
+
+        parcelleSimilaire2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nord", "Sud", "Est", "Ouest" }));
+
+        verifierSimilaire.setText("Vérifier");
+        verifierSimilaire.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifierSimilaireActionPerformed(evt);
+            }
+        });
+
+        errorSimilaireLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorSimilaireLabel.setText("jLabel4");
+
+        jLabel4.setText("La hauteur des pieds est similaires pour les 4 parcelles ? ");
+
+        verifier4ParcellesButton.setActionCommand("Vérifier");
+        verifier4ParcellesButton.setLabel("Vérifier");
+        verifier4ParcellesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifier4ParcellesButtonActionPerformed(evt);
+            }
+        });
+
+        parseokLabel.setForeground(new java.awt.Color(0, 153, 51));
+        parseokLabel.setText("Parsing reussis");
+
+        jLabel5.setText("Hauteur similaire pour les 4 parcelles selon l'enracinement. Enracinement :  ");
+
+        enracinementCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Faible", "Moyen", "Fort", "Tres.fort" }));
+
+        verifierEnracinementButton.setText("Vérifier");
+        verifierEnracinementButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifierEnracinementButtonActionPerformed(evt);
+            }
+        });
+
+        errorEnracinementLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorEnracinementLabel.setText("Pas assez de valeurs pour cet enracinement");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -128,7 +185,10 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(fichierLabel)
-                            .addComponent(errorLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(errorLabel)
+                                .addGap(302, 302, 302)
+                                .addComponent(parseokLabel))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(enonce1Label)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -143,8 +203,26 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel2)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap(129, Short.MAX_VALUE))))
+                                .addComponent(parcelleSimilaire1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(parcelleSimilaire2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(verifierSimilaire))
+                            .addComponent(errorSimilaireLabel)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(verifier4ParcellesButton))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(enracinementCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(verifierEnracinementButton))
+                            .addComponent(errorEnracinementLabel))
+                        .addContainerGap(34, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -159,7 +237,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                     .addComponent(filePathTextArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(importationButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(errorLabel)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(errorLabel)
+                    .addComponent(parseokLabel))
                 .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(enonce1Label)
@@ -172,8 +252,24 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(145, Short.MAX_VALUE))
+                    .addComponent(parcelleSimilaire1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3)
+                    .addComponent(parcelleSimilaire2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(verifierSimilaire))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorSimilaireLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(verifier4ParcellesButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(enracinementCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(verifierEnracinementButton))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorEnracinementLabel)
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         pack();
@@ -277,6 +373,8 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             errorLabel.setText("Impossible de lire le fichier");
             errorLabel.setVisible(true);
         }
+        
+        parseokLabel.setVisible(true);
     }//GEN-LAST:event_importationButtonActionPerformed
 
     private void verifierHauteurActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierHauteurActionPerformed
@@ -338,6 +436,244 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
   
     }//GEN-LAST:event_verifierHauteurActionPerformed
 
+    private void verifierSimilaireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierSimilaireActionPerformed
+        
+        resetErrorLabel();
+        //donnees ok
+        if(donneesMais == null)
+        {
+            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setVisible(true);
+            return;
+        }
+        //parcelle différentes
+        if(parcelleSimilaire1.getSelectedItem().equals(parcelleSimilaire2.getSelectedItem()))
+        {
+            errorSimilaireLabel.setText("Les parcelles à comparer doivent être différentes");
+            errorSimilaireLabel.setVisible(true);
+            return;
+        }
+        
+        //Recuperation des donnees.
+        
+        ArrayList<Double> hauteurParcelle1 = new ArrayList<>();
+        ArrayList<Double> hauteurParcelle2 = new ArrayList<>();
+        
+        for(Mais m : donneesMais)
+        {
+            if(m.getHauteur() == -1)
+                continue;
+            
+            if(m.getParcelle().equals(parcelleSimilaire1.getSelectedItem()))
+                hauteurParcelle1.add((double)m.getHauteur());
+            
+            if(m.getParcelle().equals(parcelleSimilaire2.getSelectedItem()))
+                hauteurParcelle2.add((double)m.getHauteur());
+            
+        }
+        
+        //Preparation des tableaux pour le ttest
+        int taille = hauteurParcelle1.size();
+        
+        if(hauteurParcelle2.size() < taille)
+            taille = hauteurParcelle2.size();
+        
+        double[] tabParcelle1 = new double[taille];
+        double[] tabParcelle2 = new double[taille];
+        
+        for(int cpt = 0; cpt < taille; cpt++)
+        {
+            tabParcelle1[cpt] = hauteurParcelle1.get(cpt);
+            tabParcelle2[cpt] = hauteurParcelle2.get(cpt);
+        }
+        
+        //Test
+        TTest test = new TTest();
+        double pvalue = test.tTest(tabParcelle1, tabParcelle2);
+        
+        //Affichage dialog résultat
+        String hypothese = "\"La hauteur des pieds de la parcelle " + parcelleSimilaire1.getSelectedItem() + " est similaire à celle de la parcelle ";
+        hypothese += parcelleSimilaire2.getSelectedItem() + " \"";
+        
+        if(pvalue < 0.025)
+            JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est a rejeter. (pvalue : " + pvalue + ")" );
+        else
+            JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
+    }//GEN-LAST:event_verifierSimilaireActionPerformed
+
+    private void verifier4ParcellesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifier4ParcellesButtonActionPerformed
+        resetErrorLabel();
+        
+        if(donneesMais == null)
+        {
+            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        //Recuperation des donnees.
+        
+        ArrayList<Double> hauteurParcelle1 = new ArrayList<>();
+        ArrayList<Double> hauteurParcelle2 = new ArrayList<>();
+        ArrayList<Double> hauteurParcelle3 = new ArrayList<>();
+        ArrayList<Double> hauteurParcelle4 = new ArrayList<>();
+        
+        for(Mais m : donneesMais)
+        {
+            if(m.getHauteur() == -1)
+                continue;
+            
+            if(m.getParcelle().equalsIgnoreCase("Nord"))
+                hauteurParcelle1.add((double)m.getHauteur());
+            
+            if(m.getParcelle().equalsIgnoreCase("Sud"))
+                hauteurParcelle2.add((double)m.getHauteur());
+            
+            if(m.getParcelle().equalsIgnoreCase("Est"))
+                hauteurParcelle3.add((double)m.getHauteur());
+            
+            if(m.getParcelle().equalsIgnoreCase("Ouest"))
+                hauteurParcelle4.add((double)m.getHauteur());
+        }
+        
+        //Preparation des tableaux pour le ttest
+        int taille = hauteurParcelle1.size();
+        
+        if(hauteurParcelle2.size() < taille)
+            taille = hauteurParcelle2.size();
+        
+        if(hauteurParcelle3.size() < taille)
+            taille = hauteurParcelle3.size();
+        
+        if(hauteurParcelle4.size() < taille)
+            taille = hauteurParcelle4.size();
+        
+        double[] tabParcelle1 = new double[taille];
+        double[] tabParcelle2 = new double[taille];
+        double[] tabParcelle3 = new double[taille];
+        double[] tabParcelle4 = new double[taille];
+        
+        
+        for(int cpt = 0; cpt < taille; cpt++)
+        {
+            tabParcelle1[cpt] = hauteurParcelle1.get(cpt);
+            tabParcelle2[cpt] = hauteurParcelle2.get(cpt);
+            tabParcelle3[cpt] = hauteurParcelle3.get(cpt);
+            tabParcelle4[cpt] = hauteurParcelle4.get(cpt);
+        }
+        
+        ArrayList<double[]> arrayAnova = new ArrayList<>();
+        
+        arrayAnova.add(tabParcelle1);
+        arrayAnova.add(tabParcelle2);
+        arrayAnova.add(tabParcelle3);
+        arrayAnova.add(tabParcelle4);
+        
+        //Test
+        OneWayAnova test = new OneWayAnova();
+        double pvalue = test.anovaPValue(arrayAnova);
+        //Affichage dialog résultat
+        String hypothese = "\"La hauteur des pieds des 4 parcelles est similaire\"";
+        
+        if(pvalue < 0.025)
+            JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est a rejeter. (pvalue : " + pvalue + ")" );
+        else
+            JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
+    }//GEN-LAST:event_verifier4ParcellesButtonActionPerformed
+
+    private void verifierEnracinementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierEnracinementButtonActionPerformed
+        resetErrorLabel();
+        
+        if(donneesMais == null)
+        {
+            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        //Recuperation des donnees.
+        
+        ArrayList<Double> hauteurParcelle1 = new ArrayList<>();
+        ArrayList<Double> hauteurParcelle2 = new ArrayList<>();
+        ArrayList<Double> hauteurParcelle3 = new ArrayList<>();
+        ArrayList<Double> hauteurParcelle4 = new ArrayList<>();
+        
+        for(Mais m : donneesMais)
+        {
+            //Si hauteur inconnue on zap
+            if(m.getHauteur() == -1)
+                continue;
+            //Si l'enracinement ne correspond pas à celui choisi on zap
+            if(!m.getEnracinement().equalsIgnoreCase(enracinementCombo.getSelectedItem().toString()))
+                continue;
+            
+            if(m.getParcelle().equalsIgnoreCase("Nord"))
+                hauteurParcelle1.add((double)m.getHauteur());
+            
+            if(m.getParcelle().equalsIgnoreCase("Sud"))
+                hauteurParcelle2.add((double)m.getHauteur());
+            
+            if(m.getParcelle().equalsIgnoreCase("Est"))
+                hauteurParcelle3.add((double)m.getHauteur());
+            
+            if(m.getParcelle().equalsIgnoreCase("Ouest"))
+                hauteurParcelle4.add((double)m.getHauteur());
+        }
+        
+        //Preparation des tableaux pour le ttest
+        int taille = hauteurParcelle1.size();
+        
+        if(hauteurParcelle2.size() < taille)
+            taille = hauteurParcelle2.size();
+        
+        if(hauteurParcelle3.size() < taille)
+            taille = hauteurParcelle3.size();
+        
+        if(hauteurParcelle4.size() < taille)
+            taille = hauteurParcelle4.size();
+        
+        double[] tabParcelle1 = new double[taille];
+        double[] tabParcelle2 = new double[taille];
+        double[] tabParcelle3 = new double[taille];
+        double[] tabParcelle4 = new double[taille];
+        
+        
+        for(int cpt = 0; cpt < taille; cpt++)
+        {
+            tabParcelle1[cpt] = hauteurParcelle1.get(cpt);
+            tabParcelle2[cpt] = hauteurParcelle2.get(cpt);
+            tabParcelle3[cpt] = hauteurParcelle3.get(cpt);
+            tabParcelle4[cpt] = hauteurParcelle4.get(cpt);
+        }
+        
+        ArrayList<double[]> arrayAnova = new ArrayList<>();
+        
+        arrayAnova.add(tabParcelle1);
+        arrayAnova.add(tabParcelle2);
+        arrayAnova.add(tabParcelle3);
+        arrayAnova.add(tabParcelle4);
+        
+        //Test
+        OneWayAnova test = new OneWayAnova();
+        double pvalue  = 0;
+        try
+        {
+            pvalue = test.anovaPValue(arrayAnova);
+        }
+        catch(DimensionMismatchException ex)
+        {
+            errorEnracinementLabel.setVisible(true);
+            return;
+        }
+        //Affichage dialog résultat
+        String hypothese = "\"La hauteur des pieds des 4 parcelles est similaire pour un enracinement "+ enracinementCombo.getSelectedItem()+ " \"";
+        
+        if(pvalue < 0.025)
+            JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est a rejeter. (pvalue : " + pvalue + ")" );
+        else
+            JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
+    }//GEN-LAST:event_verifierEnracinementButtonActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -378,15 +714,26 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     private javax.swing.JComboBox choixParcelleCombo;
     private javax.swing.JTextField cmTF;
     private javax.swing.JLabel enonce1Label;
+    private javax.swing.JComboBox enracinementCombo;
+    private javax.swing.JLabel errorEnracinementLabel;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JLabel errorLabelEnonce1;
+    private javax.swing.JLabel errorSimilaireLabel;
     private javax.swing.JLabel fichierLabel;
     private javax.swing.JTextField filePathTextArea;
     private javax.swing.JButton importationButton;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JComboBox parcelleSimilaire1;
+    private javax.swing.JComboBox parcelleSimilaire2;
+    private javax.swing.JLabel parseokLabel;
     private javax.swing.JLabel titreLabel;
+    private javax.swing.JButton verifier4ParcellesButton;
+    private javax.swing.JButton verifierEnracinementButton;
     private javax.swing.JButton verifierHauteur;
+    private javax.swing.JButton verifierSimilaire;
     // End of variables declaration//GEN-END:variables
 }
