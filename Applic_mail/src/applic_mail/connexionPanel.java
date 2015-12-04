@@ -134,6 +134,8 @@ public class connexionPanel extends javax.swing.JPanel {
         } 
         catch (NoSuchProviderException ex) 
         {
+            errorLabel.setText("Impossible de se connecter");
+            errorLabel.setVisible(true);
             ex.printStackTrace();
             return;
         } 
