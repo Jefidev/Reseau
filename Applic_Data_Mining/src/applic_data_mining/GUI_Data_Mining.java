@@ -838,10 +838,6 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             if(m.getHauteur() == -1 || m.getNbrGrains() == -1)
                 continue;
             
-            //Si ce n'est pas la bonne parcelle
-            if(!m.getParcelle().equalsIgnoreCase(parcelle5Combo.getSelectedItem().toString()))
-                continue;
-            
             hauteurTemp.add((double)m.getHauteur());
             nbrGrainsTemp.add((double)m.getNbrGrains());
         }
