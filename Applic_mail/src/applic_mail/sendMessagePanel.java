@@ -216,7 +216,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
         }
         
         resetForm();
-        
+        okLabel.setVisible(true);
     }//GEN-LAST:event_envoyerButtonActionPerformed
 
     private void inboxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inboxButtonActionPerformed

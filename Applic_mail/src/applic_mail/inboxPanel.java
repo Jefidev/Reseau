@@ -49,6 +49,7 @@ public class inboxPanel extends javax.swing.JPanel {
         initComponents();
         inboxList.setModel(new DefaultListModel());
         pieceJointeLabel.setVisible(false);
+        telechargerButton.setVisible(false);
     }
     
     public void setStore(Store s)
@@ -127,7 +128,7 @@ public class inboxPanel extends javax.swing.JPanel {
         logoutButton = new javax.swing.JButton();
         supprimerButton = new javax.swing.JButton();
         refreshButton = new javax.swing.JButton();
-        dossierButton = new javax.swing.JButton();
+        telechargerButton = new javax.swing.JButton();
         pieceJointeLabel = new javax.swing.JLabel();
 
         jButton1.setText("jButton1");
@@ -180,11 +181,11 @@ public class inboxPanel extends javax.swing.JPanel {
             }
         });
 
-        dossierButton.setText("Dossier pièces jointe");
-        dossierButton.setToolTipText("");
-        dossierButton.addActionListener(new java.awt.event.ActionListener() {
+        telechargerButton.setText("Télécharger la pièce jointe");
+        telechargerButton.setToolTipText("");
+        telechargerButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                dossierButtonActionPerformed(evt);
+                telechargerButtonActionPerformed(evt);
             }
         });
 
@@ -215,13 +216,14 @@ public class inboxPanel extends javax.swing.JPanel {
                                 .addComponent(receiveDateLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 141, Short.MAX_VALUE)
                                 .addComponent(pieceJointeLabel)
-                                .addGap(116, 116, 116)))
+                                .addGap(97, 97, 97)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(dossierButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(19, 19, 19)
                                 .addComponent(refreshButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(logoutButton)))
+                                .addComponent(logoutButton))
+                            .addComponent(telechargerButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(13, 13, 13))
                     .addComponent(jScrollPane2))
                 .addGap(21, 21, 21))
@@ -232,7 +234,7 @@ public class inboxPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(dossierButton))
+                        .addComponent(telechargerButton))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -311,6 +313,7 @@ public class inboxPanel extends javax.swing.JPanel {
             return;
         
         pieceJointeLabel.setVisible(false);
+        telechargerButton.setVisible(false);
         Message m = messageAffiche.get(inboxList.getSelectedIndex());
         
         try {
@@ -335,28 +338,12 @@ public class inboxPanel extends javax.swing.JPanel {
                     }
                     //piece jointe
                     if(disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT))
-                    {
-                        InputStream is = morceau.getInputStream();
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        int carac;
-                        
-                        while((carac = is.read()) != -1)
-                            baos.write(carac);
-                        
-                        baos.flush();
-                        
+                    {   
                         Path documentRecus = Paths.get(morceau.getFileName());
-                        
-                        String fileName = dossierPieceJointe.getAbsolutePath() + System.getProperty("file.separator");
-                        fileName += documentRecus.getFileName().toString();//On recupere juste le nom du fichier reçus sans le path 
-
-                        FileOutputStream fos = new FileOutputStream(fileName);
-                        
-                        baos.writeTo(fos);
-                        fos.close();
                         
                         pieceJointeLabel.setVisible(true);
                         pieceJointeLabel.setText("Piece jointe : " + documentRecus.getFileName().toString());
+                        telechargerButton.setVisible(true);
                     }
                 }
             }
@@ -378,7 +365,8 @@ public class inboxPanel extends javax.swing.JPanel {
             Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_inboxListMouseClicked
-
+    
+    
     //Creation du dossier pour les pieces jointes du user en cours (si necessaire)
     public void createDirectory(String user)
     {
@@ -389,18 +377,56 @@ public class inboxPanel extends javax.swing.JPanel {
     }
     
     
-    private void dossierButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dossierButtonActionPerformed
-        try {
-            Desktop.getDesktop().open(dossierPieceJointe);
+    private void telechargerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telechargerButtonActionPerformed
+        Message m = messageAffiche.get(inboxList.getSelectedIndex());
+        
+        try
+        {
+            Multipart contenu = (Multipart)m.getContent();
+
+            int nbrDeMorceaux = contenu.getCount();
+
+            for(int cpt = 0; cpt < nbrDeMorceaux; cpt++)
+            {
+                Part morceau = contenu.getBodyPart(cpt);
+
+                //Récupération de l'emplacement dela pièce jointe (dans le mail ou sur un serveur distant)
+                String disposition  = morceau.getDisposition();
+
+                if(disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT))
+                {
+                    InputStream is = morceau.getInputStream();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    int carac;
+
+                    while((carac = is.read()) != -1)
+                    baos.write(carac);
+
+                    baos.flush();
+
+                    Path documentRecus = Paths.get(morceau.getFileName());
+
+                    String fileName = dossierPieceJointe.getAbsolutePath() + System.getProperty("file.separator");
+                    fileName += documentRecus.getFileName().toString();//On recupere juste le nom du fichier reçus sans le path 
+
+                    FileOutputStream fos = new FileOutputStream(fileName);
+
+                    baos.writeTo(fos);
+                    fos.close();
+                    
+                    Desktop.getDesktop().open(new File(fileName));
+                }
+            }
         } catch (IOException ex) {
-            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO erreur
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_dossierButtonActionPerformed
+    }//GEN-LAST:event_telechargerButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextArea contenusTextArea;
-    private javax.swing.JButton dossierButton;
     private javax.swing.JLabel fromLabel;
     private javax.swing.JLabel inboxLabel;
     private javax.swing.JList inboxList;
@@ -413,5 +439,6 @@ public class inboxPanel extends javax.swing.JPanel {
     private javax.swing.JLabel receiveDateLabel;
     private javax.swing.JButton refreshButton;
     private javax.swing.JButton supprimerButton;
+    private javax.swing.JButton telechargerButton;
     // End of variables declaration//GEN-END:variables
 }
