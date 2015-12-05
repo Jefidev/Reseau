@@ -795,6 +795,8 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         double r = Statistics.getCorrelation(masseTab, hauteurTab);
         String result = getCorrelationText(r);
         
+        System.out.println(r);
+        
         XYSeriesCollection xyCollection = new XYSeriesCollection();
         xyCollection.addSeries(xys);
         
