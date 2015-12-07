@@ -374,15 +374,19 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
+    
     private void ChoisirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ChoisirActionPerformed
         //Affichage d'une dialog pour choisir un fichier à parser
         JFileChooser jfc = new JFileChooser();
-        jfc.showDialog(this, "Fichier Maïs");
+        jfc.showDialog(this, "OK");
         
         //Si aucun fichier n'a été selectionné on return
         if(jfc.getSelectedFile() == null)
             return;
-        //on stock le path dans la textArea
+        
+        //on stocke le path dans la textArea
         filePathTextArea.setText(jfc.getSelectedFile().getAbsolutePath());
         
     }//GEN-LAST:event_ChoisirActionPerformed
@@ -415,19 +419,20 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         String ligne;
         donneesMais = new ArrayList<>();
         //Lecture du fichier ligne par ligne
-        try {
+        try
+        {
             while((ligne = readFile.readLine()) != null)
             {
                 //split de la chaine sur les tabulations
-                //Contenus 15 champs -> champs utilisés : [1]Hauteur, [2]Masse, [3]NbrGrains, 
+                //Contenu : 15 champs -> champs utilisés : [1]Hauteur, [2]Masse, [3]NbrGrains, 
                 //[7] Enracinement, [10]Parcelle, [11] Hauteur J7
                 String[] champ = ligne.split("\\t");
                 
-                //On test pour savoir si ce n'est pas l'entête du fichier
+                //On teste pour savoir si ce n'est pas l'en-tête du fichier
                 if(champ[0].equalsIgnoreCase("Individu"))
                     continue;
                 
-                //Pas assez de données pour le champs lu -> on zap
+                //Pas assez de données pour le champs lu -> on zappe
                 if(champ.length != 15)
                     continue;
                 
@@ -467,7 +472,6 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                     hauteurJ7 =  Integer.parseInt(champ[11]);
                 
                 //Nouvel objet maïs et remplissage tableau
-                
                 donneesMais.add(new Mais(hauteur, hauteurJ7, parcelle, enracinement, masse, nbrGrain));
                 
             }
@@ -487,7 +491,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         
         if(donneesMais == null)
         {
-            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setText("Vous devez importer un fichier de données");
             errorLabel.setVisible(true);
             return;
         }
@@ -501,7 +505,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         }
         catch(NumberFormatException ex)
         {
-            errorLabelEnonce1.setText("Vous devez rentrer un nombre de centimetre valide");
+            errorLabelEnonce1.setText("Vous devez rentrer un nombre de centimetres valide");
             errorLabelEnonce1.setVisible(true);
             return;
         }
@@ -517,7 +521,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             } 
         }
         
-        //On prepare un tableau por ttest
+        //On prepare un tableau pour ttest
         double[] tabTest = new double[tabTemp.size()];
         
         int indice = 0;
@@ -538,7 +542,6 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est a rejeter. (pvalue : " + pvalue + ")" );
         else
             JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
-  
     }//GEN-LAST:event_verifierHauteurActionPerformed
 
     
@@ -1039,6 +1042,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         else
             return "Lien très fort";
     }
+    
+    
+    
     
     /**
      * @param args the command line arguments
