@@ -512,11 +512,10 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         //Recuperation des donnees pour le calcul (hauteur des plans sur la parcelle choisie)
         double[] tabTest = donneesMais.stream()
                 .filter(m -> m.getParcelle().equals(choixParcelleCombo.getSelectedItem().toString()))
-                .filter(m -> m.getHauteur() != -1)
+                .filter(m -> m.getHauteur() != -1)  // Hauteur connue
                 .mapToDouble(m -> m.getHauteur())
                 .toArray();
                
-
         //Test
         TTest test = new TTest();
         double pvalue = test.tTest(taille, tabTest);
@@ -534,16 +533,16 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     
     
     private void verifierSimilaireActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierSimilaireActionPerformed
-        
         resetErrorLabel();
-        //donnees ok
+
         if(donneesMais == null)
         {
             errorLabel.setText("Vous devez importer une fichier de données");
             errorLabel.setVisible(true);
             return;
         }
-        //parcelle différentes
+        
+        //parcelles différentes
         if(parcelleSimilaire1.getSelectedItem().equals(parcelleSimilaire2.getSelectedItem()))
         {
             errorSimilaireLabel.setText("Les parcelles à comparer doivent être différentes");
@@ -551,8 +550,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             return;
         }
         
-        //Recuperation des donnees.
-        
+        //Recuperation des donnees
         ArrayList<Double> hauteurParcelle1 = new ArrayList<>();
         ArrayList<Double> hauteurParcelle2 = new ArrayList<>();
         
@@ -565,13 +563,11 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                 hauteurParcelle1.add((double)m.getHauteur());
             
             if(m.getParcelle().equals(parcelleSimilaire2.getSelectedItem()))
-                hauteurParcelle2.add((double)m.getHauteur());
-            
+                hauteurParcelle2.add((double)m.getHauteur());  
         }
         
         //Preparation des tableaux pour le ttest
         int taille = hauteurParcelle1.size();
-        
         if(hauteurParcelle2.size() < taille)
             taille = hauteurParcelle2.size();
         
@@ -606,13 +602,12 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         
         if(donneesMais == null)
         {
-            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setText("Vous devez importer un fichier de données");
             errorLabel.setVisible(true);
             return;
         }
         
-        //Recuperation des donnees.
-        
+        //Recuperation des donnees
         ArrayList<Double> hauteurParcelle1 = new ArrayList<>();
         ArrayList<Double> hauteurParcelle2 = new ArrayList<>();
         ArrayList<Double> hauteurParcelle3 = new ArrayList<>();
@@ -626,13 +621,13 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             if(m.getParcelle().equalsIgnoreCase("Nord"))
                 hauteurParcelle1.add((double)m.getHauteur());
             
-            if(m.getParcelle().equalsIgnoreCase("Sud"))
+            else if(m.getParcelle().equalsIgnoreCase("Sud"))
                 hauteurParcelle2.add((double)m.getHauteur());
             
-            if(m.getParcelle().equalsIgnoreCase("Est"))
+            else if(m.getParcelle().equalsIgnoreCase("Est"))
                 hauteurParcelle3.add((double)m.getHauteur());
             
-            if(m.getParcelle().equalsIgnoreCase("Ouest"))
+            else if(m.getParcelle().equalsIgnoreCase("Ouest"))
                 hauteurParcelle4.add((double)m.getHauteur());
         }
         
@@ -672,6 +667,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         //Test
         OneWayAnova test = new OneWayAnova();
         double pvalue = test.anovaPValue(arrayAnova);
+        
         //Affichage dialog résultat
         String hypothese = "\"La hauteur des pieds des 4 parcelles est similaire\"";
         
