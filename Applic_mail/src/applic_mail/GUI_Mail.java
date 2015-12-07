@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package applic_mail;
 
 import classLibrary.ThreadPooling;
@@ -15,11 +10,9 @@ import java.util.Properties;
 import javax.mail.Session;
 import javax.mail.Store;
 
-/**
- *
- * @author John
- */
-public class GUI_Mail extends javax.swing.JFrame {
+
+public class GUI_Mail extends javax.swing.JFrame
+{
     
     private String host;
     private Session sess;
@@ -27,9 +20,7 @@ public class GUI_Mail extends javax.swing.JFrame {
     private String mailAdress;
     private String curUser;
 
-    /**
-     * Creates new form GUI_Mail
-     */
+    
     public GUI_Mail() {
         initComponents();
         readProp();
@@ -60,9 +51,9 @@ public class GUI_Mail extends javax.swing.JFrame {
     public void setUser(String u)
     {
         curUser = u;
-        mailAdress = u+"@u2.tech.hepl.local";
+        mailAdress = u + "@u2.tech.hepl.local";
         
-        //Creation d'une directory pour les pieces jointes du user si c'est necessaire
+        //Creation d'un directory pour les pieces jointes du user si c'est necessaire
         inboxPanel.createDirectory(u);
     }
     
@@ -70,13 +61,16 @@ public class GUI_Mail extends javax.swing.JFrame {
     {
         return mailAdress;
     }
-    //Le store reçus = connexion acceptée
+    
+    //Le store reçu = connexion acceptée
     public void setStore(Store s)
     {
         mailStore = s;
-        //On envoit le store au panneau inbox (le store contient, entre autre, les messages reçus)
+        
+        //On envoie le store au panneau inbox (le store contient, entre autres, les messages reçus)
         inboxPanel.setStore(s);
         inboxPanel.refreshMailList();
+        
         //On lance le thread qui va voir si des messages ont été reçus toutes les 5 min.
         ThreadPooling tp = new ThreadPooling(inboxPanel);
         tp.start();
@@ -91,7 +85,7 @@ public class GUI_Mail extends javax.swing.JFrame {
     
     public void readProp()
     {
-        /*Fichier properties*/
+        /* Fichier properties */
         String pathProperties = "mailProp.txt";
         
         Properties paramCo = new Properties();
@@ -122,7 +116,6 @@ public class GUI_Mail extends javax.swing.JFrame {
                 System.err.println(ex1.getStackTrace());
                 System.exit(0);
             }
-            
         }
         catch(IOException ex)
         {
@@ -133,6 +126,8 @@ public class GUI_Mail extends javax.swing.JFrame {
         host = paramCo.getProperty("MAIL_HOST");
     }
 
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

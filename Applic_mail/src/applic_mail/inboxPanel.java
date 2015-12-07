@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package applic_mail;
 
 import java.awt.Desktop;
@@ -29,34 +24,31 @@ import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author John
- */
-public class inboxPanel extends javax.swing.JPanel {
-    
+
+public class inboxPanel extends javax.swing.JPanel
+{    
     private Store storeMail;
     private Message[] messageList;
     private ArrayList<Message> messageAffiche;
-    private Folder fichierMail;
-    
+    private Folder fichierMail;    
     private File dossierPieceJointe;
 
-    /**
-     * Creates new form inboxPanel
-     */
-    public inboxPanel() {
+    
+    public inboxPanel()
+    {
         initComponents();
         inboxList.setModel(new DefaultListModel());
         pieceJointeLabel.setVisible(false);
         telechargerButton.setVisible(false);
     }
     
+    
     public void setStore(Store s)
     {
         storeMail = s;
         
-        try {
+        try
+        {
             fichierMail = storeMail.getFolder("INBOX");
             fichierMail.open(Folder.READ_WRITE);
         } catch (MessagingException ex) {
@@ -64,9 +56,11 @@ public class inboxPanel extends javax.swing.JPanel {
         }
     }
     
+    
     public synchronized void refreshMailList()
     {
-        try {
+        try
+        {
             //Si le fichier est déjà ouvert on doit le fermer pour rafraichir
             if(fichierMail.isOpen())
                 fichierMail.close(true);
@@ -75,11 +69,11 @@ public class inboxPanel extends javax.swing.JPanel {
             fichierMail.open(Folder.READ_WRITE);
             messageList = fichierMail.getMessages();
         } catch (MessagingException ex) {
-            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message d'erreur
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         messageAffiche = new ArrayList<>();
-        //On parcours la liste des messages à l'envers (ordre de reception)
+        //On parcourt la liste des messages à l'envers (ordre de reception)
         for(int i = messageList.length-1; i >= 0 ; i--)
         {
             messageAffiche.add(messageList[i]);
@@ -88,11 +82,12 @@ public class inboxPanel extends javax.swing.JPanel {
         refreshJlist();
     }
     
+    
     //Methode pour rafraichir l'affichage des mails dans le GUI
     private void refreshJlist()
     {
         //On vide la liste
-        DefaultListModel l = (DefaultListModel) inboxList.getModel();
+        DefaultListModel l = (DefaultListModel)inboxList.getModel();
         l.clear();
         
         try
@@ -104,9 +99,9 @@ public class inboxPanel extends javax.swing.JPanel {
         {
             Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message d'erreur
         }
-
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -258,36 +253,41 @@ public class inboxPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void nouveauButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nouveauButtonActionPerformed
         GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
         container.changeLayout("nouveauMessage");
     }//GEN-LAST:event_nouveauButtonActionPerformed
     
+    
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
         
-        try {
+        try
+        {
             fichierMail.close(true);
             storeMail.close();
         } catch (MessagingException ex) {
-            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         GUI_Mail container = (GUI_Mail)SwingUtilities.getWindowAncestor(this);
         container.changeLayout("connexion");
     }//GEN-LAST:event_logoutButtonActionPerformed
 
+    
     private void supprimerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_supprimerButtonActionPerformed
         if(inboxList.getSelectedIndex() < 0)
             return;
+        
         //Recuperation du mail dans la liste
         Message m = messageAffiche.get(inboxList.getSelectedIndex());
         
         //On affiche une boite de dialog pour confirmer la suppression
         int optionDialogue = JOptionPane.YES_NO_OPTION;
         try {
-            optionDialogue = JOptionPane.showConfirmDialog(null, "Voulez vous vraiment supprimer ce mail : " + m.getSubject(),"Demande suppression" ,optionDialogue);
+            optionDialogue = JOptionPane.showConfirmDialog(null, "Voulez vous vraiment supprimer ce mail : " + m.getSubject(), "Demande suppression", optionDialogue);
         } catch (MessagingException ex) {
-            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
+            Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         //Le mail est marque à supprimer (pop3 supprime définitivement à la fermeture du fichier)
@@ -295,20 +295,23 @@ public class inboxPanel extends javax.swing.JPanel {
         {
             try {
                 m.setFlag(Flags.Flag.DELETED, true);
-                messageAffiche.remove(m);//On supprime le mail de la liste
-                refreshJlist();//On rafraichis l'affichage
+                messageAffiche.remove(m);   //On supprime le mail de la liste
+                refreshJlist(); //On rafraichit l'affichage
             } catch (MessagingException ex) {
-                Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message d'erreur
+                Logger.getLogger(inboxPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_supprimerButtonActionPerformed
 
+    
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         refreshMailList();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
-//Affichage des messages quand on en sélectionne un avec la souris
+    
+    //Affichage des messages quand on en sélectionne un avec la souris
     private void inboxListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_inboxListMouseClicked
+        
         if(inboxList.getSelectedIndex() < 0)
             return;
         
@@ -317,9 +320,9 @@ public class inboxPanel extends javax.swing.JPanel {
         Message m = messageAffiche.get(inboxList.getSelectedIndex());
         
         try {
-            if(m.isMimeType("text/plain"))//Le mail est juste du texte
+            if(m.isMimeType("text/plain"))  //Le mail est juste du texte
                 contenusTextArea.setText(m.getContent().toString());
-            else//Le mail est composé de plusieurs parties
+            else    //Le mail est composé de plusieurs parties
             {
                 Multipart contenu = (Multipart)m.getContent();
                 
@@ -329,13 +332,14 @@ public class inboxPanel extends javax.swing.JPanel {
                 {
                     Part morceau = contenu.getBodyPart(cpt);
                     
-                    //Récupération de l'emplacement dela pièce jointe (dans le mail ou sur un serveur distant)
+                    //Récupération de l'emplacement de la pièce jointe (dans le mail ou sur un serveur distant)
                     String disposition  = morceau.getDisposition();
                     
-                    if(morceau.isMimeType("text/plain") && disposition == null)//Si c'est du text
+                    if(morceau.isMimeType("text/plain") && disposition == null) //Si c'est du texte
                     {
                         contenusTextArea.setText(morceau.getContent().toString());
                     }
+                    
                     //piece jointe
                     if(disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT))
                     {   
@@ -352,11 +356,11 @@ public class inboxPanel extends javax.swing.JPanel {
             String from = "From : ";
             for(Address a : m.getFrom())
             {
-                from += " "+a.toString();
+                from += " " + a.toString();
             }
             fromLabel.setText(from);
             
-            //Date de reception TO DO
+            //Date de reception
             SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm");
             receiveDateLabel.setText(df.format(m.getSentDate()));
         } catch (IOException ex) {
@@ -378,6 +382,7 @@ public class inboxPanel extends javax.swing.JPanel {
     
     
     private void telechargerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_telechargerButtonActionPerformed
+        
         Message m = messageAffiche.get(inboxList.getSelectedIndex());
         
         try
@@ -390,7 +395,7 @@ public class inboxPanel extends javax.swing.JPanel {
             {
                 Part morceau = contenu.getBodyPart(cpt);
 
-                //Récupération de l'emplacement dela pièce jointe (dans le mail ou sur un serveur distant)
+                //Récupération de l'emplacement de la pièce jointe (dans le mail ou sur un serveur distant)
                 String disposition  = morceau.getDisposition();
 
                 if(disposition != null && disposition.equalsIgnoreCase(Part.ATTACHMENT))
@@ -400,20 +405,23 @@ public class inboxPanel extends javax.swing.JPanel {
                     int carac;
 
                     while((carac = is.read()) != -1)
-                    baos.write(carac);
+                        baos.write(carac);
 
                     baos.flush();
 
+                    //Nom du fichier reçu (C://..../doc.pdf => doc.pdf grâce à l'objet Path)
                     Path documentRecus = Paths.get(morceau.getFileName());
 
+                    //Chemin du téléchargement
                     String fileName = dossierPieceJointe.getAbsolutePath() + System.getProperty("file.separator");
-                    fileName += documentRecus.getFileName().toString();//On recupere juste le nom du fichier reçus sans le path 
-
+                    fileName += documentRecus.getFileName().toString();//On recupere juste le nom du fichier reçu sans le path
+                    
+                    //Ecriture du fichier
                     FileOutputStream fos = new FileOutputStream(fileName);
-
                     baos.writeTo(fos);
                     fos.close();
                     
+                    //Ouverture/visionnage du fichier téléchargé
                     Desktop.getDesktop().open(new File(fileName));
                 }
             }

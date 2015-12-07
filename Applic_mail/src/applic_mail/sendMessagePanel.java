@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package applic_mail;
 
 import java.util.Date;
@@ -24,24 +19,20 @@ import javax.mail.internet.MimeMultipart;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 
-/**
- *
- * @author John
- */
-public class sendMessagePanel extends javax.swing.JPanel {
-    
+
+public class sendMessagePanel extends javax.swing.JPanel
+{    
     private MimeBodyPart pieceJointe;
 
-    /**
-     * Creates new form sendMessagePanel
-     */
-    public sendMessagePanel() {
+    public sendMessagePanel()
+    {
         initComponents();
         errorLabel.setVisible(false);
         okLabel.setVisible(false);
         pieceJointeLabel.setVisible(false);
     }
 
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -159,6 +150,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    
     private void envoyerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_envoyerButtonActionPerformed
     
         errorLabel.setVisible(false);
@@ -192,7 +184,6 @@ public class sendMessagePanel extends javax.swing.JPanel {
             
             MimeBodyPart corpsMessage = new MimeBodyPart();
             corpsMessage.setText(messageTextArea.getText());
-            
             contenu.addBodyPart(corpsMessage);
             
             if(pieceJointe != null)
@@ -204,13 +195,13 @@ public class sendMessagePanel extends javax.swing.JPanel {
         } 
         catch (AddressException ex) 
         {
-           errorLabel.setText("Erreur d'envois");
+           errorLabel.setText("Erreur d'envoi");
            errorLabel.setVisible(true);
            ex.printStackTrace();
         } 
         catch (MessagingException ex) 
         {
-            errorLabel.setText("Erreur d'envois");
+           errorLabel.setText("Erreur d'envoi");
            errorLabel.setVisible(true);
            ex.printStackTrace();
         }
@@ -219,6 +210,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
         okLabel.setVisible(true);
     }//GEN-LAST:event_envoyerButtonActionPerformed
 
+    
     private void inboxButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inboxButtonActionPerformed
 
         resetForm();
@@ -227,13 +219,14 @@ public class sendMessagePanel extends javax.swing.JPanel {
         container.changeLayout("inbox");
     }//GEN-LAST:event_inboxButtonActionPerformed
 
+    
     private void ajouterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ajouterButtonActionPerformed
         
         //On ajoute une pièce jointe
         if(ajouterButton.getText().equalsIgnoreCase("Ajouter pièce jointe"))
         {
             JFileChooser jfc = new JFileChooser();
-            jfc.showDialog(this, "Choix pièce jointe");
+            jfc.showDialog(this, "OK");
 
             //Si aucun fichier n'a été selectionné on return
             if(jfc.getSelectedFile() == null)
@@ -248,22 +241,22 @@ public class sendMessagePanel extends javax.swing.JPanel {
                 pieceJointe.setDataHandler(new DataHandler(ds));
                 pieceJointe.setFileName(filePath);
             } catch (MessagingException ex) {
-                Logger.getLogger(sendMessagePanel.class.getName()).log(Level.SEVERE, null, ex);//TO DO message erreur
+                Logger.getLogger(sendMessagePanel.class.getName()).log(Level.SEVERE, null, ex);
             }
            
             //Changement bouton
             pieceJointeLabel.setVisible(true);
             pieceJointeLabel.setText(filePath);
-            ajouterButton.setText("Supprimer piece jointe");
+            ajouterButton.setText("Supprimer pièce jointe");
             return;
         }
         
         //Si on supprime la pièce jointe
-        
         pieceJointeLabel.setVisible(false);
         pieceJointe = null;
         ajouterButton.setText("Ajouter pièce jointe");
     }//GEN-LAST:event_ajouterButtonActionPerformed
+    
     
     private void resetForm()
     {
@@ -278,6 +271,7 @@ public class sendMessagePanel extends javax.swing.JPanel {
         messageTextArea.setText("");
     }
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ajouterButton;
     private javax.swing.JLabel destinataireLabel;
