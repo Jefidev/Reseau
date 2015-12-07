@@ -976,7 +976,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         
         try
         {
-            fvalue = test.anovaPValue(arrayAnova);
+            fvalue = test.anovaFValue(arrayAnova);
         }
         catch(DimensionMismatchException ex)
         {
