@@ -510,26 +510,13 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         }
         
         //Recuperation des donnees pour le calcul (hauteur des plans sur la parcelle choisie)
-        ArrayList<Double> tabTemp = new ArrayList<>();
-        for(Mais m : donneesMais)
-        {
-            if(m.getParcelle().equals(choixParcelleCombo.getSelectedItem().toString()))
-            {
-               if(m.getHauteur() != -1)//Si la hauteur est connue
-                   tabTemp.add((double)m.getHauteur());
-            } 
-        }
-        
-        //On prepare un tableau pour ttest
-        double[] tabTest = new double[tabTemp.size()];
-        
-        int indice = 0;
-        for(double d : tabTemp)
-        {
-            tabTest[indice] = d;
-            indice++;
-        }
-        
+        double[] tabTest = donneesMais.stream()
+                .filter(m -> m.getParcelle().equals(choixParcelleCombo.getSelectedItem().toString()))
+                .filter(m -> m.getHauteur() != -1)
+                .mapToDouble(m -> m.getHauteur())
+                .toArray();
+               
+
         //Test
         TTest test = new TTest();
         double pvalue = test.tTest(taille, tabTest);
