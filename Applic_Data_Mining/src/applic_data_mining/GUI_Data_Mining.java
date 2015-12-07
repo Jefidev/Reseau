@@ -985,13 +985,21 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             return;
         }
         
+        String result;
+        
+        if(fvalue < 97.5)
+            result = "Hypothèse validée";
+        else
+            result = "Hypothèse rejetée";
+            
+        
         //Affichage du graphique à moustache
         //Creation des deux listes demandées par la methode add de DefaultBoxAndWhiskerCategoryDataset
         DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
         dataSet.add(arrayListParcelle1, 1, "parcelle " + parcelle1Q7Combobox.getSelectedItem());
         dataSet.add(arrayListParcelle2, 1, "parcelle " + parcelle2Q7Combobox.getSelectedItem());
         
-        JFreeChart jfc = ChartFactory.createBoxAndWhiskerChart("variation de hauteur entre deux parcelles (F-value : " + fvalue + ")", 
+        JFreeChart jfc = ChartFactory.createBoxAndWhiskerChart("variation de hauteur entre deux parcelles (" + result + " F-value : " + fvalue + ")", 
                 "Nom des parcelles",
                 "Hauteur", 
                 dataSet,
