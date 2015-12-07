@@ -675,6 +675,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         //Test
         OneWayAnova test = new OneWayAnova();
         double pvalue = 0;
+        
         try
         {
             pvalue = test.anovaPValue(arrayAnova);
@@ -773,6 +774,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         //Test
         OneWayAnova test = new OneWayAnova();
         double pvalue  = 0;
+        
         try
         {
             pvalue = test.anovaPValue(arrayAnova);
@@ -888,11 +890,10 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             nbrGrainsTemp.add((double)m.getNbrGrains());
         }
         
-
-        
         Number[] nbrGrainsTab = new Double[hauteurTemp.size()];
         Number[] hauteurTab = new Double[hauteurTemp.size()];
-        //pour le graph
+        
+        //pour le graphe
         XYSeries xys = new XYSeries("Relation nombre de grains/hauteur parcelle ");
         
         for(int cpt = 0; cpt < hauteurTemp.size(); cpt++)
@@ -909,7 +910,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         XYSeriesCollection xyCollection = new XYSeriesCollection();
         xyCollection.addSeries(xys);
         
-        JFreeChart jfc = ChartFactory.createScatterPlot("Relation nombre de grains/hauteur parcelle (" +result+")", 
+        JFreeChart jfc = ChartFactory.createScatterPlot("Relation nombre de grains/hauteur parcelle (" + result + ")", 
                 "Nombre de grains",
                 "Hauteur", 
                 xyCollection, 
@@ -926,17 +927,19 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
 
     
     
+    
     //les variations des hauteurs des pieds sont-elles similaires pour les parcelles Nord et Sud
     private void verifierQ7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierQ7ActionPerformed
         resetErrorLabel();
-        //donnees ok
+
         if(donneesMais == null)
         {
-            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setText("Vous devez importer un fichier de données");
             errorLabel.setVisible(true);
             return;
         }
-        //parcelle différentes
+        
+        //parcelles différentes
         if(parcelle2Q7Combobox.getSelectedItem().equals(parcelle1Q7Combobox.getSelectedItem()))
         {
             errorLabelQ7.setText("Les parcelles à comparer doivent être différentes");
@@ -944,8 +947,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             return;
         }
         
-        //Recuperation des donnees.
-        
+        //Recuperation des donnees
         ArrayList<Double> arrayListParcelle1 = new ArrayList<>();
         ArrayList<Double> arrayListParcelle2 = new ArrayList<>();
         
@@ -957,7 +959,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             if(m.getParcelle().equals(parcelle1Q7Combobox.getSelectedItem()))
                 arrayListParcelle1.add((double)m.getHauteur());
             
-            if(m.getParcelle().equals(parcelle2Q7Combobox.getSelectedItem()))
+            else if(m.getParcelle().equals(parcelle2Q7Combobox.getSelectedItem()))
                 arrayListParcelle2.add((double)m.getHauteur());
             
         }
@@ -998,13 +1000,12 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         }
         
         //Affichage du graphique à moustache
-        //Creation des deux list demandé par la methode add de DefaultBoxAndWhiskerCategoryDataset
-        System.out.printf("tabp1: %s%n", Arrays.toString(tabParcelle1));
+        //Creation des deux listes demandées par la methode add de DefaultBoxAndWhiskerCategoryDataset
         DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
-        dataSet.add(arrayListParcelle1, 1, "parcelle "+parcelle1Q7Combobox.getSelectedItem());
-        dataSet.add(arrayListParcelle2, 1, "parcelle "+parcelle2Q7Combobox.getSelectedItem());
+        dataSet.add(arrayListParcelle1, 1, "parcelle " + parcelle1Q7Combobox.getSelectedItem());
+        dataSet.add(arrayListParcelle2, 1, "parcelle " + parcelle2Q7Combobox.getSelectedItem());
         
-        JFreeChart jfc = ChartFactory.createBoxAndWhiskerChart("variation de hauteur entre deux parcelles (F-value : " +fvalue+")", 
+        JFreeChart jfc = ChartFactory.createBoxAndWhiskerChart("variation de hauteur entre deux parcelles (F-value : " + fvalue + ")", 
                 "Nom des parcelles",
                 "Hauteur", 
                 dataSet,
@@ -1017,12 +1018,12 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         graph.setContentPane(cp);
         graph.setTitle("Relation nombre de grains/masse parcelle " + parcelle5Combo.getSelectedItem());
         graph.setVisible(true);
-        
     }//GEN-LAST:event_verifierQ7ActionPerformed
     
     
     
-    //Renvois une phrase qui correspond à la signification de la correlation
+    
+    //Renvoie une phrase qui correspond à la signification de la correlation
     private String getCorrelationText(double r)
     {
         if(r < 0.2)
