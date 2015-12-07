@@ -5,7 +5,6 @@
  */
 package applic_data_mining;
 
-import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
