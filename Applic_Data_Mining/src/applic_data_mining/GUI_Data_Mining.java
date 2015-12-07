@@ -833,7 +833,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         XYSeriesCollection xyCollection = new XYSeriesCollection();
         xyCollection.addSeries(xys);
         
-        JFreeChart jfc = ChartFactory.createScatterPlot("Relation hauteur/masse parcelle " + parcelle5Combo.getSelectedItem() + " (" + result + ")",
+        JFreeChart jfc = ChartFactory.createScatterPlot("Relation hauteur/masse parcelle " + parcelle5Combo.getSelectedItem() + " (" + result + " r : "+ r +" )",
                 "Masse",
                 "Hauteur", 
                 xyCollection, 
@@ -896,7 +896,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         XYSeriesCollection xyCollection = new XYSeriesCollection();
         xyCollection.addSeries(xys);
         
-        JFreeChart jfc = ChartFactory.createScatterPlot("Relation nombre de grains/hauteur parcelle (" + result + ")", 
+        JFreeChart jfc = ChartFactory.createScatterPlot("Relation nombre de grains/hauteur parcelle (" + result + "  r : "+ r +" )", 
                 "Nombre de grains",
                 "Hauteur", 
                 xyCollection, 
