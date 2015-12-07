@@ -49,6 +49,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         parseokLabel.setVisible(false);
         errorEnracinementLabel.setVisible(false);
         errorLabelQ7.setVisible(false);
+        error4parcellesLabel.setVisible(false);
     }
 
     /**
@@ -96,6 +97,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         parcelle2Q7Combobox = new javax.swing.JComboBox();
         verifierQ7 = new javax.swing.JButton();
         errorLabelQ7 = new javax.swing.JLabel();
+        error4parcellesLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -223,6 +225,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         errorLabelQ7.setForeground(new java.awt.Color(255, 0, 0));
         errorLabelQ7.setText("jLabel9");
 
+        error4parcellesLabel.setForeground(new java.awt.Color(255, 0, 0));
+        error4parcellesLabel.setText("jLabel4");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -273,7 +278,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(verifier4ParcellesButton))
+                                .addComponent(verifier4ParcellesButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(error4parcellesLabel))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -341,7 +348,8 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
-                    .addComponent(verifier4ParcellesButton))
+                    .addComponent(verifier4ParcellesButton)
+                    .addComponent(error4parcellesLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
@@ -666,7 +674,17 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         
         //Test
         OneWayAnova test = new OneWayAnova();
-        double pvalue = test.anovaPValue(arrayAnova);
+        double pvalue = 0;
+        try
+        {
+            pvalue = test.anovaPValue(arrayAnova);
+        }
+        catch(DimensionMismatchException ex)
+        {
+            error4parcellesLabel.setText("Pas assez de valeurs dans l'échantillon");
+            error4parcellesLabel.setVisible(true);
+            return;
+        }
         
         //Affichage dialog résultat
         String hypothese = "\"La hauteur des pieds des 4 parcelles est similaire\"";
@@ -1069,6 +1087,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     private javax.swing.JTextField cmTF;
     private javax.swing.JLabel enonce1Label;
     private javax.swing.JComboBox enracinementCombo;
+    private javax.swing.JLabel error4parcellesLabel;
     private javax.swing.JLabel errorEnracinementLabel;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JLabel errorLabelEnonce1;
