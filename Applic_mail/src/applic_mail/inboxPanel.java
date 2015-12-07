@@ -332,7 +332,7 @@ public class inboxPanel extends javax.swing.JPanel {
                     //Récupération de l'emplacement dela pièce jointe (dans le mail ou sur un serveur distant)
                     String disposition  = morceau.getDisposition();
                     
-                    if(morceau.isMimeType("text/plain"))//Si c'est du text
+                    if(morceau.isMimeType("text/plain") && disposition == null)//Si c'est du text
                     {
                         contenusTextArea.setText(morceau.getContent().toString());
                     }

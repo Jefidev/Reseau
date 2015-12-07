@@ -5,11 +5,13 @@
  */
 package applic_data_mining;
 
+import java.util.List;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -20,7 +22,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.data.statistics.Statistics;
+import org.jfree.data.statistics.*;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -47,6 +49,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         errorSimilaireLabel.setVisible(false);
         parseokLabel.setVisible(false);
         errorEnracinementLabel.setVisible(false);
+        errorLabelQ7.setVisible(false);
     }
 
     /**
@@ -88,6 +91,12 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         verifierQ5 = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
         verifierQ6Button = new javax.swing.JButton();
+        jLabel8 = new javax.swing.JLabel();
+        parcelle1Q7Combobox = new javax.swing.JComboBox();
+        et = new javax.swing.JLabel();
+        parcelle2Q7Combobox = new javax.swing.JComboBox();
+        verifierQ7 = new javax.swing.JButton();
+        errorLabelQ7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -197,6 +206,24 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             }
         });
 
+        jLabel8.setText("Les variations des hauteurs des pieds sont-elles similaires pour les parcelles ");
+
+        parcelle1Q7Combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nord", "Sud", "Est", "Ouest" }));
+
+        et.setText("et");
+
+        parcelle2Q7Combobox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nord", "Sud", "Est", "Ouest" }));
+
+        verifierQ7.setText("vérifier");
+        verifierQ7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                verifierQ7ActionPerformed(evt);
+            }
+        });
+
+        errorLabelQ7.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabelQ7.setText("jLabel9");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -264,8 +291,19 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel7)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(verifierQ6Button)))
-                        .addContainerGap(34, Short.MAX_VALUE))))
+                                .addComponent(verifierQ6Button))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel8)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(parcelle1Q7Combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(et)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(parcelle2Q7Combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(verifierQ7))
+                            .addComponent(errorLabelQ7))
+                        .addContainerGap(53, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -321,7 +359,16 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel7)
                     .addComponent(verifierQ6Button))
-                .addContainerGap(38, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(parcelle1Q7Combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(et)
+                    .addComponent(parcelle2Q7Combobox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(verifierQ7))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorLabelQ7)
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         pack();
@@ -849,7 +896,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         Number[] nbrGrainsTab = new Double[hauteurTemp.size()];
         Number[] hauteurTab = new Double[hauteurTemp.size()];
         //pour le graph
-        XYSeries xys = new XYSeries("Relation nombre de grains/masse parcelle " + parcelle5Combo.getSelectedItem());
+        XYSeries xys = new XYSeries("Relation nombre de grains/hauteur parcelle ");
         
         for(int cpt = 0; cpt < hauteurTemp.size(); cpt++)
         {
@@ -879,6 +926,102 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         graph.setTitle("Relation nombre de grains/masse parcelle " + parcelle5Combo.getSelectedItem());
         graph.setVisible(true);
     }//GEN-LAST:event_verifierQ6ButtonActionPerformed
+
+    
+    
+    //les variations des hauteurs des pieds sont-elles similaires pour les parcelles Nord et Sud
+    private void verifierQ7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierQ7ActionPerformed
+        resetErrorLabel();
+        //donnees ok
+        if(donneesMais == null)
+        {
+            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setVisible(true);
+            return;
+        }
+        //parcelle différentes
+        if(parcelle2Q7Combobox.getSelectedItem().equals(parcelle1Q7Combobox.getSelectedItem()))
+        {
+            errorLabelQ7.setText("Les parcelles à comparer doivent être différentes");
+            errorLabelQ7.setVisible(true);
+            return;
+        }
+        
+        //Recuperation des donnees.
+        
+        ArrayList<Double> arrayListParcelle1 = new ArrayList<>();
+        ArrayList<Double> arrayListParcelle2 = new ArrayList<>();
+        
+        for(Mais m : donneesMais)
+        {
+            if(m.getHauteur() == -1)
+                continue;
+            
+            if(m.getParcelle().equals(parcelle1Q7Combobox.getSelectedItem()))
+                arrayListParcelle1.add((double)m.getHauteur());
+            
+            if(m.getParcelle().equals(parcelle2Q7Combobox.getSelectedItem()))
+                arrayListParcelle2.add((double)m.getHauteur());
+            
+        }
+        
+        //Preparation des tableaux pour l'anova
+        int taille = arrayListParcelle1.size();
+        
+        if(arrayListParcelle2.size() < taille)
+            taille = arrayListParcelle2.size();
+        
+        double[] tabParcelle1 = new double[taille];
+        double[] tabParcelle2 = new double[taille];
+        
+        for(int cpt = 0; cpt < taille; cpt++)
+        {
+            tabParcelle1[cpt] = arrayListParcelle1.get(cpt);
+            tabParcelle2[cpt] = arrayListParcelle2.get(cpt);
+        }
+        
+        ArrayList<double[]> arrayAnova = new ArrayList<>();
+        
+        arrayAnova.add(tabParcelle1);
+        arrayAnova.add(tabParcelle2);
+        
+        //Test
+        OneWayAnova test = new OneWayAnova();
+        double fvalue = 0;
+        
+        try
+        {
+            fvalue = test.anovaPValue(arrayAnova);
+        }
+        catch(DimensionMismatchException ex)
+        {
+            errorLabelQ7.setText("Pas assez de valeur pour effectuer le test");
+            errorLabelQ7.setVisible(true);
+            return;
+        }
+        
+        //Affichage du graphique à moustache
+        //Creation des deux list demandé par la methode add de DefaultBoxAndWhiskerCategoryDataset
+        System.out.printf("tabp1: %s%n", Arrays.toString(tabParcelle1));
+        DefaultBoxAndWhiskerCategoryDataset dataSet = new DefaultBoxAndWhiskerCategoryDataset();
+        dataSet.add(arrayListParcelle1, 1, "parcelle "+parcelle1Q7Combobox.getSelectedItem());
+        dataSet.add(arrayListParcelle2, 1, "parcelle "+parcelle2Q7Combobox.getSelectedItem());
+        
+        JFreeChart jfc = ChartFactory.createBoxAndWhiskerChart("variation de hauteur entre deux parcelles (F-value : " +fvalue+")", 
+                "Nom des parcelles",
+                "Hauteur", 
+                dataSet,
+                false);
+        
+        ChartPanel cp = new ChartPanel(jfc);
+        JDialog graph = new JDialog(this, true);
+        
+        graph.setSize(600, 600);
+        graph.setContentPane(cp);
+        graph.setTitle("Relation nombre de grains/masse parcelle " + parcelle5Combo.getSelectedItem());
+        graph.setVisible(true);
+        
+    }//GEN-LAST:event_verifierQ7ActionPerformed
     
     
     
@@ -941,7 +1084,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     private javax.swing.JLabel errorEnracinementLabel;
     private javax.swing.JLabel errorLabel;
     private javax.swing.JLabel errorLabelEnonce1;
+    private javax.swing.JLabel errorLabelQ7;
     private javax.swing.JLabel errorSimilaireLabel;
+    private javax.swing.JLabel et;
     private javax.swing.JLabel fichierLabel;
     private javax.swing.JTextField filePathTextArea;
     private javax.swing.JButton importationButton;
@@ -952,6 +1097,9 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JComboBox parcelle1Q7Combobox;
+    private javax.swing.JComboBox parcelle2Q7Combobox;
     private javax.swing.JComboBox parcelle5Combo;
     private javax.swing.JComboBox parcelleSimilaire1;
     private javax.swing.JComboBox parcelleSimilaire2;
@@ -962,6 +1110,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
     private javax.swing.JButton verifierHauteur;
     private javax.swing.JButton verifierQ5;
     private javax.swing.JButton verifierQ6Button;
+    private javax.swing.JButton verifierQ7;
     private javax.swing.JButton verifierSimilaire;
     // End of variables declaration//GEN-END:variables
 }
