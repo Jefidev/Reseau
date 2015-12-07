@@ -703,13 +703,12 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         
         if(donneesMais == null)
         {
-            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setText("Vous devez importer un fichier de données");
             errorLabel.setVisible(true);
             return;
         }
         
-        //Recuperation des donnees.
-        
+        //Recuperation des donnees
         ArrayList<Double> hauteurParcelle1 = new ArrayList<>();
         ArrayList<Double> hauteurParcelle2 = new ArrayList<>();
         ArrayList<Double> hauteurParcelle3 = new ArrayList<>();
@@ -717,23 +716,24 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         
         for(Mais m : donneesMais)
         {
-            //Si hauteur inconnue on zap
+            //Si hauteur inconnue on zappe
             if(m.getHauteur() == -1)
                 continue;
-            //Si l'enracinement ne correspond pas à celui choisi on zap
+            
+            //Si l'enracinement ne correspond pas à celui choisi on zappe
             if(!m.getEnracinement().equalsIgnoreCase(enracinementCombo.getSelectedItem().toString()))
                 continue;
             
             if(m.getParcelle().equalsIgnoreCase("Nord"))
                 hauteurParcelle1.add((double)m.getHauteur());
             
-            if(m.getParcelle().equalsIgnoreCase("Sud"))
+            else if(m.getParcelle().equalsIgnoreCase("Sud"))
                 hauteurParcelle2.add((double)m.getHauteur());
             
-            if(m.getParcelle().equalsIgnoreCase("Est"))
+            else if(m.getParcelle().equalsIgnoreCase("Est"))
                 hauteurParcelle3.add((double)m.getHauteur());
             
-            if(m.getParcelle().equalsIgnoreCase("Ouest"))
+            else if(m.getParcelle().equalsIgnoreCase("Ouest"))
                 hauteurParcelle4.add((double)m.getHauteur());
         }
         
@@ -789,27 +789,23 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est a rejeter. (pvalue : " + pvalue + ")" );
         else
             JOptionPane.showMessageDialog(this, "L'hypothèse "+ hypothese+" est validée. (pvalue : " + pvalue + ")" );
-        
-        
     }//GEN-LAST:event_verifierEnracinementButtonActionPerformed
     
     
     
     
-    //La hauteur dépend elle de la masse dans une parcelle donnée ?
+    //La hauteur dépend-elle de la masse dans une parcelle donnée ?
     private void verifierQ5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_verifierQ5ActionPerformed
-        
         resetErrorLabel();
         
         if(donneesMais == null)
         {
-            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setText("Vous devez importer un fichier de données");
             errorLabel.setVisible(true);
             return;
         }
         
-        //Recuperation des donnees.
-        
+        //Recuperation des donnees
         ArrayList<Double> hauteurTemp = new ArrayList<>();
         ArrayList<Double> masseTemp = new ArrayList<>();
         
@@ -827,11 +823,10 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
             masseTemp.add((double)m.getMasse());
         }
         
-
-        
         Number[] masseTab = new Double[hauteurTemp.size()];
         Number[] hauteurTab = new Double[hauteurTemp.size()];
-        //pour le graph
+        
+        //pour le graphe
         XYSeries xys = new XYSeries("Relation hauteur/masse parcelle " + parcelle5Combo.getSelectedItem());
         
         for(int cpt = 0; cpt < hauteurTemp.size(); cpt++)
@@ -850,7 +845,7 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         XYSeriesCollection xyCollection = new XYSeriesCollection();
         xyCollection.addSeries(xys);
         
-        JFreeChart jfc = ChartFactory.createScatterPlot("Relation hauteur/masse parcelle " + parcelle5Combo.getSelectedItem() + " (" +result+")", 
+        JFreeChart jfc = ChartFactory.createScatterPlot("Relation hauteur/masse parcelle " + parcelle5Combo.getSelectedItem() + " (" + result + ")",
                 "Masse",
                 "Hauteur", 
                 xyCollection, 
@@ -874,13 +869,12 @@ public class GUI_Data_Mining extends javax.swing.JFrame {
         
         if(donneesMais == null)
         {
-            errorLabel.setText("Vous devez importer une fichier de données");
+            errorLabel.setText("Vous devez importer un fichier de données");
             errorLabel.setVisible(true);
             return;
         }
         
-        //Recuperation des donnees.
-        
+        //Recuperation des donnees
         ArrayList<Double> hauteurTemp = new ArrayList<>();
         ArrayList<Double> nbrGrainsTemp = new ArrayList<>();
         
