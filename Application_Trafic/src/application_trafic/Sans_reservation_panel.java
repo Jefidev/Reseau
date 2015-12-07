@@ -196,7 +196,7 @@ public class Sans_reservation_panel extends javax.swing.JPanel {
         
         if(immatriculationTextField.getText().isEmpty())
         {
-            erreurLabel.setText("Vous devez préciser un numéros de réservation");
+            erreurLabel.setText("Vous devez préciser un numéro d'immatriculation");
             erreurLabel.setVisible(true);
             return;
         }

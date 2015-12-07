@@ -561,7 +561,7 @@ void handlerPause(int)
 {
     sigset_t masque;
     sigfillset(&masque); 
-    sigdelset(&masque, SIGCONT); // on met en place un masque aurorisant les signaux permettant la sortie de pause.
+    sigdelset(&masque, SIGCONT); // on met en place un masque autorisant les signaux permettant la sortie de pause.
 
     int sigRecu;
 

@@ -184,7 +184,7 @@ void shutdownServer(Socket* s, int sec)
 {
     if(servShutdown || servInPause)
     {
-        s->sendChar(composeAckErr(ERREUR, "Un operation est en cours sur le serveur"));
+        s->sendChar(composeAckErr(ERREUR, "Une operation est en cours sur le serveur"));
         return;
     }
 
