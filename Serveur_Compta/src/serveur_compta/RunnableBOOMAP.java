@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package serveur_compta;
 
 import java.io.BufferedInputStream;
@@ -17,16 +12,11 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 import newBean.requeteException;
 
-/**
- *
- * @author Jerome
- */
+
 public class RunnableBOOMAP implements Runnable{
     private Socket CSocket = null;
     private DataInputStream dis = null;

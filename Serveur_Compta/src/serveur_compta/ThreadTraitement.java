@@ -3,7 +3,7 @@ package serveur_compta;
 
 public class ThreadTraitement extends Thread
 {
-    private SourceTaches tachesAExecuter;
+    private final SourceTaches tachesAExecuter;
     
     private Runnable tacheEnCours;
     
@@ -12,6 +12,7 @@ public class ThreadTraitement extends Thread
         tachesAExecuter = st;
     }
     
+    @Override
     public void run()
     {
         while(!isInterrupted())
