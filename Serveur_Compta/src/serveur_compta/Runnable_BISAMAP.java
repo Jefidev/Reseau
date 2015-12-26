@@ -9,7 +9,7 @@ import java.util.Random;
 import newBean.*;
 
 
-public class RunnableBISAMAP implements Runnable
+public class Runnable_BISAMAP implements Runnable
 {
     private Socket CSocket = null;
     private DataInputStream dis = null;
@@ -18,7 +18,7 @@ public class RunnableBISAMAP implements Runnable
 
     boolean first = true;
     
-    public RunnableBISAMAP(Socket s)
+    public Runnable_BISAMAP(Socket s)
     {
         CSocket = s;
 

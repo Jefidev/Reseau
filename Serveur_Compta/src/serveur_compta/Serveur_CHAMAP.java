@@ -28,7 +28,7 @@ public class Serveur_CHAMAP extends Thread
         }
         catch(IOException e)
         {
-            System.err.println("Serveur chat : Erreur de la creation de socket  : " + e);
+            System.err.println("Serveur_CHAMAP : Erreur de la creation de socket  : " + e);
         }
         
         for(int i = 0; i < nbrThreads; i++)
@@ -43,16 +43,16 @@ public class Serveur_CHAMAP extends Thread
         {
             try
             {
-                System.out.println("Serveur BOOMAP : attend un client sur le port : " + port);
+                System.out.println("Serveur_CHAMAP : Attente d'un client sur le port " + port);
                 CSocket = SSocket.accept();
-                System.out.println("Serveur BOOMAP : Client dispo");
+                System.out.println("Serveur_CHAMAP : Client dispo");
             }
             catch(IOException e)
             {
                 System.err.println("Serveur chat : Erreur d'accept : " + e);
             }
 
-            tachesAExecuter.recordTache(new RunnableCHAMAP(CSocket));
+            tachesAExecuter.recordTache(new Runnable_CHAMAP(CSocket));
         }
     }
 }

@@ -32,7 +32,7 @@ public class Serveur_BISAMAP extends Thread
         }
         catch(IOException e)
         {
-            System.err.println("Serveur chat : Erreur de la creation de socket  : " + e);
+            System.err.println("Serveur_BISAMAP : Erreur de la creation de socket  : " + e);
         }
         
         for(int i = 0; i < nbrThreads; i++)
@@ -47,26 +47,23 @@ public class Serveur_BISAMAP extends Thread
         {
             try
             {
-                System.out.println("Serveur trafic : attend un client sur le port " + port);
+                System.out.println("Serveur_BISAMAP : Attente d'un client sur le port " + port);
                 CSocket = SSocket.accept();
-                System.out.println("Serveur trafic : Client dispo");
+                System.out.println("Serveur_BISAMAP : Client dispo");
             }
             catch(IOException e)
             {
-                System.err.println("Serveur chat : Erreur d'accept : " + e);
+                System.err.println("Serveur_BISAMAP : Erreur d'accept : " + e);
             }
 
-            tachesAExecuter.recordTache(new RunnableBISAMAP(CSocket));
+            tachesAExecuter.recordTache(new Runnable_BISAMAP(CSocket));
         }
     }
     
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        
-        /*Fichier properties*/
-        String pathProperties = "serveurChat.properties";
+    public static void main(String[] args)
+    {    
+        /* Fichier properties */
+        String pathProperties = "serveurCompta.properties";
         
         Properties paramCo = new Properties();
         
@@ -81,13 +78,15 @@ public class Serveur_BISAMAP extends Thread
             {
                 FileOutputStream Oflux = new FileOutputStream(pathProperties);
                 
-                paramCo.setProperty("PORT_SERVEUR_IN", "31042");
-                paramCo.setProperty("PORT_SERVEUR_RES", "31041");
+                paramCo.setProperty("PORT_TRAFIC", "31048");
+                paramCo.setProperty("PORT_COMPTA", "31049");
 
-                try {
+                try
+                {
                     paramCo.store(Oflux, null);
                 }
-                catch (IOException ex1) {
+                catch (IOException ex1)
+                {
                     System.err.println(ex1.getStackTrace());
                     System.exit(0);
                 }
@@ -105,13 +104,13 @@ public class Serveur_BISAMAP extends Thread
             System.exit(0);
         }
         
-        int p = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_IN"));
-        int pb = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_RES"));
+        int pt = Integer.parseInt(paramCo.getProperty("PORT_TRAFIC"));
+        int pc = Integer.parseInt(paramCo.getProperty("PORT_COMPTA"));
         
-        Serveur_BISAMAP sc = new Serveur_BISAMAP(p, new ListeTaches(), 5);
-        sc.start();
-        
-        Serveur_CHAMAP sb = new Serveur_CHAMAP(pb, new ListeTaches(), 5);
+        Serveur_CHAMAP sb = new Serveur_CHAMAP(pt, new ListeTaches(), 5);
         sb.start();
+        
+        Serveur_BISAMAP sc = new Serveur_BISAMAP(pc, new ListeTaches(), 5);
+        sc.start();
     }
 }

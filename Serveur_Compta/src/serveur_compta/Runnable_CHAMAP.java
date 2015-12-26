@@ -17,7 +17,7 @@ import newBean.connexionException;
 import newBean.requeteException;
 
 
-public class RunnableCHAMAP implements Runnable{
+public class Runnable_CHAMAP implements Runnable{
     private Socket CSocket = null;
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
@@ -25,7 +25,7 @@ public class RunnableCHAMAP implements Runnable{
 
     boolean first = true;
     
-    public RunnableCHAMAP(Socket s)
+    public Runnable_CHAMAP(Socket s)
     {
         CSocket = s;
 
