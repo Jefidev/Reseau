@@ -76,11 +76,7 @@ public class Runnable_BISAMAP implements Runnable
         {
             parts = ReceiveMsg().split("#");
             switch (parts[0])
-            {       
-                case "LOGOUT" :
-                    terminer = true;
-                    break;
-                    
+            {                          
                 case "GET_NEXT_BILL" :
                     getNextBill(parts);
                     break;
@@ -111,6 +107,10 @@ public class Runnable_BISAMAP implements Runnable
                                                                                 
                 case "VALIDATE_SAL" :
                     validateSal(parts);
+                    break;
+                    
+                case "LOGOUT" :
+                    terminer = true;
                     break;
                     
                 default :
