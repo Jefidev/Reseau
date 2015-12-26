@@ -56,7 +56,7 @@ public class Serveur_BISAMAP extends Thread
                 System.err.println("Serveur_BISAMAP : Erreur d'accept : " + e);
             }
 
-            tachesAExecuter.recordTache(new Runnable_BISAMAP(CSocket));
+            tachesAExecuter.recordTache(new Runnable_CHAMAP(CSocket));
         }
     }
     

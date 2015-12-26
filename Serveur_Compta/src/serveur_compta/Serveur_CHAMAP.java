@@ -52,7 +52,7 @@ public class Serveur_CHAMAP extends Thread
                 System.err.println("Serveur chat : Erreur d'accept : " + e);
             }
 
-            tachesAExecuter.recordTache(new Runnable_CHAMAP(CSocket));
+            tachesAExecuter.recordTache(new Runnable_BISAMAP(CSocket));
         }
     }
 }
