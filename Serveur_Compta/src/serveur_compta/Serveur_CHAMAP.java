@@ -5,19 +5,21 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-public class Serveur_BOOMAP extends Thread{
-    private int port;
-    private SourceTaches tachesAExecuter;
+public class Serveur_CHAMAP extends Thread
+{
+    private final int port;
+    private final SourceTaches tachesAExecuter;
     private ServerSocket SSocket = null;
-    private int nbrThreads;
+    private final int nbrThreads;
 
-    public Serveur_BOOMAP(int p, SourceTaches st, int nt)
+    public Serveur_CHAMAP(int p, SourceTaches st, int nt)
     {
         port = p;
         tachesAExecuter = st;
         nbrThreads = nt;
     }
     
+    @Override
     public void run()
     {
         try
@@ -50,7 +52,7 @@ public class Serveur_BOOMAP extends Thread{
                 System.err.println("Serveur chat : Erreur d'accept : " + e);
             }
 
-            tachesAExecuter.recordTache(new RunnableBOOMAP(CSocket));
+            tachesAExecuter.recordTache(new RunnableCHAMAP(CSocket));
         }
     }
 }

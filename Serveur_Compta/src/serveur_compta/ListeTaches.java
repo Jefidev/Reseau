@@ -5,7 +5,7 @@ import java.util.*;
 
 public class ListeTaches implements SourceTaches
 {   
-    private LinkedList listeTaches;
+    private final LinkedList listeTaches;
     
     public ListeTaches()
     {

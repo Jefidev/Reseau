@@ -17,7 +17,7 @@ import newBean.connexionException;
 import newBean.requeteException;
 
 
-public class RunnableBOOMAP implements Runnable{
+public class RunnableCHAMAP implements Runnable{
     private Socket CSocket = null;
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
@@ -25,7 +25,7 @@ public class RunnableBOOMAP implements Runnable{
 
     boolean first = true;
     
-    public RunnableBOOMAP(Socket s)
+    public RunnableCHAMAP(Socket s)
     {
         CSocket = s;
 

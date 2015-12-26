@@ -9,20 +9,21 @@ import java.net.Socket;
 import java.util.Properties;
 
 
-public class Serveur_Trafic extends Thread{
-
-    private int port;
-    private SourceTaches tachesAExecuter;
+public class Serveur_BISAMAP extends Thread
+{
+    private final int port;
+    private final SourceTaches tachesAExecuter;
     private ServerSocket SSocket = null;
-    private int nbrThreads;
+    private final int nbrThreads;
    
-    public Serveur_Trafic(int p, SourceTaches st, int nt)
+    public Serveur_BISAMAP(int p, SourceTaches st, int nt)
     {
         port = p;
         tachesAExecuter = st;
         nbrThreads = nt;
     }
     
+    @Override
     public void run()
     {
         try
@@ -55,7 +56,7 @@ public class Serveur_Trafic extends Thread{
                 System.err.println("Serveur chat : Erreur d'accept : " + e);
             }
 
-            tachesAExecuter.recordTache(new RunnableTraitementEntree(CSocket));
+            tachesAExecuter.recordTache(new RunnableBISAMAP(CSocket));
         }
     }
     
@@ -107,11 +108,10 @@ public class Serveur_Trafic extends Thread{
         int p = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_IN"));
         int pb = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_RES"));
         
-        Serveur_Trafic sc = new Serveur_Trafic(p, new ListeTaches(), 5);
+        Serveur_BISAMAP sc = new Serveur_BISAMAP(p, new ListeTaches(), 5);
         sc.start();
         
-        Serveur_BOOMAP sb = new Serveur_BOOMAP(pb, new ListeTaches(), 5);
+        Serveur_CHAMAP sb = new Serveur_CHAMAP(pb, new ListeTaches(), 5);
         sb.start();
     }
-    
 }
