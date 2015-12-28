@@ -127,32 +127,32 @@ public class Menu extends javax.swing.JPanel
     }// </editor-fold>//GEN-END:initComponents
 
     private void StatDescrContButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatDescrContButtonActionPerformed
-        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         app.ChangePanel("StatDescrCont");
     }//GEN-LAST:event_StatDescrContButtonActionPerformed
 
     private void GrCouleurRepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrCouleurRepButtonActionPerformed
-        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         app.ChangePanel("GrCouleurRep");
     }//GEN-LAST:event_GrCouleurRepButtonActionPerformed
 
     private void GrCouleurCompButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrCouleurCompButtonActionPerformed
-        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         app.ChangePanel("GrCouleurComp");
     }//GEN-LAST:event_GrCouleurCompButtonActionPerformed
 
     private void StatInferTestConfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestConfButtonActionPerformed
-        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         app.ChangePanel("StatInferTestConf");
     }//GEN-LAST:event_StatInferTestConfButtonActionPerformed
 
     private void StatInferTestHomogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestHomogButtonActionPerformed
-        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         app.ChangePanel("StatInferTestHomog");
     }//GEN-LAST:event_StatInferTestHomogButtonActionPerformed
 
     private void StatInferTestAnovaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestAnovaButtonActionPerformed
-        ApplicationDataAnalysis app = (ApplicationDataAnalysis)SwingUtilities.getWindowAncestor(this);
+        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         app.ChangePanel("StatInferTestAnova");
     }//GEN-LAST:event_StatInferTestAnovaButtonActionPerformed
 

@@ -132,7 +132,7 @@ public class Login extends javax.swing.JDialog
             
             if (parts[0].equals("OUI"))
             {
-                ApplicationDataAnalysis a = (ApplicationDataAnalysis) this.getParent();
+                ApplicationCompta a = (ApplicationCompta) this.getParent();
                 a.isConnected = true;
                 this.dispose();
             }

@@ -19,9 +19,9 @@ public final class Utility
         
         try
         {
-            ApplicationDataAnalysis.cliSock = new Socket(adresse, port);
-            dis = new DataInputStream(new BufferedInputStream(ApplicationDataAnalysis.cliSock.getInputStream()));
-            dos = new DataOutputStream(new BufferedOutputStream(ApplicationDataAnalysis.cliSock.getOutputStream()));
+            ApplicationCompta.cliSock = new Socket(adresse, port);
+            dis = new DataInputStream(new BufferedInputStream(ApplicationCompta.cliSock.getInputStream()));
+            dos = new DataOutputStream(new BufferedOutputStream(ApplicationCompta.cliSock.getOutputStream()));
         }
         catch (IOException e)
         {

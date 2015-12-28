@@ -54,6 +54,7 @@ public class Runnable_BISAMAP implements Runnable
     }
 
     
+    /* RUNNABLE : BOUCLE DU SERVEUR + APPEL DES METHODES SUIVANT LE SERVICE DEMANDE */
     @Override
     public void run()
     {
