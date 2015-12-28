@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 
 public final class Crypto
 {
+    /* DIGEST SALE */
     public static byte[] Digest(String msg, long temps, double aleatoire)
     {
         byte[] digest = null;
@@ -33,5 +34,12 @@ public final class Crypto
         }
         
         return digest;
+    }
+    
+    
+    /* DIGEST POUR LE CONTROLE D'INTEGRITE */
+    public static byte[] Digest(String msg)
+    {
+        return null;
     }
 }

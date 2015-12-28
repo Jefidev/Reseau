@@ -6,8 +6,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 
@@ -18,6 +21,7 @@ public class Runnable_BISAMAP implements Runnable
     private DataInputStream dis = null;
     private DataOutputStream dos = null;
     private BeanBDAccess beanOracle;
+    private String fonction;
     
     
     public Runnable_BISAMAP(Socket s)
@@ -62,7 +66,7 @@ public class Runnable_BISAMAP implements Runnable
         
         if(parts[0].equals("LOGIN"))
         {
-            if(!login(parts))
+            if(!login())
                 return;
         }
         else
@@ -120,7 +124,7 @@ public class Runnable_BISAMAP implements Runnable
             }
         }
         
-        System.err.println("Runnable_BISAMAP : Fin du runnable");
+        System.err.println("Runnable_BISAMAP : Run : Fin du runnable");
         
         try
         {
@@ -128,47 +132,66 @@ public class Runnable_BISAMAP implements Runnable
         }
         catch (IOException ex)
         {
-            System.err.println("Runnable_BISAMAP : Erreur de close : " + ex.getStackTrace());
+            System.err.println("Runnable_BISAMAP : Run : Erreur de close : " + ex.getMessage());
         }
     }
     
     
-    private boolean login(String[] part)
+    /* LOGIN (à partir de BD_COMPTA */
+    /* OUT : OUI/NON */
+    private boolean login()
     {
-        ResultSet rs = null;
-        
         try
         {
-            rs = beanOracle.selection("PASSWORD", "PERSONNEL", "LOGIN = '" + part[1]+"'");
-        }
-        catch(SQLException e)
-        {
-            System.err.println("Runnable_BISAMAP : " + e.getStackTrace());
-        }
-        
-        String pwd = null;
-        
-        try
-        {
-            if(!rs.next())
+            // Lecture des données
+            String user = dis.readUTF();
+            long temps = dis.readLong();
+            double aleatoire = dis.readDouble();
+            int longueur = dis.readInt();
+            byte[] pwdClient = new byte[longueur];
+            dis.readFully(pwdClient);
+
+            // Récupération du mot de passe dans la base de données
+            String passwordDB = null;
+
+            ResultSet rs = beanOracle.selection("PASSWORD, FONCTION", "PERSONNEL", "LOGIN = '" + user + "'");
+            while (rs.next())
             {
-                SendMsg("ERR#Login invalide");
+                passwordDB = rs.getString(1);
+                fonction = rs.getString(2);
+            }
+            
+            // L'employé doit être comptable ou chef-comptable
+            if(fonction.equalsIgnoreCase("comptable") || fonction.equalsIgnoreCase("chef-comptable"))
+            {
+                SendMsg("NON#Mauvaise fonction de l'employe");
+                System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé");
+                return false;
+            }
+            
+            // Comparaison
+            if (MessageDigest.isEqual(pwdClient, Crypto.Digest(passwordDB, temps, aleatoire)))
+            {
+                SendMsg("OUI");
+                System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est connecté au serveur");
+                return true;
             }
             else
-                pwd = rs.getString("PASSWORD");
+            {
+                SendMsg("NON#Mauvais mot de passe");
+                System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé");
+            }
+        }
+        catch (IOException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : Login : IOException : " + ex.getMessage());
         }
         catch (SQLException ex)
         {
-            System.err.println(ex.getStackTrace());
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : Login : SQLexception : " + ex.getMessage());
         }
-
-        if(pwd.equals(part[2]))
-        {
-            SendMsg("ACK");
-            return true;
-        }
-        else
-            SendMsg("ERR#Mot de passe incorrect");
         
         return false;
     }
@@ -228,7 +251,7 @@ public class Runnable_BISAMAP implements Runnable
         }
         catch(IOException e)
         {
-            System.err.println("Runnable_BISAMAP : Erreur d'envoi de msg (IO) : " + e);
+            System.err.println("Runnable_BISAMAP : SendMsg : Erreur d'envoi de msg (IO) : " + e);
         }
     }
     
@@ -256,7 +279,7 @@ public class Runnable_BISAMAP implements Runnable
         }
         catch(IOException e)
         {
-            System.err.println("Runnable_BISAMAP : Erreur de reception de msg (IO) : " + e);
+            System.err.println("Runnable_BISAMAP : ReceiveMsg : Erreur de reception de msg (IO) : " + e);
         }
             
         return message.toString();
