@@ -71,7 +71,7 @@ public class Runnable_BISAMAP implements Runnable
         }
         else
         {
-            SendMsg("ERR#Requete invalide");
+            SendMsg("NON#Requete invalide");
             return;
         }
         
