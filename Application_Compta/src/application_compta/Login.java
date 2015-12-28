@@ -102,17 +102,8 @@ public class Login extends javax.swing.JDialog
             double aleatoire = Math.random();
             String Password = new String(PwdPF.getPassword());
 
-            // digest
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
-            md.update(Password.getBytes());
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            DataOutputStream bdos = new DataOutputStream(baos);
-            bdos.writeLong(temps);
-            bdos.writeDouble(aleatoire);
-            md.update(baos.toByteArray());
-            byte[] pwdDigest = md.digest();
-
             // envoi
+            byte[] pwdDigest = Crypto.Digest(Password, temps, aleatoire);
             Utility.SendMsg(ProtocoleBISAMAP.LOGIN, "");
             Utility.dos.writeUTF(LoginTF.getText());
             Utility.dos.writeLong(temps);
@@ -133,10 +124,6 @@ public class Login extends javax.swing.JDialog
             }
             else
                 ErrorLabel.setVisible(true);
-        }
-        catch (NoSuchAlgorithmException ex)
-        {
-            System.err.println("Login : NoSuchAlgorithmException : " + ex.getMessage());
         }
         catch (IOException ex)
         {
