@@ -1,9 +1,7 @@
-package serveur_compta;
+package application_compta;
 
 import java.io.*;
 import java.security.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public final class Crypto

@@ -1,7 +1,6 @@
 package application_compta;
 
 import java.io.*;
-import java.security.*;
 import java.util.Date;
 
 
