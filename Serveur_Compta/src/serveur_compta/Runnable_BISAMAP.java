@@ -9,8 +9,6 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 
