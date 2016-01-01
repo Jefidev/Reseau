@@ -81,7 +81,7 @@ public class Runnable_BISAMAP implements Runnable
             switch (parts[0])
             {                          
                 case "GET_NEXT_BILL" :
-                    getNextBill(parts);
+                    getNextBill();
                     break;
                     
                 case "VALIDATE_BILL" :
@@ -195,8 +195,27 @@ public class Runnable_BISAMAP implements Runnable
     }
 
             
-    private void getNextBill(String[] request)
+    private void getNextBill()
     {
+        try
+        {
+            ResultSet rs = beanOracle.selection("*", "FACTURE", "FLAG_FACT_VALIDEE = 0 ORDER BY MOIS_ANNEE");
+            if(!rs.next())
+            {
+                SendMsg("NON#Pas de facture");
+                System.err.println("Runnable_BISAMAP : getNextBill : Pas de facture dispo");
+            }
+            while (rs.next())
+            {
+                //Récup facture + facture chiffrée symétriquement + envoi
+                SendMsg("OUI");
+            }
+        }
+        catch (SQLException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : getNextBill : SQLexception : " + ex.getMessage());
+        }
     }
                 
       

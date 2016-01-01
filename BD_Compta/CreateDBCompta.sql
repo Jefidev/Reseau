@@ -86,3 +86,7 @@ CREATE TABLE TARIFS
 	FLAG_PETROLIER		NUMBER(1),
 	DATE_DERNIERE_MAJ	VARCHAR2(10)
 );
+
+-- Principe des flags :
+-- 0 = KO
+-- 1 = Fait, contient
