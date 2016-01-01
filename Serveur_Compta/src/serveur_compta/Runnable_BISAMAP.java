@@ -207,9 +207,10 @@ public class Runnable_BISAMAP implements Runnable
             }
             while (rs.next())
             {
-                //Récup facture + facture chiffrée symétriquement + envoi
-                SendMsg("OUI");
+                // Récup facture
+                break;
             }
+            // chiffrement symétrique facture + envoi
         }
         catch (SQLException ex)
         {

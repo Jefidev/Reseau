@@ -15,7 +15,7 @@ public class Menu extends javax.swing.JPanel
     private void initComponents() {
 
         TitreLabel = new javax.swing.JLabel();
-        StatDescrContButton = new javax.swing.JButton();
+        ValidationFactButton = new javax.swing.JButton();
         GrCouleurRepButton = new javax.swing.JButton();
         GrCouleurCompButton = new javax.swing.JButton();
         StatInferTestConfButton = new javax.swing.JButton();
@@ -27,10 +27,10 @@ public class Menu extends javax.swing.JPanel
         TitreLabel.setForeground(new java.awt.Color(0, 0, 255));
         TitreLabel.setText("MENU");
 
-        StatDescrContButton.setText("Statistiques constructives descriptives : moyenne, mode, médiane, écart-type");
-        StatDescrContButton.addActionListener(new java.awt.event.ActionListener() {
+        ValidationFactButton.setText("Validation de factures");
+        ValidationFactButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StatDescrContButtonActionPerformed(evt);
+                ValidationFactButtonActionPerformed(evt);
             }
         });
 
@@ -93,7 +93,7 @@ public class Menu extends javax.swing.JPanel
                         .addComponent(QuitterButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(StatDescrContButton)
+                            .addComponent(ValidationFactButton)
                             .addComponent(GrCouleurRepButton)
                             .addComponent(GrCouleurCompButton)
                             .addComponent(StatInferTestConfButton)
@@ -107,7 +107,7 @@ public class Menu extends javax.swing.JPanel
                 .addContainerGap()
                 .addComponent(TitreLabel)
                 .addGap(18, 18, 18)
-                .addComponent(StatDescrContButton)
+                .addComponent(ValidationFactButton)
                 .addGap(18, 18, 18)
                 .addComponent(GrCouleurRepButton)
                 .addGap(18, 18, 18)
@@ -126,10 +126,10 @@ public class Menu extends javax.swing.JPanel
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void StatDescrContButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatDescrContButtonActionPerformed
+    private void ValidationFactButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValidationFactButtonActionPerformed
         ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("StatDescrCont");
-    }//GEN-LAST:event_StatDescrContButtonActionPerformed
+        app.ChangePanel("ValidationFact");
+    }//GEN-LAST:event_ValidationFactButtonActionPerformed
 
     private void GrCouleurRepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrCouleurRepButtonActionPerformed
         ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
@@ -165,10 +165,10 @@ public class Menu extends javax.swing.JPanel
     private javax.swing.JButton GrCouleurCompButton;
     private javax.swing.JButton GrCouleurRepButton;
     private javax.swing.JButton QuitterButton;
-    private javax.swing.JButton StatDescrContButton;
     private javax.swing.JButton StatInferTestAnovaButton;
     private javax.swing.JButton StatInferTestConfButton;
     private javax.swing.JButton StatInferTestHomogButton;
     private javax.swing.JLabel TitreLabel;
+    private javax.swing.JButton ValidationFactButton;
     // End of variables declaration//GEN-END:variables
 }

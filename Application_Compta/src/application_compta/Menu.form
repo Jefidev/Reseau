@@ -31,7 +31,7 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="StatDescrContButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ValidationFactButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="GrCouleurRepButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="GrCouleurCompButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="StatInferTestConfButton" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -50,7 +50,7 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="TitreLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="StatDescrContButton" min="-2" max="-2" attributes="0"/>
+              <Component id="ValidationFactButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="GrCouleurRepButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -83,12 +83,12 @@
         <Property name="text" type="java.lang.String" value="MENU"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="StatDescrContButton">
+    <Component class="javax.swing.JButton" name="ValidationFactButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Statistiques constructives descriptives : moyenne, mode, m&#xe9;diane, &#xe9;cart-type"/>
+        <Property name="text" type="java.lang.String" value="Validation de factures"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="StatDescrContButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ValidationFactButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="GrCouleurRepButton">
