@@ -128,7 +128,7 @@ public class Menu extends javax.swing.JPanel
 
     private void ValidationFactButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValidationFactButtonActionPerformed
         ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("ValidationFact");
+        app.ChangePanel("ValidationFacture");
     }//GEN-LAST:event_ValidationFactButtonActionPerformed
 
     private void GrCouleurRepButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrCouleurRepButtonActionPerformed
