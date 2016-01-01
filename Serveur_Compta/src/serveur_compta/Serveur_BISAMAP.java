@@ -56,14 +56,14 @@ public class Serveur_BISAMAP extends Thread
                 System.err.println("Serveur_BISAMAP : Erreur d'accept : " + e);
             }
 
-            tachesAExecuter.recordTache(new Runnable_CHAMAP(CSocket));
+            tachesAExecuter.recordTache(new Runnable_BISAMAP(CSocket));
         }
     }
     
     public static void main(String[] args)
     {    
         /* Fichier properties */
-        String pathProperties = "serveurCompta.properties";
+        String pathProperties = "ServeurCompta.properties";
         
         Properties paramCo = new Properties();
         
@@ -87,20 +87,20 @@ public class Serveur_BISAMAP extends Thread
                 }
                 catch (IOException ex1)
                 {
-                    System.err.println(ex1.getStackTrace());
+                    System.err.println(ex1.getMessage());
                     System.exit(0);
                 }
             } 
             catch (FileNotFoundException ex1) 
             {
-                System.err.println(ex1.getStackTrace());
+                System.err.println(ex1.getMessage());
                 System.exit(0);
             }
             
         }
         catch(IOException ex)
         {
-            System.err.println(ex.getStackTrace());
+            System.err.println(ex.getMessage());
             System.exit(0);
         }
         

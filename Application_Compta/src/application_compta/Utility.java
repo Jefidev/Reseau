@@ -35,14 +35,14 @@ public final class Utility
         
         try
         {
-            FileInputStream FIS = new FileInputStream("DataAnalysis.properties");
+            FileInputStream FIS = new FileInputStream("ApplicationCompta.properties");
             prop.load(FIS);
         }
         catch(FileNotFoundException ex)
         {
             try 
             {
-                FileOutputStream FOS = new FileOutputStream("DataAnalysis.properties");
+                FileOutputStream FOS = new FileOutputStream("ApplicationCompta.properties");
                 
                 prop.setProperty("Adresse", "192.168.1.4");
                 prop.setProperty("Port", "31049");

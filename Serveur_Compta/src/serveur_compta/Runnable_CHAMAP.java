@@ -92,7 +92,7 @@ public class Runnable_CHAMAP implements Runnable
         }
         catch (IOException ex)
         {
-            System.err.println("Runnable_CHAMAP : Erreur de close : " + ex.getStackTrace());
+            System.err.println("Runnable_CHAMAP : Erreur de close : " + ex.getMessage());
         }
     }
     
@@ -107,7 +107,7 @@ public class Runnable_CHAMAP implements Runnable
         }
         catch(SQLException e)
         {
-            System.err.println("Runnable_CHAMAP : " + e.getStackTrace());
+            System.err.println("Runnable_CHAMAP : " + e.getMessage());
         }
         
         String pwd = null;
@@ -123,7 +123,7 @@ public class Runnable_CHAMAP implements Runnable
         }
         catch (SQLException ex)
         {
-            System.err.println(ex.getStackTrace());
+            System.err.println(ex.getMessage());
         }
 
         if(pwd.equals(part[2]))

@@ -62,7 +62,7 @@ public class Runnable_BISAMAP implements Runnable
     {
         String[] parts = (ReceiveMsg()).split("#");
         
-        if(parts[0].equals("LOGIN"))
+        if(Integer.parseInt(parts[0]) == ProtocoleBISAMAP.LOGIN)
         {
             if(!login())
                 return;
@@ -122,7 +122,7 @@ public class Runnable_BISAMAP implements Runnable
             }
         }
         
-        System.err.println("Runnable_BISAMAP : Run : Fin du runnable");
+        System.out.println("Runnable_BISAMAP : Run : Fin du runnable");
         
         try
         {
@@ -160,10 +160,10 @@ public class Runnable_BISAMAP implements Runnable
             }
             
             // L'employé doit être comptable ou chef-comptable
-            if(fonction.equalsIgnoreCase("comptable") || fonction.equalsIgnoreCase("chef-comptable"))
+            if(!(fonction.equalsIgnoreCase("comptable") || fonction.equalsIgnoreCase("chef-comptable")))
             {
                 SendMsg("NON#Mauvaise fonction de l'employe");
-                System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé");
+                System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé (mauvaise fonction)");
                 return false;
             }
             
@@ -177,7 +177,7 @@ public class Runnable_BISAMAP implements Runnable
             else
             {
                 SendMsg("NON#Mauvais mot de passe");
-                System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé");
+                System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé (mauvais password)");
             }
         }
         catch (IOException ex)
