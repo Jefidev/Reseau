@@ -21,6 +21,7 @@ public class Runnable_BISAMAP implements Runnable
     private DataOutputStream dos = null;
     private BeanBDAccess beanOracle;
     private String fonction;
+    private SecretKey Kchiffrement, Khmac;
     
     
     public Runnable_BISAMAP(Socket s)
@@ -177,8 +178,8 @@ public class Runnable_BISAMAP implements Runnable
             }
             
             // Handshake
-            SecretKey a = Crypto.generateSecretKey();
-            SecretKey b = Crypto.generateSecretKey();
+            Kchiffrement = Crypto.generateSecretKey();
+            Khmac = Crypto.generateSecretKey();
             
             
             SendMsg("OUI");
