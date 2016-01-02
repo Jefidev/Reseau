@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.crypto.SecretKey;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 
@@ -168,17 +169,21 @@ public class Runnable_BISAMAP implements Runnable
             }
             
             // Comparaison
-            if (MessageDigest.isEqual(pwdClient, Crypto.Digest(passwordDB, temps, aleatoire)))
-            {
-                SendMsg("OUI");
-                System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est connecté au serveur");
-                return true;
-            }
-            else
+            if (!(MessageDigest.isEqual(pwdClient, Crypto.Digest(passwordDB, temps, aleatoire))))
             {
                 SendMsg("NON#Mauvais mot de passe");
                 System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé (mauvais password)");
+                return false;
             }
+            
+            // Handshake
+            SecretKey a = Crypto.generateSecretKey();
+            SecretKey b = Crypto.generateSecretKey();
+            
+            
+            SendMsg("OUI");
+            System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est connecté au serveur");
+            return true;
         }
         catch (IOException ex)
         {

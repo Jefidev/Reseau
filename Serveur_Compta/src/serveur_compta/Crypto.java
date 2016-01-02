@@ -2,6 +2,10 @@ package serveur_compta;
 
 import java.io.*;
 import java.security.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 
 
 public final class Crypto
@@ -32,5 +36,23 @@ public final class Crypto
         }
         
         return digest;
+    }
+    
+    public static SecretKey generateSecretKey()
+    {
+        String CodeProvider = "BC";
+        KeyGenerator cleGen = null;
+        
+        try
+        {
+            cleGen = KeyGenerator.getInstance("DES", CodeProvider);
+        }
+        catch (NoSuchAlgorithmException | NoSuchProviderException ex)
+        {
+            System.err.println("Crypto : generateSecretKey : NoSuchAlgorithmException ou NoSuchProviderException : " + ex.getMessage());
+        }
+        
+        cleGen.init(new SecureRandom());
+        return cleGen.generateKey();
     }
 }
