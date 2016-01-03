@@ -5,7 +5,6 @@
  */
 package Applets;
 
-import java.applet.AppletContext;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.Level;
@@ -55,6 +54,14 @@ public class LoginApplet extends javax.swing.JApplet {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        
+        errorLabel.setVisible(false);
+    }
+    
+    @Override
+    public void start()
+    {
+        errorLabel.setVisible(false);
     }
 
     /**
@@ -72,6 +79,7 @@ public class LoginApplet extends javax.swing.JApplet {
         passwordField = new javax.swing.JPasswordField();
         loginButton = new javax.swing.JButton();
         registerButton = new javax.swing.JButton();
+        errorLabel = new javax.swing.JLabel();
 
         loginLabel.setText("Votre identifiant : ");
 
@@ -91,24 +99,29 @@ public class LoginApplet extends javax.swing.JApplet {
             }
         });
 
+        errorLabel.setForeground(new java.awt.Color(255, 0, 0));
+        errorLabel.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(42, 42, 42)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(passwordLabel)
-                            .addComponent(loginLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(errorLabel)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(passwordLabel)
+                                .addComponent(loginLabel))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(loginTextField)
+                                .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(loginTextField)
-                            .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(loginButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(registerButton, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(48, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -122,7 +135,9 @@ public class LoginApplet extends javax.swing.JApplet {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(passwordLabel)
                     .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(38, 38, 38)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(errorLabel)
+                .addGap(13, 13, 13)
                 .addComponent(loginButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(registerButton)
@@ -136,6 +151,14 @@ public class LoginApplet extends javax.swing.JApplet {
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
+        
+        if(loginTextField.getText().isEmpty())
+        {
+            errorLabel.setText("Vous devez indiquer un identifiant");
+            errorLabel.setVisible(true);
+            return; 
+        }
+        
         try {
             getAppletContext().showDocument(new URL("http://localhost:8081/CaddieVirtuel/register.html"));
         } catch (MalformedURLException ex) {
@@ -145,6 +168,7 @@ public class LoginApplet extends javax.swing.JApplet {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel errorLabel;
     private javax.swing.JButton loginButton;
     private javax.swing.JLabel loginLabel;
     private javax.swing.JTextField loginTextField;
