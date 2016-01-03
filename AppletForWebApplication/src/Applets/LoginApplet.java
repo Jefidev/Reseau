@@ -5,6 +5,12 @@
  */
 package Applets;
 
+import java.applet.AppletContext;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author Jerome
@@ -72,8 +78,18 @@ public class LoginApplet extends javax.swing.JApplet {
         passwordLabel.setText("Votre mot de passe  : ");
 
         loginButton.setText("Entrer sur le site");
+        loginButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginButtonActionPerformed(evt);
+            }
+        });
 
         registerButton.setText("Je n'ai pas de mot de passe");
+        registerButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                registerButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -113,6 +129,19 @@ public class LoginApplet extends javax.swing.JApplet {
                 .addContainerGap(43, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
+        
+        
+    }//GEN-LAST:event_loginButtonActionPerformed
+
+    private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
+        try {
+            getAppletContext().showDocument(new URL("http://localhost:8081/CaddieVirtuel/register.html"));
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_registerButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

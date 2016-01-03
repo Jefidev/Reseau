@@ -80,11 +80,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Entrer sur le site"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="loginButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="registerButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Je n&apos;ai pas de mot de passe"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="registerButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
