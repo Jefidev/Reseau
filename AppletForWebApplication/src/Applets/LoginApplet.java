@@ -5,8 +5,14 @@
  */
 package Applets;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -147,7 +153,44 @@ public class LoginApplet extends javax.swing.JApplet {
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         
+        if(!loginTextField.getText().isEmpty())
+            return;
         
+        //On va établir la connexion par tunnel TCP avec la servlet visée
+        String addressServlet = "/CaddieVirtuel/Controler"; //URL de la servlet
+        URL pageCourante = getDocumentBase(); //URL de la page courante
+        URLConnection connexionServlet = null;
+        try {
+            //Construction de l'URL de la servlet par rapport à l'Host (localhost ou ip) et au port de la page courante
+            URL urlServ = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), addressServlet);
+            connexionServlet = urlServ.openConnection();
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        } catch (IOException ex) {
+            Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //On veut pas de cache
+        connexionServlet.setUseCaches(false);
+        connexionServlet.setDefaultUseCaches(false);
+        //Mais on veut pouvoir envoyer des trucs
+        connexionServlet.setDoOutput(true);
+        
+        //Le message va être composer en utilisant un flux de byte
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
+        PrintWriter pw = new PrintWriter(baos, true);
+        
+        //Composition de la chaine qui constituera le corps du message.
+        String parametrePost = null;
+        try {
+            parametrePost = "login=" + URLEncoder.encode(loginTextField.getText(), "UTF-8");
+            parametrePost += "&password=" + URLEncoder.encode(passwordField.getText(), "UTF-8");
+        } catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        pw.print(parametrePost);
+        
+        //On peut allumer le feu.
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
