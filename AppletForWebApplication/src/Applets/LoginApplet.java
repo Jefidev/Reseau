@@ -62,6 +62,7 @@ public class LoginApplet extends javax.swing.JApplet {
         }
         
         errorLabel.setVisible(false);
+        System.out.println("version : 6");
     }
     
     @Override
@@ -153,7 +154,7 @@ public class LoginApplet extends javax.swing.JApplet {
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
         
-        if(!loginTextField.getText().isEmpty())
+        if(loginTextField.getText().isEmpty())
             return;
         
         //On va établir la connexion par tunnel TCP avec la servlet visée
@@ -164,11 +165,13 @@ public class LoginApplet extends javax.swing.JApplet {
             //Construction de l'URL de la servlet par rapport à l'Host (localhost ou ip) et au port de la page courante
             URL urlServ = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), addressServlet);
             connexionServlet = urlServ.openConnection();
+            System.err.println(urlServ.toString());
         } catch (MalformedURLException ex) {
-            Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
             return;
         } catch (IOException ex) {
-            Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
+            return;
         }
         //On veut pas de cache
         connexionServlet.setUseCaches(false);
@@ -187,10 +190,19 @@ public class LoginApplet extends javax.swing.JApplet {
             parametrePost += "&password=" + URLEncoder.encode(passwordField.getText(), "UTF-8");
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
+            return;
         }
         pw.print(parametrePost);
-        
-        //On peut allumer le feu.
+
+        try {
+            //On peut allumer le feu.
+            connexionServlet.setRequestProperty("Content-Length", String.valueOf(baos.size()));
+            connexionServlet.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            baos.writeTo(connexionServlet.getOutputStream());
+        } catch (IOException ex) {
+            Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        }
     }//GEN-LAST:event_loginButtonActionPerformed
 
     private void registerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_registerButtonActionPerformed
