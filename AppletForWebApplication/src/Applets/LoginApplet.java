@@ -5,8 +5,10 @@
  */
 package Applets;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -62,7 +64,7 @@ public class LoginApplet extends javax.swing.JApplet {
         }
         
         errorLabel.setVisible(false);
-        System.out.println("version : 6");
+        System.out.println("version : 9");
     }
     
     @Override
@@ -193,12 +195,22 @@ public class LoginApplet extends javax.swing.JApplet {
             return;
         }
         pw.print(parametrePost);
+        pw.flush();
 
         try {
             //On peut allumer le feu.
             connexionServlet.setRequestProperty("Content-Length", String.valueOf(baos.size()));
             connexionServlet.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             baos.writeTo(connexionServlet.getOutputStream());
+            System.out.println("ouiii");
+            
+            BufferedReader e = new BufferedReader(new InputStreamReader(connexionServlet.getInputStream()));
+            String r;
+            while((r = e.readLine()) != null)
+                System.out.println(r);
+            
+            URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/accueil.jsp");
+            getAppletContext().showDocument(s);
         } catch (IOException ex) {
             Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
             return;
