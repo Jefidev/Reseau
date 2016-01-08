@@ -16,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 
@@ -45,14 +46,18 @@ public class Controler extends HttpServlet {
         switch(typeRequete)
         {
             case "login":
-                loginRequest(request, response);
+                    loginRequest(request, response);
+                break;
+            case "magasin":
+                    magasinRequest(request, response);
+                break;
+            case "parc":
                 break;
         }
         
         //RequestDispatcher rd = getServletContext().getRequestDispatcher("/accueil.jsp");
         //rd.forward(request, response);
     }
-    
     
     /*******************************
      * @param r : requête reçue par la servlet
@@ -91,6 +96,44 @@ public class Controler extends HttpServlet {
         } catch (IOException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void magasinRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        HttpSession sess = request.getSession(true);
+        
+        //si l'utilisateur n'est pas log
+        try {
+            if(sess.getAttribute("login") == null)
+            {
+                response.sendRedirect("index.html");
+                return;
+            }
+                
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //Parfait on peut lancer la servlet add hock
+        
+        RequestDispatcher rd = request.getRequestDispatcher("parc.jsp");
+        try {
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    private boolean verifLogin(HttpServletRequest r)
+    {
+        HttpSession sess = r.getSession(true);
+        
+        if(sess.getAttribute("login") == null)
+            return false;
+        
+        return true;
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
