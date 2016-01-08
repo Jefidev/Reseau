@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  *
  * @author Jerome
+ * 
+ * Cette servlet controler va servir à rediriger l'utilisateur sur la bonne page
+ * selon sa requête
  */
 public class Controler extends HttpServlet {
 
@@ -30,22 +33,27 @@ public class Controler extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        /*response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. 
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet Controler</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet Controler at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }*/
+        
+        String typeRequete = request.getParameter("action");
+        
+        switch(typeRequete)
+        {
+            case "login":
+                loginRequest(request);
+                break;
+        }
+        
         System.err.println("je passe ici");
         RequestDispatcher rd = getServletContext().getRequestDispatcher("/accueil.jsp");
         rd.forward(request, response);
+    }
+    
+    /*******************************
+     * @param r : requête reçue par la servlet
+     */
+    private void loginRequest(HttpServletRequest r)
+    {
+        //Faire la recherche dans la BD
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

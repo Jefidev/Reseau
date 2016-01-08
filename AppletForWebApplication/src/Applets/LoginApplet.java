@@ -190,6 +190,8 @@ public class LoginApplet extends javax.swing.JApplet {
         try {
             parametrePost = "login=" + URLEncoder.encode(loginTextField.getText(), "UTF-8");
             parametrePost += "&password=" + URLEncoder.encode(passwordField.getText(), "UTF-8");
+            //parametre pour indiquer le traitement à effectuer par la servle de controle
+            parametrePost += "&action=login";
         } catch (UnsupportedEncodingException ex) {
             Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
             return;
