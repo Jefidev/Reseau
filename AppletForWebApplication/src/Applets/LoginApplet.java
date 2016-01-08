@@ -64,7 +64,7 @@ public class LoginApplet extends javax.swing.JApplet {
         }
         
         errorLabel.setVisible(false);
-        System.out.println("version : 9");
+        System.out.println("version : 10");
     }
     
     @Override
@@ -204,15 +204,14 @@ public class LoginApplet extends javax.swing.JApplet {
             connexionServlet.setRequestProperty("Content-Length", String.valueOf(baos.size()));
             connexionServlet.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             baos.writeTo(connexionServlet.getOutputStream());
-            System.out.println("ouiii");
             
             BufferedReader e = new BufferedReader(new InputStreamReader(connexionServlet.getInputStream()));
             String r;
             while((r = e.readLine()) != null)
                 System.out.println(r);
             
-            URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/accueil.jsp");
-            getAppletContext().showDocument(s);
+            //URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/accueil.jsp");
+            //getAppletContext().showDocument(s);
         } catch (IOException ex) {
             Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
             return;

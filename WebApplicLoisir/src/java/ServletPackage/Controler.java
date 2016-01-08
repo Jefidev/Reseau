@@ -7,11 +7,16 @@ package ServletPackage;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import javax.servlet.RequestDispatcher;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import newBean.BeanBDAccess;
+import newBean.connexionException;
 
 /**
  *
@@ -39,21 +44,46 @@ public class Controler extends HttpServlet {
         switch(typeRequete)
         {
             case "login":
-                loginRequest(request);
+                loginRequest(request, response);
                 break;
         }
         
-        System.err.println("je passe ici");
-        RequestDispatcher rd = getServletContext().getRequestDispatcher("/accueil.jsp");
-        rd.forward(request, response);
+        //RequestDispatcher rd = getServletContext().getRequestDispatcher("/accueil.jsp");
+        //rd.forward(request, response);
     }
+    
     
     /*******************************
      * @param r : requête reçue par la servlet
+     * @param out : Objet de reponse
      */
-    private void loginRequest(HttpServletRequest r)
+    private void loginRequest(HttpServletRequest r, HttpServletResponse out)
     {
-        //Faire la recherche dans la BD
+        //Connexion à la base de donnée contenant les utilisateurs
+        BeanBDAccess accesBD = new BeanBDAccess();
+        try {
+            
+            //Flux pour répondre à l'applet
+            PrintWriter fluxApplet = out.getWriter();
+            
+            accesBD.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            ResultSet rs = accesBD.selection("password", "CUSTOMERS", "login = '" + r.getParameter("login") + "'");
+            
+            if(!rs.next())
+            {
+                fluxApplet.println("KO");
+                return;
+            }
+            
+            if(rs.getString(1).equals(r.getParameter("password")));
+                fluxApplet.println("OK");
+            
+        } catch (ClassNotFoundException | SQLException | connexionException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
