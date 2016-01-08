@@ -12,6 +12,6 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Youpie</h1>
+        <h1>Youpie  <%=session.getAttribute("login")%></h1>
     </body>
 </html>

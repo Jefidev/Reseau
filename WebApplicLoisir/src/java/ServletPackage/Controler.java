@@ -56,8 +56,9 @@ public class Controler extends HttpServlet {
     /*******************************
      * @param r : requête reçue par la servlet
      * @param out : Objet de reponse
+     * Permet d'identifier le client en cours. Synchronized car accès BDD
      */
-    private void loginRequest(HttpServletRequest r, HttpServletResponse out)
+    private synchronized void loginRequest(HttpServletRequest r, HttpServletResponse out)
     {
         //Connexion à la base de donnée contenant les utilisateurs
         BeanBDAccess accesBD = new BeanBDAccess();
@@ -71,12 +72,21 @@ public class Controler extends HttpServlet {
             
             if(!rs.next())
             {
-                fluxApplet.println("KO");
+                fluxApplet.println("Login invalide");
                 return;
             }
             
-            if(rs.getString(1).equals(r.getParameter("password")));
-                fluxApplet.println("OK");
+            if(!rs.getString(1).equals(r.getParameter("password")))
+            {
+                fluxApplet.println("Mot de passe invalide");
+                return;
+            }
+            
+            //Creation de la session qui servira à "tracer" les actions du client
+            r.getSession().setAttribute("login", r.getParameter("login"));
+            
+            //Et on dit à l'applet que c'est ok 
+            fluxApplet.println("ok");
             
         } catch (ClassNotFoundException | SQLException | connexionException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);

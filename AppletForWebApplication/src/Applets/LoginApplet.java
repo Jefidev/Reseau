@@ -64,7 +64,7 @@ public class LoginApplet extends javax.swing.JApplet {
         }
         
         errorLabel.setVisible(false);
-        System.out.println("version : 10");
+        System.out.println("version : 11");
     }
     
     @Override
@@ -155,7 +155,7 @@ public class LoginApplet extends javax.swing.JApplet {
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginButtonActionPerformed
-        
+
         if(loginTextField.getText().isEmpty())
             return;
         
@@ -207,11 +207,18 @@ public class LoginApplet extends javax.swing.JApplet {
             
             BufferedReader e = new BufferedReader(new InputStreamReader(connexionServlet.getInputStream()));
             String r;
-            while((r = e.readLine()) != null)
-                System.out.println(r);
+            r= e.readLine();
             
-            //URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/accueil.jsp");
-            //getAppletContext().showDocument(s);
+            if(r.equalsIgnoreCase("ok"))
+            {
+                URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/accueil.jsp");
+                getAppletContext().showDocument(s);
+                return;
+            }
+            
+            errorLabel.setText(r);
+            errorLabel.setVisible(true);
+            
         } catch (IOException ex) {
             Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
             return;
