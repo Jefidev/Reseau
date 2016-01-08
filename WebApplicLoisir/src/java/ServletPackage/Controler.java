@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -82,10 +83,6 @@ public class Controler extends HttpServlet {
                 return;
             }
             
-            //Creation de la session qui servira à "tracer" les actions du client
-            r.getSession().setAttribute("login", r.getParameter("login"));
-            
-            //Et on dit à l'applet que c'est ok 
             fluxApplet.println("ok");
             
         } catch (ClassNotFoundException | SQLException | connexionException ex) {

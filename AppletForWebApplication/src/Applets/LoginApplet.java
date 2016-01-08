@@ -64,7 +64,7 @@ public class LoginApplet extends javax.swing.JApplet {
         }
         
         errorLabel.setVisible(false);
-        System.out.println("version : 11");
+        System.out.println("version : 12");
     }
     
     @Override
@@ -211,7 +211,7 @@ public class LoginApplet extends javax.swing.JApplet {
             
             if(r.equalsIgnoreCase("ok"))
             {
-                URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/accueil.jsp");
+                URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/accueil.jsp?login="+loginTextField.getText());
                 getAppletContext().showDocument(s);
                 return;
             }
