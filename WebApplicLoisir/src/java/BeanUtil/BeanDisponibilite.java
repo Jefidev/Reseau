@@ -6,12 +6,12 @@
 package BeanUtil;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
@@ -31,7 +31,7 @@ public class BeanDisponibilite implements Serializable {
         erreur = null;
     }
     
-    public void setDateReservation(String date)
+    public void setdateReservation(String date)
     {
         if(date == null)
             return;
@@ -39,14 +39,15 @@ public class BeanDisponibilite implements Serializable {
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
         try
         {
-            dateReservation = (Date) df.parse(date);
+            dateReservation = df.parse(date);
+            System.out.println(dateReservation.toString());
             setNbrReservation();
         } catch (ParseException ex) {
             setErreur("Format de date incorrecte");
         }
     }
     
-    public String getDateReservation()
+    public String getdateReservation()
     {
         return dateReservation.toString();
     }
@@ -65,11 +66,10 @@ public class BeanDisponibilite implements Serializable {
     {
         //Acces à la BD pour recuperer le nombre de reservation pour une jour donne
         BeanBDAccess accesBD = new BeanBDAccess();
- 
         try { 
             
             //Recuperation de la date sous le bon format
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/mm/yyyy", Locale.FRENCH);
+            SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY", Locale.FRENCH);
             String date = sdf.format(dateReservation);
             System.out.println(date);
             
@@ -82,6 +82,7 @@ public class BeanDisponibilite implements Serializable {
             
             if(!rs.next())
             {
+                erreur = "aucun tuple";
                 nbrReservation = 0;
                 return;
             }

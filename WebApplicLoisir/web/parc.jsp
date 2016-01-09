@@ -8,7 +8,9 @@
 <!DOCTYPE html>
 
 <jsp:useBean id="beanReservation" class="BeanUtil.BeanDisponibilite" scope="request"/>
-<jsp:setProperty name="beanReservation" property="dateReservation" value="<%=request.getParameter("dateReservation")%>"/>
+<%! String curDate;%>
+<% curDate = request.getParameter("dateReservation");%>
+<jsp:setProperty name="beanReservation" property="dateReservation" value="<%= curDate %>"/>
 
 <html>
     <head>
@@ -25,5 +27,6 @@
             <input type="submit" value="Vérifier les disponibilités">
         </form>
         <p><jsp:getProperty name="beanReservation" property="nbrReservation" /></p>
+        <p><jsp:getProperty name="beanReservation" property="erreur" /></p>
     </body>
 </html>
