@@ -19,14 +19,26 @@
     </head>
     <body>
         <h1>Réserver vos tikets pour le parc</h1>
+        <p>Session de <%=session.getAttribute("login")%></p>
         <p>Session <%=session.getAttribute("login")%></p>
         <p>Attention le nombre d'entrée est limitée à 20 par jours.</p>
         <p>Pour quelle date voulez vous réserver vos tikets ?</p>
         <form method="POST" action="parc.jsp">
             <input type="date" name="dateReservation">
+            <p style="color: red"><jsp:getProperty name="beanReservation" property="erreur" /></p>
             <input type="submit" value="Vérifier les disponibilités">
         </form>
-        <p><jsp:getProperty name="beanReservation" property="nbrReservation" /></p>
-        <p><jsp:getProperty name="beanReservation" property="erreur" /></p>
+        
+        <% if(curDate != null){%>
+        
+        <p>Pour l'instant <jsp:getProperty name="beanReservation" property="nbrReservation" /> entrées ont été réservées</p>
+        <p>réserver des entrées (999€/entrées) : </p>
+        
+        <form method="POST" action="parc.jsp">
+            <input type="number" name="reservation">
+            <input type="submit" value="Ajouter au caddie">
+        </form>
+        
+        <% } %>      
     </body>
 </html>

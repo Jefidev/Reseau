@@ -28,7 +28,7 @@ public class BeanDisponibilite implements Serializable {
     private int nbrReservation;
     
     public BeanDisponibilite() {
-        erreur = null;
+        erreur = "";
     }
     
     public void setdateReservation(String date)
@@ -54,6 +54,12 @@ public class BeanDisponibilite implements Serializable {
     
     public void setErreur(String err)
     {
+        if(err == null)
+        {
+            erreur = "";
+            return;
+        }
+        
         erreur = err;
     }
     
