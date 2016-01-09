@@ -52,6 +52,7 @@ public class Controler extends HttpServlet {
                     magasinRequest(request, response);
                 break;
             case "parc":
+                    parcRequest(request, response);
                 break;
         }
         
@@ -98,23 +99,33 @@ public class Controler extends HttpServlet {
         }
     }
     
+    
     private void magasinRequest(HttpServletRequest request, HttpServletResponse response)
     {
         HttpSession sess = request.getSession(true);
         
-        //si l'utilisateur n'est pas log
+        if(!verifLogin(sess, response))
+            return;
+        
+        //Parfait on peut lancer la servlet add hock
+        
+        RequestDispatcher rd = request.getRequestDispatcher("magasin.jsp");
         try {
-            if(sess.getAttribute("login") == null)
-            {
-                response.sendRedirect("index.html");
-                return;
-            }
-                
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    
+    private void parcRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        HttpSession sess = request.getSession(true);
         
-        //Parfait on peut lancer la servlet add hock
+        if(!verifLogin(sess, response))
+            return;
         
         RequestDispatcher rd = request.getRequestDispatcher("parc.jsp");
         try {
@@ -126,12 +137,18 @@ public class Controler extends HttpServlet {
         }
     }
     
-    private boolean verifLogin(HttpServletRequest r)
+    private boolean verifLogin(HttpSession sess, HttpServletResponse r)
     {
-        HttpSession sess = r.getSession(true);
-        
-        if(sess.getAttribute("login") == null)
-            return false;
+        try {
+            if(sess.getAttribute("login") == null)
+            {
+                r.sendRedirect("index.html");
+                return false;
+            }
+                
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
         return true;
     }
