@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib uri="/WEB-INF/tlds/outil.tld" prefix="outil"%>
 <!DOCTYPE html>
 
 <jsp:useBean id="beanReservation" class="BeanUtil.BeanDisponibilite" scope="request"/>
@@ -20,7 +21,7 @@
     <body>
         <h1>Réserver vos tikets pour le parc</h1>
         <p>Session de <%=session.getAttribute("login")%></p>
-        <p>Session <%=session.getAttribute("login")%></p>
+        <outil:currentDate langue="UK"/>
         <p>Attention le nombre d'entrée est limitée à 20 par jours.</p>
         <p>Pour quelle date voulez vous réserver vos tikets ?</p>
         <form method="POST" action="parc.jsp">

@@ -25,4 +25,14 @@
     <tag-class>BalisesPerso.produits</tag-class>
     <body-content>JSP</body-content>
   </tag>
+  <tag>
+    <name>currentDate</name>
+    <tag-class>BalisesPerso.BaliseDate</tag-class>
+    <body-content>empty</body-content>
+    <attribute>
+      <name>langue</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
+  </tag>
 </taglib>

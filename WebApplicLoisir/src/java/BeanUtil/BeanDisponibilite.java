@@ -77,7 +77,6 @@ public class BeanDisponibilite implements Serializable {
             //Recuperation de la date sous le bon format
             SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY", Locale.FRENCH);
             String date = sdf.format(dateReservation);
-            System.out.println(date);
             
             //Connect + select des dates
             accesBD.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
