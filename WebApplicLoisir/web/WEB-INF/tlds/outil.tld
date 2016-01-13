@@ -21,11 +21,6 @@
       </listener>
     -->
   <tag>
-    <name>select</name>
-    <tag-class>BalisesPerso.produits</tag-class>
-    <body-content>JSP</body-content>
-  </tag>
-  <tag>
     <name>currentDate</name>
     <tag-class>BalisesPerso.BaliseDate</tag-class>
     <body-content>empty</body-content>
@@ -34,5 +29,10 @@
       <rtexprvalue>true</rtexprvalue>
       <type>java.lang.String</type>
     </attribute>
+  </tag>
+  <tag>
+    <name>displayProducts</name>
+    <tag-class>BalisesPerso.displayProduct</tag-class>
+    <body-content>JSP</body-content>
   </tag>
 </taglib>

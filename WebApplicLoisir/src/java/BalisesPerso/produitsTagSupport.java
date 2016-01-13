@@ -5,7 +5,9 @@
  */
 package BalisesPerso;
 
+import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+import org.apache.jasper.el.JspELException;
 
 /**
  *
@@ -13,5 +15,31 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  */
 public class produitsTagSupport extends BodyTagSupport{
     
+    public produitsTagSupport()
+    {
+        super();
+    }
     
+    @Override
+    public int doStartTag() throws JspException
+    {
+        System.err.println("do start tag");
+        return EVAL_BODY_BUFFERED;
+    }
+    
+    
+    @Override
+    public int doAfterBody() throws JspException
+    {
+        System.err.println("do after body");
+        bodyContent.clearBody();
+        return SKIP_BODY;
+    }
+    
+    @Override
+    public int doEndTag() throws JspException
+    {
+        System.err.println("do end tag");
+        return EVAL_PAGE;
+    }
 }
