@@ -13,7 +13,10 @@
         <title>JSP Page</title>
     </head>
     <body>
-        <h1>Hello World!</h1>
+        <h1>Consomme !</h1>
         <outil:currentDate langue="UK"/>
+        <outil:displayProducts>
+            select * from produits
+        </outil:displayProducts>
     </body>
 </html>

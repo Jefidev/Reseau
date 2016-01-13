@@ -22,9 +22,6 @@
         <h1>Réserver vos tikets pour le parc</h1>
         <p>Session de <%=session.getAttribute("login")%></p>
         <outil:currentDate langue="UK"/>
-        <outil:displayProducts>
-            testificate
-        </outil:displayProducts>
         <p>Attention le nombre d'entrée est limitée à 20 par jours.</p>
         <p>Pour quelle date voulez vous réserver vos tikets ?</p>
         <form method="POST" action="parc.jsp">

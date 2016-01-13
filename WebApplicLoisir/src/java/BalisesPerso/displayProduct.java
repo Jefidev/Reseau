@@ -6,75 +6,70 @@
 package BalisesPerso;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+import newBean.BeanBDAccess;
+import newBean.connexionException;
 
 /**
  *
  * @author Jerome
  */
 public class displayProduct extends BodyTagSupport {
-
+    
+    private boolean erreur;
+    private Statement requete;
+    
     /**
      * Creates new instance of tag handler
      */
     public displayProduct() {
         super();
+        erreur = false;
     }
-
-    ////////////////////////////////////////////////////////////////
-    ///                                                          ///
-    ///   User methods.                                          ///
-    ///                                                          ///
-    ///   Modify these methods to customize your tag handler.    ///
-    ///                                                          ///
-    ////////////////////////////////////////////////////////////////
+    
     /**
      * Method called from doStartTag(). Fill in this method to perform other
      * operations from doStartTag().
      */
     private void otherDoStartTagOperations() {
-        // TODO: code that performs other operations in doStartTag
-        //       should be placed here.
-        //       It will be called after initializing variables, 
-        //       finding the parent, setting IDREFs, etc, and 
-        //       before calling theBodyShouldBeEvaluated(). 
-        //
-        //       For example, to print something out to the JSP, use the following:
-        //
-        //   try {
-        //       JspWriter out = pageContext.getOut();
-        //       out.println("something");
-        //   } catch (IOException ex) {
-        //       // do something
-        //   }
+        
+        BeanBDAccess bd = new BeanBDAccess();
         
         
-        System.err.println("Other do start tag = connexion à la BD");
+        try {
+            bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            requete = bd.getConnexion().createStatement();
+        } catch (ClassNotFoundException ex) {
+            erreur = true;
+            System.err.println("Driver introuvable");
+        } catch (SQLException ex) {
+            erreur = true;
+            System.err.println("Exception SQL");
+        } catch (connexionException ex) {
+            erreur = true;
+            System.err.println("Erreur de connexion à la base");
+        }
         
     }
     
     private boolean theBodyShouldBeEvaluated() {
-        // TODO: code that determines whether the body should be
-        //       evaluated should be placed here.
-        //       Called from the doStartTag() method.
-        System.err.println("body should be evaluated");
-        return true;
+        //if(erreur == true) return false et inversément
+        return !erreur;
     }
 
     /**
      * Method called from doEndTag() Fill in this method to perform other
      * operations from doEndTag().
      */
-    private void otherDoEndTagOperations() {
-        // TODO: code that performs other operations in doEndTag
-        //       should be placed here.
-        //       It will be called after initializing variables,
-        //       finding the parent, setting IDREFs, etc, and
-        //       before calling shouldEvaluateRestOfPageAfterEndTag().
-    }
+    private void otherDoEndTagOperations() {/*nothing*/}
     
     
      /**
@@ -82,59 +77,60 @@ public class displayProduct extends BodyTagSupport {
      * generated after this tag is finished. Called from doEndTag().
      */
     private boolean shouldEvaluateRestOfPageAfterEndTag() {
-        // TODO: code that determines whether the rest of the page
-        //       should be evaluated after the tag is processed
-        //       should be placed here.
-        //       Called from the doEndTag() method.
-        //
-        System.err.println("Evaluate the rest of the page");
-        return true;
+        return !erreur;
     }
     
-    /**
-     * Fill in this method to determine if the tag body should be evaluated
-     * again after evaluating the body. Use this method to create an iterating
-     * tag. Called from doAfterBody().
-     */
     private boolean theBodyShouldBeEvaluatedAgain() {
-        // TODO: code that determines whether the tag body should be
-        //       evaluated again after processing the tag
-        //       should be placed here.
-        //       You can use this method to create iterating tags.
-        //       Called from the doAfterBody() method.
-        //
+        //j'ai pas envie de lire 2 fois le body
         return false;
     }  
     
-    
-    
-
-    /**
-     * Fill in this method to process the body content of the tag. You only need
-     * to do this if the tag's BodyContent property is set to "JSP" or
-     * "tagdependent." If the tag's bodyContent is set to "empty," then this
-     * method will not be called.
-     */
+    //Cette methode va permettre d'afficher ce que je veux.
     private void writeTagBodyContent(JspWriter out, BodyContent bodyContent) throws IOException {
-        // TODO: insert code to write html before writing the body content.
-        // e.g.:
-        //
-        // out.println("<strong>" + attribute_1 + "</strong>");
-        // out.println("   <blockquote>");
+        
+        //Recuperation de la requete à executer
+        ResultSet rs = null;
+        System.err.println(bodyContent.getString());
+        try {
+            rs = requete.executeQuery(bodyContent.getString());
+        } catch (SQLException ex) {
+            System.err.println("Erreur d'execution de la requete");
+            ex.printStackTrace();
+            erreur = true;
+            return;
+        }
 
-        // write the body content (after processing by the JSP engine) on the output Writer
-        out.println("<h1>victory : "+bodyContent.getString() +"</h1>");
-        bodyContent.writeOut(out);
-
-        // Or else get the body content as a string and process it, e.g.:
-        //     String bodyStr = bodyContent.getString();
-        //     String result = yourProcessingMethod(bodyStr);
-        //     out.println(result);
-        // TODO: insert code to write html after writing the body content.
-        // e.g.:
-        //
-        // out.println("   </blockquote>");
-        // clear the body content for the next time through.
+        try {
+            //Maintenant on va boucler sur notre result set pour afficher les produits
+            
+            while(rs.next())
+            {
+                out.println("<div>");
+                out.println("<h2>" + rs.getString("NOM")+ "</h2>");
+                out.println("<p>" + rs.getString("DESCRIPTION") + "</p>");
+                out.println("<p>Prix : "+ rs.getFloat("PRIX") + "</p>");
+                
+                int qttStock = rs.getInt("QUANTITE") - rs.getInt("RESERVE");
+                
+                out.println("<p>Quantité en stock : "+ qttStock +"</p>");
+                
+                //formulaire pour commander
+                out.println("<form action=\"Controler\" method=\"POST\">");
+                out.println("<p>Commander : </p><input type=\"number\" name = \"quantite\" value = \"0\" min=\"1\" max = \"" + qttStock + "\" />");
+                out.println("<input type=\"hidden\" name=\"action\" value=\""+ rs.getInt("ID_PRODUIT") +"\"/>");
+                //champ cacher pour la servlet de controle
+                out.println("<input type=\"commande\" value=\"Commander\">");
+                out.println("</form>");
+                out.println("</div>");
+            }
+        } catch (SQLException ex) {
+            System.err.println("Erreur de parcours du resultset");
+            ex.printStackTrace();
+            erreur = true;
+            return;
+        }
+        
+        //On efface le body pour pas le réévaluer plus tard.
         bodyContent.clearBody();
     }
 
