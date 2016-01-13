@@ -2,15 +2,17 @@ package serveur_compta;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyException;
+import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.security.cert.X509Certificate;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -21,6 +23,40 @@ import javax.crypto.SecretKey;
 
 public final class Crypto
 {
+    /* ASYMETRIQUE */
+    /*public byte[] asymCrypt(byte[]tocrypt)
+    {
+        try          
+        {     
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream(getNomCompletFichier(Kstore)),mdpKeystore.toCharArray());
+            X509Certificate certif = (X509Certificate)ks.getCertificate(alias);
+            PublicKey cléPublique = certif.getPublicKey();
+            Cipher chiffrement= Cipher.getInstance("RSA/ECB/PKCS1Padding","BC");
+            chiffrement.init(Cipher.ENCRYPT_MODE, cléPublique);
+            return chiffrement.doFinal(tocrypt);     
+        }
+        return null;
+    }
+    
+    public byte[] asymDecrypt(byte []todecrypt)
+    {
+        try          
+        {             
+            KeyStore ks = KeyStore.getInstance("JKS");
+            ks.load(new FileInputStream(getNomCompletFichier(Kstore)),mdpKeystore.toCharArray());
+            Enumeration en = ks.aliases(); 
+            PrivateKey Clepriv=(PrivateKey)ks.getKey(alias,mdpPrivate.toCharArray());
+            System.out.println(" *** Cle privee recuperee = " + Clepriv.toString()); 
+            Cipher chiffrement= Cipher.getInstance("RSA/ECB/PKCS1Padding","BC");
+            chiffrement.init(Cipher.DECRYPT_MODE, Clepriv);
+            return chiffrement.doFinal(todecrypt);             
+        }        
+
+       return null;
+    }*/
+    
+    
     /* DIGEST SALE */
     public static byte[] saltDigest(String msg, long temps, double aleatoire)
     {       
@@ -49,6 +85,12 @@ public final class Crypto
     }
     
     
+    /* HMAC */
+    
+    
+    /* SIGNATURE */
+    
+    
     /* SYMETRIQUE */
     public static SecretKey generateSecretKey()
     {        
@@ -65,7 +107,6 @@ public final class Crypto
         
         return null;
     }
-    
     
     public static byte[] symCrypt(SecretKey cle, byte[] tocrypt)
     {
@@ -99,7 +140,6 @@ public final class Crypto
         
         return null; 
     }
-    
     
     public static byte[] symDecrypt(SecretKey cle, byte[] todecrypt)
     {
