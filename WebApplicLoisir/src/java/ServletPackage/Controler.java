@@ -218,6 +218,8 @@ public class Controler extends HttpServlet {
         if(!verifLogin(sess, response))
             return;
         
+        System.out.println(sess.getAttribute("login"));
+        
         //Redirection à l'accueil
         RequestDispatcher rd = request.getRequestDispatcher("accueil.jsp");
         try {

@@ -10,7 +10,7 @@
     <%
         if(request.getParameter("login") == null && session.getAttribute("login") == null)
             response.sendRedirect("index.html");
-        else
+        else if(request.getParameter("login") != null)
             session.setAttribute("login", request.getParameter("login"));
     %>
     <head>
