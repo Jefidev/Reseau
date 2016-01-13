@@ -170,7 +170,7 @@ public class Runnable_BISAMAP implements Runnable
             }
             
             // Comparaison
-            if (!(MessageDigest.isEqual(pwdClient, Crypto.Digest(passwordDB, temps, aleatoire))))
+            if (!(MessageDigest.isEqual(pwdClient, Crypto.saltDigest(passwordDB, temps, aleatoire))))
             {
                 SendMsg("NON#Mauvais mot de passe");
                 System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé (mauvais password)");

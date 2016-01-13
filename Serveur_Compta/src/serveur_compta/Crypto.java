@@ -1,20 +1,29 @@
 package serveur_compta;
 
-import java.io.*;
-import java.security.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.KeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 
 public final class Crypto
 {
     /* DIGEST SALE */
-    public static byte[] Digest(String msg, long temps, double aleatoire)
-    {
-        byte[] digest = null;
-        
+    public static byte[] saltDigest(String msg, long temps, double aleatoire)
+    {       
         try
         {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -24,7 +33,8 @@ public final class Crypto
             bdos.writeLong(temps);
             bdos.writeDouble(aleatoire);
             md.update(baos.toByteArray());
-            digest = md.digest();
+            byte[] digest = md.digest();
+            return digest;
         }
         catch (IOException ex)
         {
@@ -35,24 +45,92 @@ public final class Crypto
             System.err.println("Crypto : Digest : NoSuchAlgorithmException : " + ex.getMessage());
         }
         
-        return digest;
+        return null;
     }
     
+    
+    /* SYMETRIQUE */
     public static SecretKey generateSecretKey()
-    {
-        String CodeProvider = "BC";
-        KeyGenerator cleGen = null;
-        
+    {        
         try
         {
-            cleGen = KeyGenerator.getInstance("DES", CodeProvider);
+            KeyGenerator cleGen = KeyGenerator.getInstance("DES", "BC");
+            cleGen.init(new SecureRandom());
+            return cleGen.generateKey();
         }
         catch (NoSuchAlgorithmException | NoSuchProviderException ex)
         {
             System.err.println("Crypto : generateSecretKey : NoSuchAlgorithmException ou NoSuchProviderException : " + ex.getMessage());
         }
         
-        cleGen.init(new SecureRandom());
-        return cleGen.generateKey();
+        return null;
+    }
+    
+    
+    public static byte[] symCrypt(SecretKey cle, byte[] tocrypt)
+    {
+        try
+        {
+            Cipher chiffrement = Cipher.getInstance("DES/ECB/PKCS5Padding","BC"); 
+            chiffrement.init(Cipher.ENCRYPT_MODE, cle); 
+            byte[] texteCrypte = chiffrement.doFinal(tocrypt);
+            return texteCrypte;
+        }
+        catch (NoSuchAlgorithmException | NoSuchProviderException ex)      
+        {
+            System.err.println("Crypto : symCrypt : NoSuchAlgorithmException ou NoSuchProviderException : " + ex.getMessage());
+        }
+        catch (IllegalBlockSizeException ex)
+        {
+            System.err.println("Crypto : symCrypt : IllegalBlockSizeException : " + ex.getMessage());
+        }
+        catch (BadPaddingException ex)
+        {
+            System.err.println("Crypto : symCrypt : BadPaddingException : " + ex.getMessage());
+        }
+        catch (NoSuchPaddingException ex)
+        {
+            System.err.println("Crypto : symCrypt : NoSuchPaddingException : " + ex.getMessage());
+        }
+        catch (InvalidKeyException ex)
+        {
+            System.err.println("Crypto : symCrypt : InvalidKeyException : " + ex.getMessage());
+        }
+        
+        return null; 
+    }
+    
+    
+    public static byte[] symDecrypt(SecretKey cle, byte[] todecrypt)
+    {
+        try
+        {
+            Cipher chiffrementD = Cipher.getInstance("DES/ECB/PKCS5Padding", "BC");
+            chiffrementD.init(Cipher.DECRYPT_MODE,cle); 
+            byte[] texteDecrypte = chiffrementD.doFinal(todecrypt);
+            return texteDecrypte;
+        }
+        catch (NoSuchAlgorithmException | NoSuchProviderException ex)      
+        {
+            System.err.println("Crypto : symDecrypt : NoSuchAlgorithmException ou NoSuchProviderException : " + ex.getMessage());
+        }
+        catch (IllegalBlockSizeException ex)
+        {
+            System.err.println("Crypto : symDecrypt : IllegalBlockSizeException : " + ex.getMessage());
+        }
+        catch (BadPaddingException ex)
+        {
+            System.err.println("Crypto : symDecrypt : BadPaddingException : " + ex.getMessage());
+        }
+        catch (NoSuchPaddingException ex)
+        {
+            System.err.println("Crypto : symDecrypt : NoSuchPaddingException : " + ex.getMessage());
+        }
+        catch (InvalidKeyException ex)
+        {
+            System.err.println("Crypto : symDecrypt : InvalidKeyException : " + ex.getMessage());
+        }
+        
+        return null; 
     }
 }
