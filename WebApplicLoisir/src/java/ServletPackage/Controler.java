@@ -54,6 +54,12 @@ public class Controler extends HttpServlet {
             case "parc":
                     parcRequest(request, response);
                 break;
+            case "commande":
+                    commandeRequest(request, response);
+                break;
+            case "retourAccueil":
+                    retourAccueilRequest(request, response);
+                break;
         }
         
         //RequestDispatcher rd = getServletContext().getRequestDispatcher("/accueil.jsp");
@@ -99,7 +105,11 @@ public class Controler extends HttpServlet {
         }
     }
     
-    
+    /****************************MAGASIN REQUEST*********
+     * @param request
+     * @param response 
+     * Verifie si le client est log et redirige vers la page magasin
+     */
     private void magasinRequest(HttpServletRequest request, HttpServletResponse response)
     {
         HttpSession sess = request.getSession(true);
@@ -119,7 +129,12 @@ public class Controler extends HttpServlet {
         }
     }
     
-    
+    /****** Parc request
+     * @param request
+     * @param response
+     * 
+     * On verifie que le client est bien log et si c'est le cas on va rediriger vers la page parc
+     */
     private void parcRequest(HttpServletRequest request, HttpServletResponse response)
     {
         HttpSession sess = request.getSession(true);
@@ -137,6 +152,48 @@ public class Controler extends HttpServlet {
         }
     }
     
+    //acces BD donc synchronized
+    private synchronized void commandeRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        //Verification du log du client
+        HttpSession session = request.getSession(true);
+        
+        if(!verifLogin(session, response))
+            return;
+        
+        //Verification de la commande passee + qtt en stock   
+        int qttSouhaitee = 0;
+        try
+        {
+            qttSouhaitee = Integer.parseInt(request.getParameter("quantite"));
+        }
+        catch(NumberFormatException ex)
+        {
+            redirectErreur(request, response);
+            return;
+        }
+        
+        //Recuperation du produit à commander
+        BeanBDAccess bd = new  BeanBDAccess();
+        
+        try {
+            bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+            redirectErreur(request, response);
+            return;
+        } catch (SQLException | connexionException ex) {
+            ex.printStackTrace();
+            redirectErreur(request, response);
+            return;
+        }
+        
+        System.err.println(session.getAttribute("login"));
+        redirectErreur(request, response);
+    }
+    
+    
+    //true si le client est log, redirection si ce n'est pas le cas
     private boolean verifLogin(HttpSession sess, HttpServletResponse r)
     {
         try {
@@ -152,7 +209,39 @@ public class Controler extends HttpServlet {
         
         return true;
     }
-
+    
+    //Retour sur la page d'accueil apres une erreur
+    private void retourAccueilRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        HttpSession sess = request.getSession(true);
+        
+        if(!verifLogin(sess, response))
+            return;
+        
+        //Redirection à l'accueil
+        RequestDispatcher rd = request.getRequestDispatcher("accueil.jsp");
+        try {
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    private void redirectErreur(HttpServletRequest request, HttpServletResponse response)
+    {
+        RequestDispatcher rd = request.getRequestDispatcher("erreur.jsp");
+        try {
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP <code>GET</code> method.

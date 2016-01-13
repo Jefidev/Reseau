@@ -90,7 +90,7 @@ public class displayProduct extends BodyTagSupport {
         
         //Recuperation de la requete à executer
         ResultSet rs = null;
-        System.err.println(bodyContent.getString());
+
         try {
             rs = requete.executeQuery(bodyContent.getString());
         } catch (SQLException ex) {
@@ -117,9 +117,15 @@ public class displayProduct extends BodyTagSupport {
                 //formulaire pour commander
                 out.println("<form action=\"Controler\" method=\"POST\">");
                 out.println("<p>Commander : </p><input type=\"number\" name = \"quantite\" value = \"0\" min=\"1\" max = \"" + qttStock + "\" />");
-                out.println("<input type=\"hidden\" name=\"action\" value=\""+ rs.getInt("ID_PRODUIT") +"\"/>");
+                
                 //champ cacher pour la servlet de controle
-                out.println("<input type=\"commande\" value=\"Commander\">");
+                //id du produit
+                out.println("<input type=\"hidden\" name=\"idProduit\" value=\""+ rs.getInt("ID_PRODUIT") +"\"/>");
+                
+                //action
+                out.println("<input type=\"hidden\" name=\"action\" value=\"commande\"/>");
+                
+                out.println("<input type=\"submit\" value=\"Commander\">");
                 out.println("</form>");
                 out.println("</div>");
             }
