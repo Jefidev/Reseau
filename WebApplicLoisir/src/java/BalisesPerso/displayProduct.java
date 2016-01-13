@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -116,7 +114,7 @@ public class displayProduct extends BodyTagSupport {
                 
                 //formulaire pour commander
                 out.println("<form action=\"Controler\" method=\"POST\">");
-                out.println("<p>Commander : </p><input type=\"number\" name = \"quantite\" value = \"0\" min=\"1\" max = \"" + qttStock + "\" />");
+                out.println("<p>Commander : </p><input type=\"number\" name = \"quantite\" value = \"1\" min=\"1\" max = \"" + qttStock + "\" />");
                 
                 //champ cacher pour la servlet de controle
                 //id du produit

@@ -163,9 +163,11 @@ public class Controler extends HttpServlet {
         
         //Verification de la commande passee + qtt en stock   
         int qttSouhaitee = 0;
+        int idProduit = 0;
         try
         {
             qttSouhaitee = Integer.parseInt(request.getParameter("quantite"));
+            idProduit = Integer.parseInt(request.getParameter("idProduit"));
         }
         catch(NumberFormatException ex)
         {
@@ -178,6 +180,29 @@ public class Controler extends HttpServlet {
         
         try {
             bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            ResultSet rs = bd.selection("*", "produits", "ID_PRODUIT = " + idProduit);
+            
+            if(!rs.next())
+            {
+                //Le produit n'existe pas y'a un problème
+                redirectErreur(request, response);
+                return;
+            }
+            
+            int qttRestante = rs.getInt("QUANTITE") - rs.getInt("RESERVE");
+            
+            if(qttRestante < qttSouhaitee)
+            {
+                //erreur de qtt
+            }
+            
+            if(qttSouhaitee < 0)
+            {
+                //page d'erreur;
+            }
+            
+            //Ici il faut changer la qtt reservee
+
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
             redirectErreur(request, response);
