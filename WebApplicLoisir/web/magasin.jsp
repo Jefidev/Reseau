@@ -12,11 +12,27 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
     </head>
-    <body>
+    
         <h1>Consomme !</h1>
         <outil:currentDate langue="UK"/>
+        
+        <%
+            if(request.getAttribute("erreurCommande") ==  null)
+            {
+        %>
         <outil:displayProducts>
             select * from produits
         </outil:displayProducts>
-    </body>
+        <%
+            }
+            else
+            {   
+                String message = request.getAttribute("erreurCommande").toString();
+                int id = Integer.parseInt(request.getAttribute("idProduit").toString());
+        %>
+        <outil:displayProducts erreurCommmande="<%=message%>" idItem="<%=id%>">
+            select * from produits
+        </outil:displayProducts>
+        <%}%>
+    
 </html>

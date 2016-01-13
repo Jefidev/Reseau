@@ -26,8 +26,8 @@ public class displayProduct extends BodyTagSupport {
     private Statement requete;
     
     //balise des attributs
-    private int erreurCommande;
-    private String idItem;
+    private String erreurCommande;
+    private int idItem;
     
     /**
      * Creates new instance of tag handler
@@ -101,10 +101,15 @@ public class displayProduct extends BodyTagSupport {
             erreur = true;
             return;
         }
-
+        
+        int idProduitErreur = 0;
+        
+        //Si il y a eu une erreur à l'expédition d'une commande
+        if(erreurCommande != null)
+            idProduitErreur = idItem;
+            
         try {
             //Maintenant on va boucler sur notre result set pour afficher les produits
-            
             while(rs.next())
             {
                 out.println("<div>");
@@ -129,6 +134,10 @@ public class displayProduct extends BodyTagSupport {
                 
                 out.println("<input type=\"submit\" value=\"Commander\">");
                 out.println("</form>");
+                //Si il y a eu une erreur de command eon affiche le message
+                if(idProduitErreur == rs.getInt("ID_PRODUIT"))
+                    out.println("<p style=\"color: red\">"+ erreurCommande +"</p>");
+                
                 out.println("</div>");
             }
         } catch (SQLException ex) {
@@ -227,11 +236,11 @@ public class displayProduct extends BodyTagSupport {
     } 
     
     
-    public void setErreurCommande(int erreur) {
-        this.erreurCommande = erreur;
+    public void setErreurCommmande(String erreurCommande) {
+        this.erreurCommande = erreurCommande;
     }
 
-    public void setIdItem(String idItem) {
+    public void setIdItem(int idItem) {
         this.idItem = idItem;
     }
 }

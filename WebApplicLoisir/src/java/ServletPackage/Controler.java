@@ -194,16 +194,35 @@ public class Controler extends HttpServlet implements HttpSessionListener{
             int qttRestante = rs.getInt("QUANTITE") - rs.getInt("RESERVE");
             
             //On va tester si le stock a pas changé
+            boolean erreurQtt = false;
             if(qttRestante < qttSouhaitee)
             {
-                //erreur de qtt  
+                request.setAttribute("erreurCommande", "La quantité d'article que vous avez commandée est supérieur à celle en stock");
+                request.setAttribute("idProduit", idProduit);
+                erreurQtt =  true;
             }
             
             if(qttSouhaitee < 0)
             {
-                //page d'erreur;
+                request.setAttribute("erreurCommande", "Vous ne pouvez pas commander une quantité nulle ou négative");
+                request.setAttribute("idProduit", idProduit);
+                erreurQtt =  true;
             }
             
+            //Si y'a une erreur dans la quantité on renvoit à l'expéditeur
+            if(erreurQtt)
+            {
+                RequestDispatcher rd = request.getRequestDispatcher("magasin.jsp");
+                try {
+                    rd.forward(request, response);
+                } catch (ServletException ex) {
+                    Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                return;
+            }
             //Ici il faut changer la qtt reservee
 
         } catch (ClassNotFoundException ex) {
@@ -245,8 +264,6 @@ public class Controler extends HttpServlet implements HttpSessionListener{
         
         if(!verifLogin(sess, response))
             return;
-        
-        System.out.println(sess.getAttribute("login"));
         
         //Redirection à l'accueil
         RequestDispatcher rd = request.getRequestDispatcher("accueil.jsp");
