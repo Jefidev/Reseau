@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 
@@ -27,7 +29,7 @@ import newBean.connexionException;
  * Cette servlet controler va servir à rediriger l'utilisateur sur la bonne page
  * selon sa requête
  */
-public class Controler extends HttpServlet {
+public class Controler extends HttpServlet implements HttpSessionListener{
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -191,9 +193,10 @@ public class Controler extends HttpServlet {
             
             int qttRestante = rs.getInt("QUANTITE") - rs.getInt("RESERVE");
             
+            //On va tester si le stock a pas changé
             if(qttRestante < qttSouhaitee)
             {
-                //erreur de qtt
+                //erreur de qtt  
             }
             
             if(qttSouhaitee < 0)
@@ -307,4 +310,14 @@ public class Controler extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
+    @Override
+    public void sessionCreated(HttpSessionEvent se) {
+        System.out.println("create");
+    }
+
+    @Override
+    public void sessionDestroyed(HttpSessionEvent se) {
+        System.out.println("destroy");
+    }
 }

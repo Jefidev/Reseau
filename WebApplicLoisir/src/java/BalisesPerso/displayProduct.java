@@ -25,6 +25,10 @@ public class displayProduct extends BodyTagSupport {
     private boolean erreur;
     private Statement requete;
     
+    //balise des attributs
+    private int erreurCommande;
+    private String idItem;
+    
     /**
      * Creates new instance of tag handler
      */
@@ -221,4 +225,13 @@ public class displayProduct extends BodyTagSupport {
         // Since the doAfterBody method is guarded, place exception handing code here.
         throw new JspException("Error in displayProduct tag", ex);
     } 
+    
+    
+    public void setErreurCommande(int erreur) {
+        this.erreurCommande = erreur;
+    }
+
+    public void setIdItem(String idItem) {
+        this.idItem = idItem;
+    }
 }

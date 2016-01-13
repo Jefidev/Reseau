@@ -34,5 +34,15 @@
     <name>displayProducts</name>
     <tag-class>BalisesPerso.displayProduct</tag-class>
     <body-content>JSP</body-content>
+    <attribute>
+      <name>erreurCommmande</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>int</type>
+    </attribute>
+    <attribute>
+      <name>idItem</name>
+      <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.String</type>
+    </attribute>
   </tag>
 </taglib>
