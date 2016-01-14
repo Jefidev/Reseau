@@ -87,7 +87,6 @@ public class BeanDisponibilite implements Serializable {
             
             if(!rs.next())
             {
-                erreur = "aucun tuple";
                 nbrReservation = 0;
                 return;
             }

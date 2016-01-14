@@ -16,9 +16,13 @@ public class SessionListener implements HttpSessionListener{
 
     @Override
     public void sessionCreated(HttpSessionEvent se) {
-        System.err.println("create");
+        /*nothing*/
     }
-
+    
+    /**
+     * @param se 
+     * Ici on va supprimer les items reservés par le client qui a timeOut
+     */
     @Override
     public void sessionDestroyed(HttpSessionEvent se) {
         System.err.println("destroy");

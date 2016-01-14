@@ -10,8 +10,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -103,6 +101,16 @@ public class listCaddie extends BodyTagSupport {
                 out.println("<p>prix unitaire : " + String.valueOf(prix) + "</p>");
                 out.println("<p>Quantite : " + String.valueOf(quantite) + "</p>");
                 out.println("<p>prix total : " + String.valueOf(prix * quantite) + "</p>");
+                
+                //Formulaire pour supprimer la commande
+                out.println("<form action=\"Controler\" method=\"POST\">");
+                //action
+                out.println("<input type=\"hidden\" name=\"action\" value=\"suppressionArticle\"/>");
+                out.println("<input type=\"hidden\" name=\"idArticle\" value=\""+ rs.getInt("ID_PRODUIT") +"\"/>");
+
+                out.println("<input type=\"submit\" value=\"Supprimer\">");
+                out.println("</form>");
+                
                 out.println("</div>");
             }
             

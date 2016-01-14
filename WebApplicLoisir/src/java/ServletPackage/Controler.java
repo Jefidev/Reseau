@@ -219,10 +219,7 @@ public class Controler extends HttpServlet{
         if(!verifLogin(sess, response))
             return;
         
-        System.err.println("invalidation de la session");
-        sess.invalidate();
-        
-        RequestDispatcher rd = request.getRequestDispatcher("caddie.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("payemment.jsp");
         try {
             rd.forward(request, response);
         } catch (ServletException ex) {
