@@ -38,12 +38,15 @@
         
         <% if(curDate != null){%>
         
-        <p>Pour l'instant <jsp:getProperty name="beanReservation" property="nbrReservation" /> entrées ont été réservées</p>
-        <p>réserver des entrées (999€/entrées) : </p>
+        <p>Pour l'instant <jsp:getProperty name="beanReservation" property="nbrReservation" /> entrées ont été réservées
+        pour le <jsp:getProperty name="beanReservation" property="dateReservation" /></p>
+        <p>réserver des entrées (5€/entrées) : </p>
         
-        <form method="POST" action="parc.jsp">
+        <form method="POST" action="Controler">
             <input type="number" name="reservation">
             <input type="submit" value="Ajouter au caddie">
+            <input type="hidden" name="action" value="reserverParc"/>
+            <input type="hidden" name="date" value="<jsp:getProperty name="beanReservation" property="dateReservation" />"/>
         </form>
         
         <% } %>      

@@ -81,7 +81,7 @@ public class BeanDisponibilite implements Serializable {
             //Connect + select des dates
             accesBD.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
             //requete
-            ResultSet rs = accesBD.selection(   "NBR_RESERVATIONS", 
+            ResultSet rs = accesBD.selection(   "*", 
                                                 "RESERVATIONS_PARC", 
                                                 "DATE_RESERVATION = '" + date + "'");
             
@@ -91,7 +91,10 @@ public class BeanDisponibilite implements Serializable {
                 return;
             }
             
-            nbrReservation = rs.getInt(1);
+            nbrReservation = rs.getInt("NBR_RESERVATIONS");
+            int nbrAttente = rs.getInt("ATTENTE_CONFIRMATION");
+            
+            nbrReservation = nbrReservation + nbrAttente;
             
         } catch (ClassNotFoundException | SQLException | connexionException ex) {
             erreur = "Erreur de connexion à la BD";
