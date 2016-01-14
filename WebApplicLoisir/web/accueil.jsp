@@ -28,5 +28,9 @@
             <input type="submit" value="Acheter des guides ou des objets \"nature\""/>
             <input type="hidden" name="action" value="magasin"/>
         </form>
+        <form action="Controler" method="POST">
+            <input type="submit" value="Afficher le caddie"/>
+            <input type="hidden" name="action" value="caddie"/>
+        </form>
     </body>
 </html>

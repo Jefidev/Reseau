@@ -16,6 +16,11 @@
         <h1>Consomme !</h1>
         <outil:currentDate langue="UK"/>
         
+        <form action="Controler" method="POST">
+            <input type="submit" value="Retour à l'accueil"/>
+            <input type="hidden" name="action" value="retourAccueil"/>
+        </form>
+        
         <%
             if(request.getAttribute("erreurCommande") ==  null)
             {

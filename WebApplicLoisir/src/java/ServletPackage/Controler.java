@@ -58,6 +58,9 @@ public class Controler extends HttpServlet implements HttpSessionListener{
             case "parc":
                     parcRequest(request, response);
                 break;
+            case "caddie":
+                    caddieRequest(request, response);
+                break;
             case "commande":
                     commandeRequest(request, response);
                 break;
@@ -109,6 +112,11 @@ public class Controler extends HttpServlet implements HttpSessionListener{
         }
     }
     
+    
+    
+    
+    
+    
     /****************************MAGASIN REQUEST*********
      * @param request
      * @param response 
@@ -133,6 +141,11 @@ public class Controler extends HttpServlet implements HttpSessionListener{
         }
     }
     
+    
+    
+    
+    
+    
     /****** Parc request
      * @param request
      * @param response
@@ -155,6 +168,40 @@ public class Controler extends HttpServlet implements HttpSessionListener{
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    
+    
+    
+    
+    
+    
+    /****** Caddie request
+     * @param request
+     * @param response
+     * 
+     * On verifie que le client est bien log et si c'est le cas on va rediriger vers la page parc
+     */
+    private void caddieRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        HttpSession sess = request.getSession(true);
+        
+        if(!verifLogin(sess, response))
+            return;
+        
+        RequestDispatcher rd = request.getRequestDispatcher("caddie.jsp");
+        try {
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
+    
+    
     
     //acces BD donc synchronized
     private synchronized void commandeRequest(HttpServletRequest request, HttpServletResponse response)
@@ -279,7 +326,7 @@ public class Controler extends HttpServlet implements HttpSessionListener{
             
             
             //On peut rediriger sur la page caddie
-            RequestDispatcher rd = request.getRequestDispatcher("magasin.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("caddie.jsp");
                 try {
                     rd.forward(request, response);
                 } catch (ServletException ex) {
