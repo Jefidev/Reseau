@@ -28,6 +28,7 @@
         <%}
         else{
             %>
+            <outil:listCaddie>caddie</outil:listCaddie>
         <%}%>     
     </body>
     

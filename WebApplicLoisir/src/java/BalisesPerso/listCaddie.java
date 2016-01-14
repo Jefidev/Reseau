@@ -49,7 +49,6 @@ public class listCaddie extends BodyTagSupport {
      */
     private void otherDoStartTagOperations() {
         BeanBDAccess bd = new BeanBDAccess();
-
         try {
             bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
             requete = bd.getConnexion().createStatement();
@@ -84,10 +83,30 @@ public class listCaddie extends BodyTagSupport {
     private void writeTagBodyContent(JspWriter out, BodyContent bodyContent) throws IOException {
         //On recupere le contenu du caddie dans la session
         String contenuBody = bodyContent.getString();
+        System.err.println("contenu caddie = " + contenuBody);
         HashMap contenuCaddie = (HashMap) pageContext.getSession().getAttribute(contenuBody);
         
         try {
             ResultSet rs = requete.executeQuery("select * from produits");
+            
+            //Parcours des produits
+            while(rs.next())
+            {
+                if(contenuCaddie.get(rs.getInt("ID_PRODUIT")) == null)
+                    continue;
+                
+                //Si le produit a été commandé par le client
+                int quantite = (int)contenuCaddie.get(rs.getInt("ID_PRODUIT"));
+                float prix = (float) rs.getFloat("PRIX");
+                
+                out.println("<div>");
+                out.println("<h2>"+ rs.getString("NOM") +"</h2>");
+                out.println("<p>prix unitaire : " + String.valueOf(prix) + "</p>");
+                out.println("<p>Quantite : " + String.valueOf(quantite) + "</p>");
+                out.println("<p>prix total : " + String.valueOf(prix * quantite) + "</p>");
+                out.println("</div>");
+            }
+            
         } catch (SQLException ex) {
             erreur = true;
             return;
