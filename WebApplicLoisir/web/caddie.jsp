@@ -27,6 +27,7 @@
             <h2>Votre caddie est vide</h2>
         <%}
         else{
+            //Si on a des choses à afficher dans le caddie
             %>
             <outil:listCaddie>caddie</outil:listCaddie>
         <%}%>     

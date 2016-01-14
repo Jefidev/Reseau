@@ -83,7 +83,6 @@ public class listCaddie extends BodyTagSupport {
     private void writeTagBodyContent(JspWriter out, BodyContent bodyContent) throws IOException {
         //On recupere le contenu du caddie dans la session
         String contenuBody = bodyContent.getString();
-        System.err.println("contenu caddie = " + contenuBody);
         HashMap contenuCaddie = (HashMap) pageContext.getSession().getAttribute(contenuBody);
         
         try {
@@ -106,6 +105,15 @@ public class listCaddie extends BodyTagSupport {
                 out.println("<p>prix total : " + String.valueOf(prix * quantite) + "</p>");
                 out.println("</div>");
             }
+            
+            
+            //Affichage du boutton pour valider les achats
+            out.println("<form action=\"Controler\" method=\"POST\">");
+            //action
+            out.println("<input type=\"hidden\" name=\"action\" value=\"achat\"/>");
+                
+            out.println("<input type=\"submit\" value=\"Acheter\">");
+            out.println("</form>");
             
         } catch (SQLException ex) {
             erreur = true;

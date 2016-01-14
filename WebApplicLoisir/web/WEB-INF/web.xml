@@ -13,4 +13,8 @@
             30
         </session-timeout>
     </session-config>
+    <listener>
+        <display-name>sessionListener</display-name>
+        <listener-class>ServletPackage.SessionListener</listener-class>
+    </listener>
 </web-app>

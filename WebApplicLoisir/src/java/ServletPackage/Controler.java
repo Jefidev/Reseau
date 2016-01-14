@@ -31,7 +31,7 @@ import newBean.requeteException;
  * Cette servlet controler va servir à rediriger l'utilisateur sur la bonne page
  * selon sa requête
  */
-public class Controler extends HttpServlet implements HttpSessionListener{
+public class Controler extends HttpServlet{
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -66,6 +66,9 @@ public class Controler extends HttpServlet implements HttpSessionListener{
                 break;
             case "retourAccueil":
                     retourAccueilRequest(request, response);
+                break;
+            case "achat":
+                    validerAchatRequest(request, response);
                 break;
         }
         
@@ -118,8 +121,7 @@ public class Controler extends HttpServlet implements HttpSessionListener{
     
     
     
-    
-    
+
     /****************************MAGASIN REQUEST*********
      * @param request
      * @param response 
@@ -204,6 +206,31 @@ public class Controler extends HttpServlet implements HttpSessionListener{
     
     
     
+    /****** Achat request
+     * @param request
+     * @param response
+     * 
+     * On verifie que le client est bien log et si c'est le cas on va rediriger vers la page parc
+     */
+    private void validerAchatRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        HttpSession sess = request.getSession(true);
+        
+        if(!verifLogin(sess, response))
+            return;
+        
+        System.err.println("invalidation de la session");
+        sess.invalidate();
+        
+        RequestDispatcher rd = request.getRequestDispatcher("caddie.jsp");
+        try {
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     
     //acces BD donc synchronized
@@ -442,14 +469,4 @@ public class Controler extends HttpServlet implements HttpSessionListener{
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
-    @Override
-    public void sessionCreated(HttpSessionEvent se) {
-        System.out.println("create");
-    }
-
-    @Override
-    public void sessionDestroyed(HttpSessionEvent se) {
-        System.out.println("destroy");
-    }
 }
