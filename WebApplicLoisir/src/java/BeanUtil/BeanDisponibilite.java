@@ -49,7 +49,8 @@ public class BeanDisponibilite implements Serializable {
     
     public String getdateReservation()
     {
-        return dateReservation.toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY", Locale.FRENCH);
+        return sdf.format(dateReservation);
     }
     
     public void setErreur(String err)

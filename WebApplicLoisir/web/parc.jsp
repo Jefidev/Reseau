@@ -46,6 +46,7 @@
             <input type="number" name="reservation">
             <input type="submit" value="Ajouter au caddie">
             <input type="hidden" name="action" value="reserverParc"/>
+            <!--Attention pour le format de la date -->
             <input type="hidden" name="date" value="<jsp:getProperty name="beanReservation" property="dateReservation" />"/>
         </form>
         
