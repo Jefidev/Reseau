@@ -6,22 +6,34 @@
 package BalisesPerso;
 
 import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+import newBean.BeanBDAccess;
+import newBean.connexionException;
 
 /**
  *
  * @author Jerome
  */
 public class listCaddie extends BodyTagSupport {
-
+    
+    private boolean erreur;
+    private Statement requete;
+    
     /**
      * Creates new instance of tag handler
      */
     public listCaddie() {
         super();
+        erreur = false;
     }
 
     ////////////////////////////////////////////////////////////////
@@ -36,34 +48,33 @@ public class listCaddie extends BodyTagSupport {
      * operations from doStartTag().
      */
     private void otherDoStartTagOperations() {
-        // TODO: code that performs other operations in doStartTag
-        //       should be placed here.
-        //       It will be called after initializing variables, 
-        //       finding the parent, setting IDREFs, etc, and 
-        //       before calling theBodyShouldBeEvaluated(). 
-        //
-        //       For example, to print something out to the JSP, use the following:
-        //
-        //   try {
-        //       JspWriter out = pageContext.getOut();
-        //       out.println("something");
-        //   } catch (IOException ex) {
-        //       // do something
-        //   }
+        BeanBDAccess bd = new BeanBDAccess();
+
+        try {
+            bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            requete = bd.getConnexion().createStatement();
+        } catch (ClassNotFoundException ex) {
+            erreur = true;
+            System.err.println("Driver introuvable");
+        } catch (SQLException ex) {
+            erreur = true;
+            System.err.println("Exception SQL");
+        } catch (connexionException ex) {
+            erreur = true;
+            System.err.println("Erreur de connexion à la base");
+        }
     }
 
+    
+    
     /**
      * Method called from doEndTag() Fill in this method to perform other
      * operations from doEndTag().
      */
-    private void otherDoEndTagOperations() {
-        // TODO: code that performs other operations in doEndTag
-        //       should be placed here.
-        //       It will be called after initializing variables,
-        //       finding the parent, setting IDREFs, etc, and
-        //       before calling shouldEvaluateRestOfPageAfterEndTag().
-    }
+    private void otherDoEndTagOperations() { }
 
+    
+    
     /**
      * Fill in this method to process the body content of the tag. You only need
      * to do this if the tag's BodyContent property is set to "JSP" or
@@ -71,24 +82,17 @@ public class listCaddie extends BodyTagSupport {
      * method will not be called.
      */
     private void writeTagBodyContent(JspWriter out, BodyContent bodyContent) throws IOException {
-        // TODO: insert code to write html before writing the body content.
-        // e.g.:
-        //
-        // out.println("<strong>" + attribute_1 + "</strong>");
-        // out.println("   <blockquote>");
-
-        // write the body content (after processing by the JSP engine) on the output Writer
-        bodyContent.writeOut(out);
-
-        // Or else get the body content as a string and process it, e.g.:
-        //     String bodyStr = bodyContent.getString();
-        //     String result = yourProcessingMethod(bodyStr);
-        //     out.println(result);
-        // TODO: insert code to write html after writing the body content.
-        // e.g.:
-        //
-        // out.println("   </blockquote>");
-        // clear the body content for the next time through.
+        //On recupere le contenu du caddie dans la session
+        String contenuBody = bodyContent.getString();
+        HashMap contenuCaddie = (HashMap) pageContext.getSession().getAttribute(contenuBody);
+        
+        try {
+            ResultSet rs = requete.executeQuery("select * from produits");
+        } catch (SQLException ex) {
+            erreur = true;
+            return;
+        }
+        
         bodyContent.clearBody();
     }
 
@@ -181,12 +185,7 @@ public class listCaddie extends BodyTagSupport {
      * generated after this tag is finished. Called from doEndTag().
      */
     private boolean shouldEvaluateRestOfPageAfterEndTag() {
-        // TODO: code that determines whether the rest of the page
-        //       should be evaluated after the tag is processed
-        //       should be placed here.
-        //       Called from the doEndTag() method.
-        //
-        return true;
+        return !erreur;
     }
 
     /**
@@ -195,20 +194,13 @@ public class listCaddie extends BodyTagSupport {
      * tag. Called from doAfterBody().
      */
     private boolean theBodyShouldBeEvaluatedAgain() {
-        // TODO: code that determines whether the tag body should be
-        //       evaluated again after processing the tag
-        //       should be placed here.
-        //       You can use this method to create iterating tags.
-        //       Called from the doAfterBody() method.
-        //
+        //j'ai pas envie de lire 2 fois le body
         return false;
     }
 
     private boolean theBodyShouldBeEvaluated() {
-        // TODO: code that determines whether the body should be
-        //       evaluated should be placed here.
-        //       Called from the doStartTag() method.
-        return true;
+        //if(erreur == true) return false et inversément
+        return !erreur;
     }
     
 }

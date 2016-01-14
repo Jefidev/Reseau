@@ -73,6 +73,9 @@ public class Controler extends HttpServlet implements HttpSessionListener{
         //rd.forward(request, response);
     }
     
+    
+    
+    
     /*******************************
      * @param r : requête reçue par la servlet
      * @param out : Objet de reponse
