@@ -167,7 +167,6 @@ public class LoginApplet extends javax.swing.JApplet {
             //Construction de l'URL de la servlet par rapport à l'Host (localhost ou ip) et au port de la page courante
             URL urlServ = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), addressServlet);
             connexionServlet = urlServ.openConnection();
-            System.err.println(urlServ.toString());
         } catch (MalformedURLException ex) {
             ex.printStackTrace();
             return;

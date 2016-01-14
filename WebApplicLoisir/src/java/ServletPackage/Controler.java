@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
+import newBean.requeteException;
 
 /**
  *
@@ -166,6 +168,7 @@ public class Controler extends HttpServlet implements HttpSessionListener{
         //Verification de la commande passee + qtt en stock   
         int qttSouhaitee = 0;
         int idProduit = 0;
+        int qttReservee = 0;
         try
         {
             qttSouhaitee = Integer.parseInt(request.getParameter("quantite"));
@@ -192,6 +195,7 @@ public class Controler extends HttpServlet implements HttpSessionListener{
             }
             
             int qttRestante = rs.getInt("QUANTITE") - rs.getInt("RESERVE");
+            qttReservee = rs.getInt("RESERVE");
             
             //On va tester si le stock a pas changé
             boolean erreurQtt = false;
@@ -223,20 +227,81 @@ public class Controler extends HttpServlet implements HttpSessionListener{
                 
                 return;
             }
-            //Ici il faut changer la qtt reservee
-
+            
+            //La quantite est ok. Il va falloir s'assurer que le user existe bien et si c'est le cas on réserve la qtt demandée
+            rs = bd.selection("*", "CUSTOMERS", "LOGIN = '" + session.getAttribute("login") + "'");
+            
+            if(!rs.next())
+            {
+                System.err.println("Erreur session invalidate");
+                //le mec n'existe pas c'est une imposture
+                session.invalidate();
+                //Redirection à la base de login
+                response.sendRedirect("index.html");
+                return;
+            }
+            
+            //Tout est ok on va réserver la quantite voulue. Mise à jour de la BD
+            HashMap mapMAJ = new HashMap();
+            mapMAJ.put("RESERVE", String.valueOf(qttReservee + qttSouhaitee));
+            
+            bd.miseAJour("PRODUITS", mapMAJ, "ID_PRODUIT = " + idProduit);
+            bd.commit();
+            
+            //On va ajouter la commande au caddie.
+            
+            //Aucun element dans le caddie
+            if(session.getAttribute("caddie") ==  null)
+            {
+                HashMap caddie = new HashMap();
+                caddie.put(idProduit, qttSouhaitee);
+                session.setAttribute("caddie", caddie);
+            }
+            //Il y a déjà des éléments dans le caddie
+            else
+            {
+                HashMap caddie = (HashMap) session.getAttribute("caddie");
+                
+                //Si on a pas encore commandé ça
+                if(caddie.get(idProduit) ==  null)
+                {
+                    caddie.put(idProduit, qttSouhaitee);
+                }
+                //Si il y a deja des objets de ce type commande
+                else
+                {
+                    int qttDejaCommandee = (int)caddie.get(idProduit);
+                    caddie.replace(idProduit, qttDejaCommandee + qttSouhaitee);
+                }
+                
+                session.setAttribute("caddie", caddie);
+            }
+            
+            
+            //On peut rediriger sur la page caddie
+            RequestDispatcher rd = request.getRequestDispatcher("magasin.jsp");
+                try {
+                    rd.forward(request, response);
+                } catch (ServletException ex) {
+                    Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            
+                        
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
             redirectErreur(request, response);
-            return;
         } catch (SQLException | connexionException ex) {
             ex.printStackTrace();
             redirectErreur(request, response);
-            return;
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            redirectErreur(request, response);
+        } catch (requeteException ex) {
+            ex.printStackTrace();
+            redirectErreur(request, response);
         }
-        
-        System.err.println(session.getAttribute("login"));
-        redirectErreur(request, response);
     }
     
     
