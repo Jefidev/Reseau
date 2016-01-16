@@ -217,7 +217,7 @@ public class Controler extends HttpServlet{
      * @param request
      * @param response
      * 
-     * On verifie que le client est bien log et si c'est le cas on va rediriger vers la page parc
+     * On va enregistrer la commande dans la BD et vider le caddie.
      */
     private void validerAchatRequest(HttpServletRequest request, HttpServletResponse response)
     {
@@ -225,6 +225,9 @@ public class Controler extends HttpServlet{
         
         if(!verifLogin(sess, response))
             return;
+        
+        
+        
         
         RequestDispatcher rd = request.getRequestDispatcher("payemment.jsp");
         try {

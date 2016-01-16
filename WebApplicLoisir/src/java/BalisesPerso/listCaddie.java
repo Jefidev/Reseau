@@ -82,6 +82,7 @@ public class listCaddie extends BodyTagSupport {
         //On recupere le contenu du caddie dans la session
         String contenuBody = bodyContent.getString();
         HashMap contenuCaddie = (HashMap) pageContext.getSession().getAttribute(contenuBody);
+        float prixTotal = 0;
         
         //Affichage reservation place parc
         if(contenuCaddie.get("entreeParc") != null)
@@ -95,7 +96,7 @@ public class listCaddie extends BodyTagSupport {
             out.println("<p>Quantite : " + contenuCaddie.get("entreeParc") + "</p>");
             out.println("<p>Date : " + qtt + "</p>");
             out.println("<p>prix total : " + String.valueOf(5 * qtt) + "</p>");
-                
+
              //Formulaire pour supprimer la commande
             out.println("<form action=\"Controler\" method=\"POST\">");
             //action
@@ -106,6 +107,8 @@ public class listCaddie extends BodyTagSupport {
             out.println("</form>");
                 
             out.println("</div>");
+            
+            prixTotal += 5*qtt;
         }
         
         try {
@@ -137,13 +140,17 @@ public class listCaddie extends BodyTagSupport {
                 out.println("</form>");
                 
                 out.println("</div>");
+                
+                prixTotal += prix * quantite;
             }
             
             
             //Affichage du boutton pour valider les achats
+            out.println("<p> Prix total : "+ prixTotal + "</p>");
             out.println("<form action=\"Controler\" method=\"POST\">");
             //action
             out.println("<input type=\"hidden\" name=\"action\" value=\"achat\"/>");
+            out.println("<input type=\"hidden\" name=\"total\" value=\"" + prixTotal + "\"/>");
                 
             out.println("<input type=\"submit\" value=\"Acheter\">");
             out.println("</form>");
