@@ -32,5 +32,9 @@
             <input type="submit" value="Afficher le caddie"/>
             <input type="hidden" name="action" value="caddie"/>
         </form>
+        <form action="Controler" method="POST">
+            <input type="submit" value="Déconnexion"/>
+            <input type="hidden" name="action" value="deconnexion"/>
+        </form>
     </body>
 </html>

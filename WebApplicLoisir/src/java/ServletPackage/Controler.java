@@ -74,6 +74,9 @@ public class Controler extends HttpServlet{
             case "suppressionArticle":
                     suppressionRequest(request, response);
                 break;
+            case "deconnexion":
+                    logoutRequest(request, response);
+                break;
         }
         
         //RequestDispatcher rd = getServletContext().getRequestDispatcher("/accueil.jsp");
@@ -522,11 +525,11 @@ public class Controler extends HttpServlet{
                 String qttMAJ =  String.valueOf(qttDejaReservee + nbrPlacesSouhaitees);
                        
                 HashMap mapMAJ = new HashMap();
-                mapMAJ.put("ATTENTE_CONFIRMATION", 11);
+                mapMAJ.put("ATTENTE_CONFIRMATION", qttMAJ);
                 
                 System.err.println("date : " + dateSouhaitee + "  qtt = " + qttMAJ);
 
-                bd.miseAJour("RESERVATIONS_PARC", mapMAJ, "DATE_RESERVATION = " + dateSouhaitee);
+                bd.miseAJour("RESERVATIONS_PARC", mapMAJ, "DATE_RESERVATION = '" + dateSouhaitee + "'");
                 bd.commit();
             }
             
@@ -596,16 +599,75 @@ public class Controler extends HttpServlet{
                 contenuCaddie.remove("entreeParc");
                 contenuCaddie.remove("dateParc");
 
-
+                //recuperation du nombre de reservation
+                ResultSet rs = bd.selection("*", "RESERVATIONS_PARC", "DATE_RESERVATION = '" + date + "'");
+                
+                if(!rs.next())
+                    redirectErreur(request, response);
+                
+                int totalReserve = rs.getInt("ATTENTE_CONFIRMATION");
+                int nouveauTotal = totalReserve - nbrPlace;
+                
+                HashMap champsMAJ = new HashMap();
+                champsMAJ.put("ATTENTE_CONFIRMATION", nouveauTotal);
+                
+                bd.miseAJour("RESERVATIONS_PARC", champsMAJ, "DATE_RESERVATION = '" + date + "'");
+                bd.commit();
             }
 
             //Suppression d'une réservation d'article
             else
             {
-
+               int idArticle = Integer.parseInt(request.getParameter("idArticle"));
+               int nbrReserve = (int)contenuCaddie.get(idArticle);
+               
+               //Suppression du caddie
+               contenuCaddie.remove(idArticle);
+               
+               //recuperation dans la BD du nombre total d'objets réservé
+               ResultSet rs = bd.selection("*", "produits", "ID_PRODUIT = " + idArticle);
+               
+               if(!rs.next())
+                    redirectErreur(request, response);
+               
+               int nbrTotalReserve = rs.getInt("RESERVE");
+               int nouveauNbrReservation = nbrTotalReserve - nbrReserve;
+               
+               HashMap champsMAJ = new HashMap();
+                champsMAJ.put("RESERVE", nouveauNbrReservation);
+               
+               bd.miseAJour("produits", champsMAJ, "ID_PRODUIT = " + idArticle);
+               bd.commit();
+            }
+            
+            //Redirection vers le caddie
+            
+            //On peut rediriger sur la page caddie
+            RequestDispatcher rd = request.getRequestDispatcher("caddie.jsp");
+            try {
+                rd.forward(request, response);
+            } catch (ServletException | IOException ex) {
+                Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         } catch (ClassNotFoundException | SQLException | connexionException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (requeteException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
+    
+    private void logoutRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        HttpSession sess = request.getSession();
+        
+        sess.invalidate();
+        try {
+            response.sendRedirect("index.html");
+        } catch (IOException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
