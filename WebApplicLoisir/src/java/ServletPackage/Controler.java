@@ -68,6 +68,9 @@ public class Controler extends HttpServlet{
             case "achat":
                     validerAchatRequest(request, response);
                 break;
+            case "reserverParc":
+                    reserverParcRequest(request, response);
+                break;
         }
         
         //RequestDispatcher rd = getServletContext().getRequestDispatcher("/accueil.jsp");
@@ -227,7 +230,12 @@ public class Controler extends HttpServlet{
         }
     }
     
-    
+    /*COMMANDE REQUEST
+    *Une commande à été demandée pour un produit (c'est toujours 1 produit à la foi)
+    *Etape 1 : vérifier dans la BDD que le stock disponible est toujours suffisant
+    *Etape 2 : vérifier sur le client qui commande existe bien dans la BD
+    *Etape 3 : Réserver la quantité demandée par le client en mettant à jour la BD
+    */
     //acces BD donc synchronized
     private synchronized void commandeRequest(HttpServletRequest request, HttpServletResponse response)
     {
@@ -377,6 +385,16 @@ public class Controler extends HttpServlet{
     }
     
     
+    
+    
+    
+    private void reserverParcRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        //Reservation des places
+    }
+    
+    
+    
     //true si le client est log, redirection si ce n'est pas le cas
     private boolean verifLogin(HttpSession sess, HttpServletResponse r)
     {
@@ -394,7 +412,7 @@ public class Controler extends HttpServlet{
         return true;
     }
     
-    //Retour sur la page d'accueil apres une erreur
+    //edirection page d'accueil
     private void retourAccueilRequest(HttpServletRequest request, HttpServletResponse response)
     {
         HttpSession sess = request.getSession(true);

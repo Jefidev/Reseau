@@ -32,6 +32,7 @@
         <p>Pour quelle date voulez vous réserver vos tikets ?</p>
         <form method="POST" action="parc.jsp">
             <input type="date" name="dateReservation">
+            <!-- Récupération du message d'erreur dans le bean pour l'afficher (si chaine vide rien n'apparait à l'ecran) -->
             <p style="color: red"><jsp:getProperty name="beanReservation" property="erreur" /></p>
             <input type="submit" value="Vérifier les disponibilités">
         </form>
@@ -45,8 +46,9 @@
         <form method="POST" action="Controler">
             <input type="number" name="reservation">
             <input type="submit" value="Ajouter au caddie">
+            <!-- Action à accomplir dans le controler -->
             <input type="hidden" name="action" value="reserverParc"/>
-            <!--Attention pour le format de la date -->
+            <!--Récupération de la date de la réservation dans un champ caché -->
             <input type="hidden" name="date" value="<jsp:getProperty name="beanReservation" property="dateReservation" />"/>
         </form>
         

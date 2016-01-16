@@ -40,7 +40,6 @@ public class BeanDisponibilite implements Serializable {
         try
         {
             dateReservation = df.parse(date);
-            System.out.println(dateReservation.toString());
             setNbrReservation();
         } catch (ParseException ex) {
             setErreur("Format de date incorrecte");
