@@ -399,7 +399,6 @@ public class Controler extends HttpServlet{
         //Boolean pour savoir si une reservation existe déjà pour cette date ou pas
         boolean entryExist = false;
         
-        System.err.println("debut du truc");
         //On test pour savoir si le champ contient une valeur correcte
         try
         {
@@ -411,7 +410,7 @@ public class Controler extends HttpServlet{
             redirectErreur(request, response);
             return;
         }
-        System.err.println("avant acces");
+        
         //Acces à la base
         BeanBDAccess bd = new BeanBDAccess();
 
@@ -420,7 +419,7 @@ public class Controler extends HttpServlet{
             bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
             
             //recherche du nombre de réservations pour cette date
-            ResultSet rs = bd.selection("*", "RESERVATIONS_PARC", "DATE_RESERVATION = " + dateSouhaitee);
+            ResultSet rs = bd.selection("*", "RESERVATIONS_PARC", "DATE_RESERVATION = '" + dateSouhaitee + "'");
             
             //Aucune réservation à ce jour
             if(!rs.next())
@@ -437,10 +436,8 @@ public class Controler extends HttpServlet{
             //verification du nombre de places
             if(nbrPlacesDispo < nbrPlacesSouhaitees)
             {
-                System.err.println("pas assez de place" + dateSouhaitee);
                 //ajout d'infos à la requête avant la redirection 
                 request.setAttribute("erreurCommande", "Il n'y a plus assez de places pour le jour souhaité");
-                request.setAttribute("dateReservation", dateSouhaitee);
                 
                 //redirection
                 RequestDispatcher rd = request.getRequestDispatcher("parc.jsp");
@@ -466,33 +463,8 @@ public class Controler extends HttpServlet{
                 response.sendRedirect("index.html");
                 return;
             }
-            
-           System.err.println("avant MAJ");
-            //On va ajouter la commande au caddie + mettre à jour la BD
-            
-            //MAJ BD
-            
-            //MAJ
-            if(entryExist)
-            {
-                HashMap mapMAJ = new HashMap();
-                mapMAJ.put("ATTENTE_CONFIRMATION", String.valueOf(qttDejaReservee + nbrPlacesSouhaitees));
 
-                bd.miseAJour("RESERVATIONS_PARC", mapMAJ, "DATE_RESERVATION = " + dateSouhaitee);
-                bd.commit();
-            }
-            
-            //insertion
-            else
-            {
-                HashMap mapMAJ = new HashMap();
-                mapMAJ.put("ATTENTE_CONFIRMATION", String.valueOf(qttDejaReservee + nbrPlacesSouhaitees));
-                mapMAJ.put("DATE_RESERVATION", dateSouhaitee);
-                mapMAJ.put("NBR_RESERVATIONS", "0");
-                
-                bd.ecriture("RESERVATIONS_PARC", mapMAJ);
-                bd.commit();
-            }
+            //On va ajouter la commande au caddie + mettre à jour la BD
             
             //Aucun element dans le caddie
             if(session.getAttribute("caddie") ==  null)
@@ -537,6 +509,34 @@ public class Controler extends HttpServlet{
                 }
                 
                 session.setAttribute("caddie", caddie);
+            }
+            
+            
+            //MAJ BD
+            //MAJ
+            if(entryExist)
+            {
+                String qttMAJ =  String.valueOf(qttDejaReservee + nbrPlacesSouhaitees);
+                       
+                HashMap mapMAJ = new HashMap();
+                mapMAJ.put("ATTENTE_CONFIRMATION", 11);
+                
+                System.err.println("date : " + dateSouhaitee + "  qtt = " + qttMAJ);
+
+                bd.miseAJour("RESERVATIONS_PARC", mapMAJ, "DATE_RESERVATION = " + dateSouhaitee);
+                bd.commit();
+            }
+            
+            //insertion
+            else
+            {
+                HashMap mapMAJ = new HashMap();
+                mapMAJ.put("ATTENTE_CONFIRMATION", String.valueOf(qttDejaReservee + nbrPlacesSouhaitees));
+                mapMAJ.put("DATE_RESERVATION", dateSouhaitee);
+                mapMAJ.put("NBR_RESERVATIONS", "0");
+                
+                bd.ecriture("RESERVATIONS_PARC", mapMAJ);
+                bd.commit();
             }
             
             

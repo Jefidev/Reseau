@@ -37,15 +37,17 @@
             <input type="submit" value="Vérifier les disponibilités">
         </form>
         
+        <!-- Affichage de l'erreur -->
+        <%if(request.getAttribute("erreurCommande") != null){%>
+        <p style="color: red"><%=request.getAttribute("erreurCommande")%></p>
+        <%}%>
+        
         <!-- Une recherche a été demandée pour la réservation -->
         <% if(beanReservation.getdateReservation() != null){%>
         
         <p>Pour l'instant <jsp:getProperty name="beanReservation" property="nbrReservation" /> entrées ont été réservées
         pour le <jsp:getProperty name="beanReservation" property="dateReservation" /></p>
         <p>réserver des entrées (5€/entrées) : </p>
-        
-        <!-- Si il y a eu une erreur à la réservation de la place on va l'afficher ici -->
-        
         
         <form method="POST" action="Controler">
             <input type="number" name="nbrPlace">

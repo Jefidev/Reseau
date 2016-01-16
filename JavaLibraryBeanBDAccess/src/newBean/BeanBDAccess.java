@@ -195,6 +195,7 @@ public class BeanBDAccess implements Serializable{
             {
                 throw new requeteException("Erreur de rollback", 3);
             }        
+            ex.printStackTrace();
             throw new requeteException("Update raté", 1);
         }
     }

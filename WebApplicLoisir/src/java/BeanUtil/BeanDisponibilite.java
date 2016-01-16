@@ -36,7 +36,7 @@ public class BeanDisponibilite implements Serializable {
         if(date == null || date.isEmpty())
             return;
         
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, Locale.FRENCH);
         try
         {
             dateReservation = df.parse(date);
