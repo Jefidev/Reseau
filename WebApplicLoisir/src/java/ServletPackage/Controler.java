@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,8 @@ import newBean.requeteException;
  * selon sa requête
  */
 public class Controler extends HttpServlet{
+    
+    private int idCommande;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -226,8 +229,21 @@ public class Controler extends HttpServlet{
         if(!verifLogin(sess, response))
             return;
         
+        //recuperation du caddie
+        HashMap contenuCaddie = (HashMap) sess.getAttribute("caddie");
+        
+        //Huston we've a problem
+        if(contenuCaddie ==  null)
+        {
+            redirectErreur(request, response);
+            return;
+        }
+        
+        //Le cas du parc
         
         
+        
+        //Le cas des articles
         
         RequestDispatcher rd = request.getRequestDispatcher("payemment.jsp");
         try {
@@ -723,6 +739,28 @@ public class Controler extends HttpServlet{
         } catch (ServletException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    //On va initialiser l'ID commande ici
+    @Override
+    public void init (ServletConfig config)
+    {
+        BeanBDAccess bd = new BeanBDAccess();
+        
+        try {
+            bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            
+            ResultSet rs = bd.selection("max(ID_COMMANDE)", "COMMANDES", null);
+            
+            if(!rs.next())
+                idCommande = 1;
+            
+            else
+                idCommande =  rs.getInt(1) + 1;
+            
+        } catch (ClassNotFoundException | SQLException | connexionException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
