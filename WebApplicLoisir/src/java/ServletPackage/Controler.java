@@ -70,6 +70,9 @@ public class Controler extends HttpServlet{
                 break;
             case "reserverParc":
                     reserverParcRequest(request, response);
+                break;  
+            case "suppressionArticle":
+                    suppressionRequest(request, response);
                 break;
         }
         
@@ -562,12 +565,60 @@ public class Controler extends HttpServlet{
     
     
     
+    /*
+    *Supprime un produit du caddie de l'utilisateur et met à jour la BD
+    */
+    private synchronized void suppressionRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        //Verification du log du client
+        HttpSession session = request.getSession(true);
+        
+        if(!verifLogin(session, response))
+            return;
+        
+        
+        //Récupération des infos du produit à supprimer
+        HashMap contenuCaddie = (HashMap) session.getAttribute("caddie");
+        
+        if(contenuCaddie ==  null)
+            redirectErreur(request, response);
+        
+        BeanBDAccess bd = new BeanBDAccess();
+        try {
+            bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            
+            //Si il faut supprimer une réservation de place dans le parc
+            if(request.getParameter("idArticle").equals("entreeParc"))
+            {
+                int nbrPlace = (int)contenuCaddie.get("entreeParc");
+                String date = (String) contenuCaddie.get("dateParc");
+
+                contenuCaddie.remove("entreeParc");
+                contenuCaddie.remove("dateParc");
+
+
+            }
+
+            //Suppression d'une réservation d'article
+            else
+            {
+
+            }
+
+        } catch (ClassNotFoundException | SQLException | connexionException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
     //true si le client est log, redirection si ce n'est pas le cas
     private boolean verifLogin(HttpSession sess, HttpServletResponse r)
     {
         try {
             if(sess.getAttribute("login") == null)
             {
+                sess.invalidate();
                 r.sendRedirect("index.html");
                 return false;
             }
