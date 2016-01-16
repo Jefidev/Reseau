@@ -83,6 +83,31 @@ public class listCaddie extends BodyTagSupport {
         String contenuBody = bodyContent.getString();
         HashMap contenuCaddie = (HashMap) pageContext.getSession().getAttribute(contenuBody);
         
+        //Affichage reservation place parc
+        if(contenuCaddie.get("entreeParc") != null)
+        {
+            int qtt = (int)contenuCaddie.get("entreeParc");
+            String date = (String)contenuCaddie.get("dateParc");
+            
+            out.println("<div>");
+            out.println("<h2>Entree parc</h2>");
+            out.println("<p>prix unitaire : 5</p>");
+            out.println("<p>Quantite : " + contenuCaddie.get("entreeParc") + "</p>");
+            out.println("<p>Date : " + qtt + "</p>");
+            out.println("<p>prix total : " + String.valueOf(5 * qtt) + "</p>");
+                
+             //Formulaire pour supprimer la commande
+            out.println("<form action=\"Controler\" method=\"POST\">");
+            //action
+            out.println("<input type=\"hidden\" name=\"action\" value=\"suppressionArticle\"/>");
+            out.println("<input type=\"hidden\" name=\"idArticle\" value=\"entreeParc\"/>");
+            
+            out.println("<input type=\"submit\" value=\"Supprimer\">");
+            out.println("</form>");
+                
+            out.println("</div>");
+        }
+        
         try {
             ResultSet rs = requete.executeQuery("select * from produits");
             

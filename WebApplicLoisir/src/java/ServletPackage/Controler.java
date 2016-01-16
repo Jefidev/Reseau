@@ -299,9 +299,7 @@ public class Controler extends HttpServlet{
                 RequestDispatcher rd = request.getRequestDispatcher("magasin.jsp");
                 try {
                     rd.forward(request, response);
-                } catch (ServletException ex) {
-                    Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
+                } catch (ServletException | IOException ex) {
                     Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 
@@ -360,13 +358,11 @@ public class Controler extends HttpServlet{
             
             //On peut rediriger sur la page caddie
             RequestDispatcher rd = request.getRequestDispatcher("caddie.jsp");
-                try {
-                    rd.forward(request, response);
-                } catch (ServletException ex) {
-                    Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
-                }
+            try {
+                rd.forward(request, response);
+            } catch (ServletException | IOException ex) {
+                Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
                         
         } catch (ClassNotFoundException ex) {
@@ -375,10 +371,7 @@ public class Controler extends HttpServlet{
         } catch (SQLException | connexionException ex) {
             ex.printStackTrace();
             redirectErreur(request, response);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            redirectErreur(request, response);
-        } catch (requeteException ex) {
+        } catch (IOException | requeteException ex) {
             ex.printStackTrace();
             redirectErreur(request, response);
         }
@@ -388,9 +381,183 @@ public class Controler extends HttpServlet{
     
     
     
-    private void reserverParcRequest(HttpServletRequest request, HttpServletResponse response)
+    private synchronized void reserverParcRequest(HttpServletRequest request, HttpServletResponse response)
     {
-        //Reservation des places
+        //Verification du log du client
+        HttpSession session = request.getSession(true);
+        
+        if(!verifLogin(session, response))
+            return;
+        
+        
+        //Verification des places disponibles
+        int nbrPlacesSouhaitees;
+        int nbrPlacesDispo;
+        int qttDejaReservee = 0;
+        String dateSouhaitee;
+        
+        //Boolean pour savoir si une reservation existe déjà pour cette date ou pas
+        boolean entryExist = false;
+        
+        System.err.println("debut du truc");
+        //On test pour savoir si le champ contient une valeur correcte
+        try
+        {
+            nbrPlacesSouhaitees = Integer.parseInt(request.getParameter("nbrPlace"));
+            dateSouhaitee = request.getParameter("date");
+        }
+        catch(NumberFormatException ex)
+        {
+            redirectErreur(request, response);
+            return;
+        }
+        System.err.println("avant acces");
+        //Acces à la base
+        BeanBDAccess bd = new BeanBDAccess();
+
+        try {
+            //connexion
+            bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            
+            //recherche du nombre de réservations pour cette date
+            ResultSet rs = bd.selection("*", "RESERVATIONS_PARC", "DATE_RESERVATION = " + dateSouhaitee);
+            
+            //Aucune réservation à ce jour
+            if(!rs.next())
+            {
+                   nbrPlacesDispo = 20;
+            }
+            else
+            {
+                qttDejaReservee = rs.getInt("ATTENTE_CONFIRMATION");
+                nbrPlacesDispo = 20 - (rs.getInt("NBR_RESERVATIONS") + qttDejaReservee);
+                entryExist = true;
+            }
+            
+            //verification du nombre de places
+            if(nbrPlacesDispo < nbrPlacesSouhaitees)
+            {
+                System.err.println("pas assez de place" + dateSouhaitee);
+                //ajout d'infos à la requête avant la redirection 
+                request.setAttribute("erreurCommande", "Il n'y a plus assez de places pour le jour souhaité");
+                request.setAttribute("dateReservation", dateSouhaitee);
+                
+                //redirection
+                RequestDispatcher rd = request.getRequestDispatcher("parc.jsp");
+                
+                try {
+                    rd.forward(request, response);
+                } catch (ServletException | IOException ex) {
+                    Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                
+                return;
+            }
+            
+            //Le nbr de place est ok. Il va falloir s'assurer que le user existe bien
+            rs = bd.selection("*", "CUSTOMERS", "LOGIN = '" + session.getAttribute("login") + "'");
+            
+            if(!rs.next())
+            {
+                System.err.println("Erreur session invalidate");
+                //le mec n'existe pas c'est une imposture
+                session.invalidate();
+                //Redirection à la base de login
+                response.sendRedirect("index.html");
+                return;
+            }
+            
+           System.err.println("avant MAJ");
+            //On va ajouter la commande au caddie + mettre à jour la BD
+            
+            //MAJ BD
+            
+            //MAJ
+            if(entryExist)
+            {
+                HashMap mapMAJ = new HashMap();
+                mapMAJ.put("ATTENTE_CONFIRMATION", String.valueOf(qttDejaReservee + nbrPlacesSouhaitees));
+
+                bd.miseAJour("RESERVATIONS_PARC", mapMAJ, "DATE_RESERVATION = " + dateSouhaitee);
+                bd.commit();
+            }
+            
+            //insertion
+            else
+            {
+                HashMap mapMAJ = new HashMap();
+                mapMAJ.put("ATTENTE_CONFIRMATION", String.valueOf(qttDejaReservee + nbrPlacesSouhaitees));
+                mapMAJ.put("DATE_RESERVATION", dateSouhaitee);
+                mapMAJ.put("NBR_RESERVATIONS", "0");
+                
+                bd.ecriture("RESERVATIONS_PARC", mapMAJ);
+                bd.commit();
+            }
+            
+            //Aucun element dans le caddie
+            if(session.getAttribute("caddie") ==  null)
+            {
+                HashMap caddie = new HashMap();
+                caddie.put("entreeParc", nbrPlacesSouhaitees);
+                caddie.put("dateParc", dateSouhaitee);
+                session.setAttribute("caddie", caddie);
+            }
+            
+            //Il y a déjà des éléments dans le caddie
+            else
+            {
+                HashMap caddie = (HashMap) session.getAttribute("caddie");
+                
+                /*J'ai pas gerer le fait que plusieurs commandes de places
+                pour des dates différentes puissent être faites donc il est
+                indispensable que le truc fonctionne*/
+                
+                if(caddie.get("entreeParc") ==  null)
+                {
+                    caddie.put("entreeParc", nbrPlacesSouhaitees);
+                    caddie.put("dateParc", dateSouhaitee);
+                }
+                //Si il y a deja des objets de ce type commande
+                else
+                {
+                    //Cas que je ne gere pas
+                    request.setAttribute("erreurCommande", "Vous devez valider votre commande avant d'en effectuer une autre");
+                    request.setAttribute("dateReservation", dateSouhaitee);
+
+                    //redirection
+                    RequestDispatcher rd = request.getRequestDispatcher("parc.jsp");
+
+                    try {
+                        rd.forward(request, response);
+                    } catch (ServletException | IOException ex) {
+                        Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    return;
+                }
+                
+                session.setAttribute("caddie", caddie);
+            }
+            
+            
+            //On peut rediriger sur la page caddie
+            RequestDispatcher rd = request.getRequestDispatcher("caddie.jsp");
+            try {
+                rd.forward(request, response);
+            } catch (ServletException | IOException ex) {
+                Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            
+            
+        } catch (ClassNotFoundException | SQLException | connexionException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (requeteException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
     

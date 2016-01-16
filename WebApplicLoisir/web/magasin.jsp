@@ -35,6 +35,7 @@
                 String message = request.getAttribute("erreurCommande").toString();
                 int id = Integer.parseInt(request.getAttribute("idProduit").toString());
         %>
+        <!-- On va demander d'afficher un message d'erreur pour le produit indiqué -->
         <outil:displayProducts erreurCommmande="<%=message%>" idItem="<%=id%>">
             select * from produits
         </outil:displayProducts>

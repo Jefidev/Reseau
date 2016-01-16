@@ -33,7 +33,7 @@ public class BeanDisponibilite implements Serializable {
     
     public void setdateReservation(String date)
     {
-        if(date == null)
+        if(date == null || date.isEmpty())
             return;
         
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
@@ -48,6 +48,9 @@ public class BeanDisponibilite implements Serializable {
     
     public String getdateReservation()
     {
+        if(dateReservation == null)
+            return null;
+        
         SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY", Locale.FRENCH);
         return sdf.format(dateReservation);
     }
@@ -93,7 +96,7 @@ public class BeanDisponibilite implements Serializable {
             
             nbrReservation = rs.getInt("NBR_RESERVATIONS");
             int nbrAttente = rs.getInt("ATTENTE_CONFIRMATION");
-            
+            //le nombre de reservation total
             nbrReservation = nbrReservation + nbrAttente;
             
         } catch (ClassNotFoundException | SQLException | connexionException ex) {

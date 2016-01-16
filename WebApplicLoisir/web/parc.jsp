@@ -37,14 +37,18 @@
             <input type="submit" value="Vérifier les disponibilités">
         </form>
         
-        <% if(curDate != null){%>
+        <!-- Une recherche a été demandée pour la réservation -->
+        <% if(beanReservation.getdateReservation() != null){%>
         
         <p>Pour l'instant <jsp:getProperty name="beanReservation" property="nbrReservation" /> entrées ont été réservées
         pour le <jsp:getProperty name="beanReservation" property="dateReservation" /></p>
         <p>réserver des entrées (5€/entrées) : </p>
         
+        <!-- Si il y a eu une erreur à la réservation de la place on va l'afficher ici -->
+        
+        
         <form method="POST" action="Controler">
-            <input type="number" name="reservation">
+            <input type="number" name="nbrPlace">
             <input type="submit" value="Ajouter au caddie">
             <!-- Action à accomplir dans le controler -->
             <input type="hidden" name="action" value="reserverParc"/>
