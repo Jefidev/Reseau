@@ -15,6 +15,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,7 +25,9 @@ import java.util.logging.Logger;
  * @author Jerome
  */
 public class LoginApplet extends javax.swing.JApplet {
-
+    
+    HashMap<String, String> paramValue = new HashMap<String, String>();
+    
     /**
      * Initializes the applet LoginApplet
      */
@@ -71,6 +75,23 @@ public class LoginApplet extends javax.swing.JApplet {
     public void start()
     {
         errorLabel.setVisible(false);
+        
+        //Si on a reçus des parametres dans l'URL on les traite
+        String url = getDocumentBase().toString();
+        
+        if(url.indexOf("?") == -1)
+            return;
+        
+        String paramaters = url.substring(url.indexOf("?") + 1);
+	parseParam(paramaters);
+        
+        //Si on reçoit un login
+        if(paramValue.get("login") != null)
+            loginTextField.setText(paramValue.get("login"));
+        
+        //Si on reçoit un login et un mot de passe
+        if(paramValue.get("mdp") != null)
+            passwordField.setText(paramValue.get("mdp"));
     }
 
     /**
@@ -234,12 +255,29 @@ public class LoginApplet extends javax.swing.JApplet {
         }
         
         try {
-            getAppletContext().showDocument(new URL("http://localhost:8081/CaddieVirtuel/register.html"));
+            //On envoie le login à la page d'enregistrement
+            URL pageCourante = getDocumentBase();
+            URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/register.html?login="+loginTextField.getText());
+            getAppletContext().showDocument(s);
         } catch (MalformedURLException ex) {
             Logger.getLogger(LoginApplet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_registerButtonActionPerformed
 
+    
+    
+    //parse the URL parameter
+   private void parseParam(String parameters){
+	  
+	   StringTokenizer paramGroup = new StringTokenizer(parameters, "&");
+	   
+	   while(paramGroup.hasMoreTokens()){
+	     
+		   StringTokenizer value = new StringTokenizer(paramGroup.nextToken(), "=");
+		   paramValue.put(value.nextToken(), value.nextToken());
+	   }
+   }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel errorLabel;

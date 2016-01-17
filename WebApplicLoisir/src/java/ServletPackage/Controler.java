@@ -9,7 +9,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -52,6 +57,9 @@ public class Controler extends HttpServlet{
         {
             case "login":
                     loginRequest(request, response);
+                break;
+            case "register":
+                    registerRequest(request, response);
                 break;
             case "magasin":
                     magasinRequest(request, response);
@@ -129,6 +137,51 @@ public class Controler extends HttpServlet{
     }
     
     
+    
+    
+    private synchronized void registerRequest(HttpServletRequest r, HttpServletResponse out)
+    {
+        //Flux pour répondre à l'applet
+        PrintWriter fluxApplet = null;
+        try {
+            fluxApplet = out.getWriter();
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        //Connexion à la base de donnée 
+        BeanBDAccess accesBD = new BeanBDAccess();
+        try {
+            //On regarde si l'utilisateur existe 
+            accesBD.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            ResultSet rs = accesBD.selection("password", "CUSTOMERS", "login = '" + r.getParameter("login") + "'");
+            
+            if(rs.next())
+            {
+                fluxApplet.println("Ce login est deja utilise");
+                return;
+            }
+            
+            //Ce n'est pas le cas on insert
+            HashMap mapInsert = new HashMap();
+            mapInsert.put("LOGIN", r.getParameter("login"));
+            mapInsert.put("PASSWORD", r.getParameter("password"));
+                
+            accesBD.ecriture("CUSTOMERS", mapInsert);
+            
+            accesBD.commit();
+
+            fluxApplet.println("ok");
+            
+        } catch (ClassNotFoundException | SQLException | connexionException ex) {
+            fluxApplet.println("Erreur d'acces BD");
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+            return;
+        } catch (requeteException ex) {
+            fluxApplet.println("Erreur d'acces BD");
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     
 
@@ -239,15 +292,121 @@ public class Controler extends HttpServlet{
             return;
         }
         
-        //Le cas du parc
-        
-        
-        
-        //Le cas des articles
-        
-        RequestDispatcher rd = request.getRequestDispatcher("payemment.jsp");
+        BeanBDAccess bd = new BeanBDAccess();
         try {
+            bd.connexionOracle("localhost", 1521, "SHOP", "SHOP", "XE");
+            
+            //pour la date de commande
+            SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY", Locale.FRENCH);
+            System.err.println(idCommande);
+            //Creation de la commande :
+            HashMap mapInsert = new HashMap();
+            mapInsert.put("ID_COMMANDE", idCommande);
+            mapInsert.put("ID_CLIENT", sess.getAttribute("login"));
+            mapInsert.put("DATE_COMMANDE", sdf.format(new Date()));
+            mapInsert.put("TOTAL", request.getParameter("total"));
+                
+            bd.ecriture("COMMANDES", mapInsert);
+            
+            //Achat des places dans le parc
+            if(contenuCaddie.get("entreeParc") != null)
+            {
+                int nbrPlace = (int)contenuCaddie.get("entreeParc");
+                String date = (String) contenuCaddie.get("dateParc");
+
+                contenuCaddie.remove("entreeParc");
+                contenuCaddie.remove("dateParc");
+
+                //recuperation du nombre de reservation
+                ResultSet rs = bd.selection("*", "RESERVATIONS_PARC", "DATE_RESERVATION = '" + date + "'");
+                
+                if(!rs.next())
+                {
+                    bd.rollback();
+                    redirectErreur(request, response);
+                    return;
+                }
+                
+                int totalReserve = rs.getInt("ATTENTE_CONFIRMATION");
+                int nouveauTotal = totalReserve - nbrPlace;
+                int nouvNbrReservation = rs.getInt("NBR_RESERVATIONS") + nbrPlace;
+                
+                //Mise à jour de la table parc
+                HashMap champsMAJ = new HashMap();
+                champsMAJ.put("ATTENTE_CONFIRMATION", nouveauTotal);
+                champsMAJ.put("NBR_RESERVATIONS", nouvNbrReservation);
+                
+                bd.miseAJour("RESERVATIONS_PARC", champsMAJ, "DATE_RESERVATION = '" + date + "'");
+                
+                //Mise à jour de la commande associee
+                HashMap MAJcommande = new HashMap();
+                MAJcommande.put("DATE_ENTREE", date);
+                MAJcommande.put("NBR_ENTREE", nbrPlace);
+                
+                bd.miseAJour("COMMANDES", MAJcommande, "ID_COMMANDE = " + idCommande);
+            }
+
+            //Modification du stock de produit
+            Iterator entries = contenuCaddie.entrySet().iterator();
+            
+            while(entries.hasNext())
+            {
+               Map.Entry entry = (Map.Entry) entries.next();
+               
+               int idArticle = (int)entry.getKey();
+               int nbrReserve = (int)entry.getValue();
+
+               //recuperation dans la BD du nombre total d'objets réservé
+               ResultSet rs = bd.selection("*", "produits", "ID_PRODUIT = " + idArticle);
+               
+               //erreur pas de resultat
+               if(!rs.next())
+               {
+                   bd.rollback();
+                   redirectErreur(request, response);
+                   return;
+               }
+               
+               int nbrTotalReserve = rs.getInt("RESERVE");
+               int nouveauNbrReservation = nbrTotalReserve - nbrReserve;
+               int nouveauStock = rs.getInt("QUANTITE") - nbrReserve;
+               
+               HashMap champsMAJ = new HashMap();
+               champsMAJ.put("RESERVE", nouveauNbrReservation);
+               champsMAJ.put("QUANTITE", nouveauStock);
+               
+               bd.miseAJour("produits", champsMAJ, "ID_PRODUIT = " + idArticle);
+               
+               //Creation de l'entree dans la table commande produit
+               
+               HashMap insertProduitCommande = new HashMap();
+               insertProduitCommande.put("ID_COMMANDE", idCommande);
+               insertProduitCommande.put("ID_PRODUIT", idArticle);
+               insertProduitCommande.put("QUANTITE", nbrReserve);
+                
+               bd.ecriture("PRODUITS_COMMMANDES", insertProduitCommande);
+               
+            }
+            
+            bd.commit();
+            //suppression du caddie de la session
+            sess.removeAttribute("caddie");
+            
+            //Mise à jour de l'ID commande pour le suivant 
+            idCommande++;
+            
+            RequestDispatcher rd = request.getRequestDispatcher("payemment.jsp");
             rd.forward(request, response);
+
+        } catch (ClassNotFoundException | SQLException | connexionException ex) {
+            try {
+                bd.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (requeteException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ServletException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -580,6 +739,11 @@ public class Controler extends HttpServlet{
         } catch (IOException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (requeteException ex) {
+            try {
+                bd.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }
         
