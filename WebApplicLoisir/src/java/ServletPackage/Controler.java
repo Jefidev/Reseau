@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
@@ -906,6 +907,10 @@ public class Controler extends HttpServlet{
         
         if(!verifLogin(sess, response))
             return;
+        
+        //Ressource bundle
+        ResourceBundle res = ResourceBundle.getBundle("../Bundles/TextesSite", new Locale("en", "UK"));
+        System.err.println(res.getString("Bienvenue"));
         
         //Redirection à l'accueil
         RequestDispatcher rd = request.getRequestDispatcher("accueil.jsp");
