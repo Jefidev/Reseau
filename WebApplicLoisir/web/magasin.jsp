@@ -4,20 +4,24 @@
     Author     : Jerome
 --%>
 
+<%@page import="java.util.ResourceBundle"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="/WEB-INF/tlds/outil.tld" prefix="outil"%>
+<%//Recuperation du resource bundle
+    ResourceBundle bundle = (ResourceBundle)session.getAttribute("langue");%>
+<html>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title><%=bundle.getString("Magasin") %></title>
     </head>
     
-        <h1>Consomme !</h1>
-        <outil:currentDate langue="UK"/>
+        <h1><%=bundle.getString("Magasin") %></h1>
+        <outil:currentDate langue="<%=bundle.getString("Date") %>"/>
         
         <form action="Controler" method="POST">
-            <input type="submit" value="Retour à l'accueil"/>
+            <input type="submit" value="<%=bundle.getString("Accueil") %>"/>
             <input type="hidden" name="action" value="retourAccueil"/>
         </form>
         

@@ -908,9 +908,22 @@ public class Controler extends HttpServlet{
         if(!verifLogin(sess, response))
             return;
         
-        //Ressource bundle
-        ResourceBundle res = ResourceBundle.getBundle("../Bundles/TextesSite", new Locale("en", "UK"));
-        System.err.println(res.getString("Bienvenue"));
+        Locale localLangue = null;
+        String choixUtilisateur = request.getParameter("langue");
+
+        switch(choixUtilisateur)
+        {
+            case "English" :
+                localLangue =  new Locale("en", "UK");
+                break;
+            default :
+                localLangue =  new Locale("fr", "FR");
+        }
+        
+        
+        ResourceBundle res = ResourceBundle.getBundle("../Bundles/TextesSite", localLangue);
+        
+        sess.setAttribute("langue", res);
         
         //Redirection à l'accueil
         RequestDispatcher rd = request.getRequestDispatcher("accueil.jsp");

@@ -40,7 +40,7 @@ public class ChoixLangue extends SimpleTagSupport {
             ResultSet rs = bd.selection("*", "LANGUES", null);
             
             out.println("<form action=\"Controler\" method=\"POST\">");
-            out.println("<select>");
+            out.println("<select name=\"langue\">");
             while(rs.next())
             {
                 String langue = rs.getString(1);
