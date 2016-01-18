@@ -5,13 +5,14 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.security.InvalidKeyException;
-import java.security.KeyException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -24,18 +25,55 @@ import javax.crypto.SecretKey;
 public final class Crypto
 {
     /* ASYMETRIQUE */
-    public byte[] asymCrypt(byte[] tocrypt)
+    public static byte[] asymCrypt(byte[] tocrypt, String fichierKS, String mdpKS, String alias)
     {
         try          
         {     
-            KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream(getNomCompletFichier(Kstore)),mdpKeystore.toCharArray());
+            KeyStore ks = KeyStore.getInstance("PKCS12", "BC");
+            ks.load(new FileInputStream(getPathFichier(fichierKS)), mdpKS.toCharArray());
             X509Certificate certif = (X509Certificate)ks.getCertificate(alias);
             PublicKey ClePublique = certif.getPublicKey();
             Cipher chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding","BC");
             chiffrement.init(Cipher.ENCRYPT_MODE, ClePublique);
             return chiffrement.doFinal(tocrypt);     
         }
+        catch (KeyStoreException ex)
+        {
+            System.err.println("Crypto : asymCrypt : KeyStoreException : " + ex.getMessage());
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            System.err.println("Crypto : asymCrypt : NoSuchAlgorithmException : " + ex.getMessage());
+        }
+        catch (NoSuchProviderException ex)
+        {
+            System.err.println("Crypto : asymCrypt : NoSuchProviderException : " + ex.getMessage());
+        }
+        catch (NoSuchPaddingException ex)
+        {
+            System.err.println("Crypto : asymCrypt : NoSuchPaddingException : " + ex.getMessage());
+        }
+        catch (InvalidKeyException ex)
+        {
+            System.err.println("Crypto : asymCrypt : InvalidKeyException : " + ex.getMessage());
+        }
+        catch (IllegalBlockSizeException ex)
+        {
+            System.err.println("Crypto : asymCrypt : IllegalBlockSizeException : " + ex.getMessage());
+        }
+        catch (BadPaddingException ex)
+        {
+            System.err.println("Crypto : asymCrypt : BadPaddingException : " + ex.getMessage());
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Crypto : asymCrypt : IOException : " + ex.getMessage());
+        }
+        catch (CertificateException ex)
+        {
+            System.err.println("Crypto : asymCrypt : CertificateException : " + ex.getMessage());
+        }
+        
         return null;
     }
     
@@ -74,11 +112,11 @@ public final class Crypto
         }
         catch (IOException ex)
         {
-            System.err.println("Crypto : Digest : IOException : " + ex.getMessage());
+            System.err.println("Crypto : saltDigest : IOException : " + ex.getMessage());
         }
         catch (NoSuchAlgorithmException ex)
         {
-            System.err.println("Crypto : Digest : NoSuchAlgorithmException : " + ex.getMessage());
+            System.err.println("Crypto : saltDigest : NoSuchAlgorithmException : " + ex.getMessage());
         }
         
         return null;
@@ -172,5 +210,12 @@ public final class Crypto
         }
         
         return null; 
+    }
+    
+    
+    /* CHEMIN FICHIER */
+    private static String getPathFichier(String f)
+    {
+        return System.getProperty("user.dir") + System.getProperty("file.separator") + f;
     }
 }

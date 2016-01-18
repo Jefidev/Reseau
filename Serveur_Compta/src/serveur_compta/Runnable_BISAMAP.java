@@ -181,6 +181,10 @@ public class Runnable_BISAMAP implements Runnable
             CleSecreteChiffrement = Crypto.generateSecretKey();
             CleSecreteHMAC = Crypto.generateSecretKey();
             
+            byte[] test = Crypto.asymCrypt(CleSecreteChiffrement.getEncoded(), "KSAppCompta.p12", "azerty", "ServeurCompta");
+            byte[] test2 = Crypto.asymCrypt(CleSecreteHMAC.getEncoded(), "KSAppCompta.p12", "azerty", "ServeurCompta");
+            
+            
             
             SendMsg("OUI");
             System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est connecté au serveur");
