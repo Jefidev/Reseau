@@ -21,7 +21,7 @@ public class Runnable_BISAMAP implements Runnable
     private DataOutputStream dos = null;
     private BeanBDAccess beanOracle;
     private String fonction;
-    private SecretKey Kchiffrement, Khmac;
+    private SecretKey CleSecreteChiffrement, CleSecreteHMAC;
     
     
     public Runnable_BISAMAP(Socket s)
@@ -137,7 +137,7 @@ public class Runnable_BISAMAP implements Runnable
     }
     
     
-    /* LOGIN (à partir de BD_COMPTA */
+    /* LOGIN (à partir de BD_COMPTA) + handshake */
     /* OUT : OUI/NON */
     private boolean login()
     {
@@ -178,8 +178,8 @@ public class Runnable_BISAMAP implements Runnable
             }
             
             // Handshake
-            Kchiffrement = Crypto.generateSecretKey();
-            Khmac = Crypto.generateSecretKey();
+            CleSecreteChiffrement = Crypto.generateSecretKey();
+            CleSecreteHMAC = Crypto.generateSecretKey();
             
             
             SendMsg("OUI");

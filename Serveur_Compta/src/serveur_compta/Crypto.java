@@ -24,22 +24,22 @@ import javax.crypto.SecretKey;
 public final class Crypto
 {
     /* ASYMETRIQUE */
-    /*public byte[] asymCrypt(byte[]tocrypt)
+    public byte[] asymCrypt(byte[] tocrypt)
     {
         try          
         {     
             KeyStore ks = KeyStore.getInstance("JKS");
             ks.load(new FileInputStream(getNomCompletFichier(Kstore)),mdpKeystore.toCharArray());
             X509Certificate certif = (X509Certificate)ks.getCertificate(alias);
-            PublicKey cléPublique = certif.getPublicKey();
-            Cipher chiffrement= Cipher.getInstance("RSA/ECB/PKCS1Padding","BC");
-            chiffrement.init(Cipher.ENCRYPT_MODE, cléPublique);
+            PublicKey ClePublique = certif.getPublicKey();
+            Cipher chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding","BC");
+            chiffrement.init(Cipher.ENCRYPT_MODE, ClePublique);
             return chiffrement.doFinal(tocrypt);     
         }
         return null;
     }
     
-    public byte[] asymDecrypt(byte []todecrypt)
+    /*public byte[] asymDecrypt(byte []todecrypt)
     {
         try          
         {             

@@ -131,7 +131,6 @@ public class Login extends javax.swing.JDialog
     }//GEN-LAST:event_ConnexionButtonActionPerformed
 
     
-
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -171,6 +170,7 @@ public class Login extends javax.swing.JDialog
         });
     }
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton ConnexionButton;
     private javax.swing.JLabel ErrorLabel;
