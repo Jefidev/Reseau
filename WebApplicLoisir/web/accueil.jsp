@@ -19,7 +19,6 @@
     </head>
     <body>
         <h1>Bienvenue <%=session.getAttribute("login")%></h1>
-        <h2>Que voulez-vous faire ?</h2>
         <form action="Controler" method="POST">
             <input type="submit" value="Réserver des entrées pour le parc"/>
             <input type="hidden" name="action" value="parc"/>
