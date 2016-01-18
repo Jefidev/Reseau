@@ -17,7 +17,8 @@
     </head>
     <body>
         <h1><%=bundle.getString("Bienvenue") %> <%=session.getAttribute("login")%></h1>
-        <outil:currentDate langue="<%=bundle.getString("Date") %>"/>
+        <% String date = bundle.getString("Date"); %>
+        <outil:currentDate langue="<%=date %>"/>
         <form action="Controler" method="POST">
             <input type="submit" value="<%=bundle.getString("Reserver") %>""/>
             <input type="hidden" name="action" value="parc"/>

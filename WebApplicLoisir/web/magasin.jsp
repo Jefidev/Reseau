@@ -18,7 +18,8 @@
     </head>
     
         <h1><%=bundle.getString("Magasin") %></h1>
-        <outil:currentDate langue="<%=bundle.getString("Date") %>"/>
+        <% String date = bundle.getString("Date"); %>
+        <outil:currentDate langue="<%=date %>"/>
         
         <form action="Controler" method="POST">
             <input type="submit" value="<%=bundle.getString("Accueil") %>"/>

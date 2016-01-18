@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ResourceBundle;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -92,6 +93,7 @@ public class displayProduct extends BodyTagSupport {
         
         //Recuperation de la requete à executer
         ResultSet rs = null;
+        ResourceBundle bundle = (ResourceBundle)pageContext.getSession().getAttribute("langue");
 
         try {
             rs = requete.executeQuery(bodyContent.getString());
@@ -113,17 +115,18 @@ public class displayProduct extends BodyTagSupport {
             while(rs.next())
             {
                 out.println("<div>");
-                out.println("<h2>" + rs.getString("NOM")+ "</h2>");
-                out.println("<p>" + rs.getString("DESCRIPTION") + "</p>");
-                out.println("<p>Prix : "+ rs.getFloat("PRIX") + "</p>");
+                out.println("<h2>" + bundle.getString(rs.getString("NOM"))+ "</h2>");
+                out.println("<p>" + bundle.getString(rs.getString("DESCRIPTION")) + "</p>");
+                out.println("<p>"+bundle.getString("Prix")+" : "+ rs.getFloat("PRIX") + "</p>");
                 
                 int qttStock = rs.getInt("QUANTITE") - rs.getInt("RESERVE");
                 
-                out.println("<p>Quantité en stock : "+ qttStock +"</p>");
+                out.println("<p>"+bundle.getString("Stock")+" : "+ qttStock +"</p>");
                 
                 //formulaire pour commander
                 out.println("<form action=\"Controler\" method=\"POST\">");
-                out.println("<p>Commander : </p><input type=\"number\" name = \"quantite\" value = \"1\" min=\"1\" max = \"" + qttStock + "\" />");
+                out.println("<p>"+bundle.getString("Commander")+" : </p>");
+                out.println("<input type=\"number\" name = \"quantite\" value = \"1\" min=\"1\" max = \"" + qttStock + "\" />");
                 
                 //champ cacher pour la servlet de controle
                 //id du produit
@@ -132,7 +135,7 @@ public class displayProduct extends BodyTagSupport {
                 //action
                 out.println("<input type=\"hidden\" name=\"action\" value=\"commande\"/>");
                 
-                out.println("<input type=\"submit\" value=\"Commander\">");
+                out.println("<input type=\"submit\" value=\""+bundle.getString("Commander")+"\">");
                 out.println("</form>");
                 //Si il y a eu une erreur de command eon affiche le message
                 if(idProduitErreur == rs.getInt("ID_PRODUIT"))
