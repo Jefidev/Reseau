@@ -88,6 +88,9 @@ public class Controler extends HttpServlet{
             case "deconnexion":
                     logoutRequest(request, response);
                 break;
+            case "choixLangue":
+                    choixLangueRequest(request, response);
+                break;
         }
         
         //RequestDispatcher rd = getServletContext().getRequestDispatcher("/accueil.jsp");
@@ -877,6 +880,27 @@ public class Controler extends HttpServlet{
     
     //edirection page d'accueil
     private void retourAccueilRequest(HttpServletRequest request, HttpServletResponse response)
+    {
+        HttpSession sess = request.getSession(true);
+        
+        if(!verifLogin(sess, response))
+            return;
+        
+        //Redirection à l'accueil
+        RequestDispatcher rd = request.getRequestDispatcher("accueil.jsp");
+        try {
+            rd.forward(request, response);
+        } catch (ServletException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    
+    //Choix de la langue
+    private void choixLangueRequest(HttpServletRequest request, HttpServletResponse response)
     {
         HttpSession sess = request.getSession(true);
         

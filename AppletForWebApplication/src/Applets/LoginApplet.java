@@ -231,7 +231,7 @@ public class LoginApplet extends javax.swing.JApplet {
             
             if(r.equalsIgnoreCase("ok"))
             {
-                URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/accueil.jsp?login="+loginTextField.getText());
+                URL s = new URL(pageCourante.getProtocol(), pageCourante.getHost(), pageCourante.getPort(), "/CaddieVirtuel/choixLangue.jsp?login="+loginTextField.getText());
                 getAppletContext().showDocument(s);
                 return;
             }

@@ -7,12 +7,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
-    <%
-        if(request.getParameter("login") == null && session.getAttribute("login") == null)
-            response.sendRedirect("index.html");
-        else if(request.getParameter("login") != null)
-            session.setAttribute("login", request.getParameter("login"));
-    %>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Accueil</title>
