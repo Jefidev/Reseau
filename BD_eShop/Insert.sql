@@ -10,6 +10,9 @@ BEGIN
 	INSERT INTO PRODUITS VALUES (3, 'boussole', 'Ca indique le nord normalement', 5, 3, 0);
 	INSERT INTO PRODUITS VALUES (4, 'canette d''air', 'Pour respirer de l''air pure', 20, 9, 0);
 
+	INSERT INTO LANGUES VALUES ('Français');
+	INSERT INTO LANGUES VALUES ('Anglais');
+	
 	COMMIT;
 END;
 /
