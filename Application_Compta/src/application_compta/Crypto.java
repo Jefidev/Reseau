@@ -261,6 +261,6 @@ public final class Crypto
     /* CHEMIN FICHIER */
     private static String getPathFichier(String f)
     {
-        return System.getProperty("user.dir") + System.getProperty("file.separator") + f;
+        return System.getProperty("user.dir") + System.getProperty("file.separator") + ".." + System.getProperty("file.separator") + f;
     }
 }
