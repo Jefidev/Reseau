@@ -2,9 +2,11 @@ package serveur_compta;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
@@ -226,15 +228,38 @@ public class Runnable_BISAMAP implements Runnable
             }
             while (rs.next())
             {
-                // Récup facture
+                String i = rs.getString("ID_FACTURE");
+                String s = rs.getString("ID_SOCIETE");
+                String ma = rs.getString("MOIS_ANNEE");
+                double th = rs.getDouble("TOTAL_HTVA");
+                double tt = rs.getDouble("TOTAL_TVAC");
+                int ffv = rs.getInt("FLAG_FACT_VALIDEE");
+                String l = rs.getString("LOGIN");
+                int ffe = rs.getInt("FLAG_FACT_ENVOYEE");
+                String me = rs.getString("MOYEN_ENVOI");
+                int ffp = rs.getInt("FLAG_FACT_PAYEE");
+                Facture facture = new Facture (i, s, ma, th, tt, ffv, l, ffe, me, ffp);
+                
+                byte[] factureToCrypt = ObjectToByteArray(facture);
+                byte[] factureCryptee = Crypto.symCrypt(CleSecreteChiffrement, factureToCrypt);
+                
+                SendMsg("OUI");
+                dos.writeInt(factureCryptee.length); 
+                dos.write(factureCryptee);
+                dos.flush();
+                
                 break;
             }
-            // chiffrement symétrique facture + envoi
         }
         catch (SQLException ex)
         {
             SendMsg("NON#Erreur interne au serveur");
             System.err.println("Runnable_BISAMAP : getNextBill : SQLexception : " + ex.getMessage());
+        }
+        catch (IOException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : getNextBill : IOException : " + ex.getMessage());
         }
     }
                 
@@ -288,7 +313,7 @@ public class Runnable_BISAMAP implements Runnable
         }
         catch(IOException e)
         {
-            System.err.println("Runnable_BISAMAP : SendMsg : Erreur d'envoi de msg (IO) : " + e);
+            System.err.println("Runnable_BISAMAP : SendMsg : Erreur d'envoi de msg (IO) : " + e.getMessage());
         }
     }
     
@@ -316,9 +341,26 @@ public class Runnable_BISAMAP implements Runnable
         }
         catch(IOException e)
         {
-            System.err.println("Runnable_BISAMAP : ReceiveMsg : Erreur de reception de msg (IO) : " + e);
+            System.err.println("Runnable_BISAMAP : ReceiveMsg : Erreur de reception de msg (IO) : " + e.getMessage());
         }
             
         return message.toString();
+    }
+    
+    byte[] ObjectToByteArray(Object obj)
+    {
+        try
+        {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(obj);
+            return baos.toByteArray();
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Runnable_BISAMAP : ObjectToByteArray : IOException : " + ex.getMessage());
+        }
+        
+        return null;
     }
 }

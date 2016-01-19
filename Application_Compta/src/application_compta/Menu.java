@@ -1,6 +1,7 @@
 package application_compta;
 
 import javax.swing.SwingUtilities;
+import library_compta.ProtocoleBISAMAP;
 
 
 public class Menu extends javax.swing.JPanel
