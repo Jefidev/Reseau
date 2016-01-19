@@ -1,4 +1,4 @@
-package serveur_compta;
+package library_compta;
 
 
 public class ProtocoleBISAMAP

@@ -10,6 +10,7 @@ import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.crypto.SecretKey;
+import library_compta.*;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 
@@ -219,8 +220,9 @@ public class Runnable_BISAMAP implements Runnable
             ResultSet rs = beanOracle.selection("*", "FACTURE", "FLAG_FACT_VALIDEE = 0 ORDER BY MOIS_ANNEE");
             if(!rs.next())
             {
-                SendMsg("NON#Pas de facture");
+                SendMsg("NON#Pas de facture disponible");
                 System.err.println("Runnable_BISAMAP : getNextBill : Pas de facture dispo");
+                return;
             }
             while (rs.next())
             {

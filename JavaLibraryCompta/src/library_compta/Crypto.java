@@ -1,4 +1,4 @@
-package application_compta;
+package library_compta;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -80,13 +80,13 @@ public final class Crypto
         return null;
     }
     
-    public static byte[] asymDecrypt(byte []todecrypt, String fichierKS, String mdpKS, String mdpPrivate, String aliasKeyPair)
+    public static byte[] asymDecrypt(byte []todecrypt, String fichierKS, String mdpKS, String mdpPrivate, String alias)
     {
         try          
         {             
             KeyStore ks = KeyStore.getInstance("PKCS12", "BC");
             ks.load(new FileInputStream(getPathFichier(fichierKS)), mdpKS.toCharArray());
-            PrivateKey Clepriv = (PrivateKey)ks.getKey(aliasKeyPair, mdpPrivate.toCharArray()); 
+            PrivateKey Clepriv = (PrivateKey)ks.getKey(alias, mdpPrivate.toCharArray()); 
             Cipher chiffrement= Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
             chiffrement.init(Cipher.DECRYPT_MODE, Clepriv);
             return chiffrement.doFinal(todecrypt); 

@@ -88,5 +88,6 @@ CREATE TABLE TARIFS
 );
 
 -- Principe des flags :
--- 0 = KO
--- 1 = Fait, contient
+-- 0 = Nouveau
+-- 1 = Fait, contient, OK
+-- 2 = KO, raté
