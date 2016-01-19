@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public final class Utility
 {
-    private static DataInputStream dis;
+    public static DataInputStream dis;
     public static DataOutputStream dos;
     private static String adresse;
     private static int port;

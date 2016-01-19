@@ -180,13 +180,17 @@ public class Runnable_BISAMAP implements Runnable
             // Handshake
             CleSecreteChiffrement = Crypto.generateSecretKey();
             CleSecreteHMAC = Crypto.generateSecretKey();
+            byte[] CleSecreteChiffrementChiffreeAsym = Crypto.asymCrypt(CleSecreteChiffrement.getEncoded(), "KSAppCompta.p12", "azerty", "ServeurCompta");
+            byte[] CleSecreteHMACChiffreeAsym = Crypto.asymCrypt(CleSecreteHMAC.getEncoded(), "KSAppCompta.p12", "azerty", "ServeurCompta");
             
-            byte[] test = Crypto.asymCrypt(CleSecreteChiffrement.getEncoded(), "KSAppCompta.p12", "azerty", "ServeurCompta");
-            byte[] test2 = Crypto.asymCrypt(CleSecreteHMAC.getEncoded(), "KSAppCompta.p12", "azerty", "ServeurCompta");
-            
-            
-            
+            // Réponse
             SendMsg("OUI");
+            dos.writeInt(CleSecreteChiffrementChiffreeAsym.length); 
+            dos.write(CleSecreteChiffrementChiffreeAsym);
+            dos.writeInt(CleSecreteHMACChiffreeAsym.length);
+            dos.write(CleSecreteHMACChiffreeAsym);
+            dos.flush();
+            
             System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est connecté au serveur");
             return true;
         }

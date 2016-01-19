@@ -3,6 +3,7 @@ package serveur_compta;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
@@ -10,10 +11,13 @@ import java.security.KeyStoreException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -33,7 +37,7 @@ public final class Crypto
             ks.load(new FileInputStream(getPathFichier(fichierKS)), mdpKS.toCharArray());
             X509Certificate certif = (X509Certificate)ks.getCertificate(alias);
             PublicKey ClePublique = certif.getPublicKey();
-            Cipher chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding","BC");
+            Cipher chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
             chiffrement.init(Cipher.ENCRYPT_MODE, ClePublique);
             return chiffrement.doFinal(tocrypt);     
         }
@@ -77,22 +81,61 @@ public final class Crypto
         return null;
     }
     
-    /*public byte[] asymDecrypt(byte []todecrypt)
+    public byte[] asymDecrypt(byte []todecrypt, String fichierKS, String mdpKS, String alias)
     {
         try          
         {             
-            KeyStore ks = KeyStore.getInstance("JKS");
-            ks.load(new FileInputStream(getNomCompletFichier(Kstore)),mdpKeystore.toCharArray());
+            KeyStore ks = KeyStore.getInstance("PKCS12", "BC");
+            ks.load(new FileInputStream(getPathFichier(fichierKS)), mdpKS.toCharArray());
             Enumeration en = ks.aliases(); 
-            PrivateKey Clepriv=(PrivateKey)ks.getKey(alias,mdpPrivate.toCharArray());
-            System.out.println(" *** Cle privee recuperee = " + Clepriv.toString()); 
-            Cipher chiffrement= Cipher.getInstance("RSA/ECB/PKCS1Padding","BC");
+            PrivateKey Clepriv = (PrivateKey)ks.getKey(alias, mdpPrivate.toCharArray()); 
+            Cipher chiffrement= Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
             chiffrement.init(Cipher.DECRYPT_MODE, Clepriv);
-            return chiffrement.doFinal(todecrypt);             
+            return chiffrement.doFinal(todecrypt); 
+        }
+        catch (KeyStoreException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : KeyStoreException : " + ex.getMessage());
+        }
+        catch (NoSuchProviderException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : NoSuchProviderException : " + ex.getMessage());
+        }
+        catch (FileNotFoundException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : FileNotFoundException : " + ex.getMessage());
+        }
+        catch (IOException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : IOException : " + ex.getMessage());
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : NoSuchAlgorithmException : " + ex.getMessage());
+        }
+        catch (CertificateException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : CertificateException : " + ex.getMessage());
+        }
+        catch (NoSuchPaddingException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : NoSuchPaddingException : " + ex.getMessage());
+        }
+        catch (IllegalBlockSizeException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : IllegalBlockSizeException : " + ex.getMessage());
+        }
+        catch (BadPaddingException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : BadPaddingException : " + ex.getMessage());
+        }
+        catch (InvalidKeyException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : InvalidKeyException : " + ex.getMessage());
         }        
 
-       return null;
-    }*/
+        return null;
+    }
     
     
     /* DIGEST SALE */

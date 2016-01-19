@@ -2,12 +2,14 @@ package application_compta;
 
 import java.awt.CardLayout;
 import java.net.*;
+import javax.crypto.SecretKey;
 
 
 public class ApplicationCompta extends javax.swing.JFrame
 {
     public static Socket cliSock = null;
     public Boolean isConnected = false;
+    private SecretKey CleSecreteChiffrement, CleSecreteHMAC;
     
     
     @SuppressWarnings("unchecked")

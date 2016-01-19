@@ -116,7 +116,15 @@ public class Login extends javax.swing.JDialog
             String[] parts = reponse.split("#");
             
             if (parts[0].equals("OUI"))
-            {
+            {   
+                // Lecture des données
+                int longueur = Utility.dis.readInt();
+                byte[] CleSecreteChiffrementChiffreeAsym = new byte[longueur];
+                Utility.dis.readFully(CleSecreteChiffrementChiffreeAsym);        
+                longueur = Utility.dis.readInt();
+                byte[] CleSecreteHMACChiffreeAsym = new byte[longueur];
+                Utility.dis.readFully(CleSecreteHMACChiffreeAsym);
+                
                 ApplicationCompta a = (ApplicationCompta) this.getParent();
                 a.isConnected = true;
                 this.dispose();
