@@ -5,7 +5,6 @@
  */
 package ServletPackage;
 
-import com.sun.xml.internal.org.jvnet.mimepull.MIMEMessage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
@@ -290,6 +289,7 @@ public class Controler extends HttpServlet{
     private void validerAchatRequest(HttpServletRequest request, HttpServletResponse response)
     {
         HttpSession sess = request.getSession(true);
+        String corpMailFacture = "Facture numero : " + idCommande +"\r\n";
         
         if(!verifLogin(sess, response))
             return;
@@ -325,6 +325,10 @@ public class Controler extends HttpServlet{
             {
                 int nbrPlace = (int)contenuCaddie.get("entreeParc");
                 String date = (String) contenuCaddie.get("dateParc");
+                
+                corpMailFacture = "Entrees pour le parc : \r\n";
+                corpMailFacture= "Quantite : "+nbrPlace +"  date : " + date + "\r\n";
+                corpMailFacture= "Prix : " + nbrPlace*5 +"\r\n \r\n";
 
                 contenuCaddie.remove("entreeParc");
                 contenuCaddie.remove("dateParc");
@@ -382,6 +386,12 @@ public class Controler extends HttpServlet{
                int nbrTotalReserve = rs.getInt("RESERVE");
                int nouveauNbrReservation = nbrTotalReserve - nbrReserve;
                int nouveauStock = rs.getInt("QUANTITE") - nbrReserve;
+               float prix = rs.getFloat("PRIX");
+               String nomProduit = rs.getString("NOM");
+               
+               corpMailFacture = nomProduit + "\r\n";
+               corpMailFacture= "Quantite : "+nbrReserve +"\r\n";
+               corpMailFacture= "Prix : " + nbrReserve*prix +"\r\n \r\n";
                
                HashMap champsMAJ = new HashMap();
                champsMAJ.put("RESERVE", nouveauNbrReservation);
@@ -399,6 +409,9 @@ public class Controler extends HttpServlet{
                bd.ecriture("PRODUITS_COMMMANDES", insertProduitCommande);
                
             }
+            
+            corpMailFacture = "Total facture : " + request.getParameter("total")+"\r\n \r\n";
+            corpMailFacture = "Merci Pour vos achats";
             
             bd.commit();
             //suppression du caddie de la session
@@ -426,7 +439,7 @@ public class Controler extends HttpServlet{
                 Multipart contenu = new MimeMultipart();
 
                 MimeBodyPart corpsMessage = new MimeBodyPart();
-                corpsMessage.setText(messageTextArea.getText());//Mettre le contenu du message ici
+                corpsMessage.setText(corpMailFacture);//Mettre le contenu du message ici
                 contenu.addBodyPart(corpsMessage);
 
                 messageComplet.setContent(contenu);

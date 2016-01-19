@@ -154,7 +154,7 @@ public class listCaddie extends BodyTagSupport {
             
             //E-mail facturation
             out.println("<p>E-mail de facturation : </p>");
-            out.println("<input type=\"email\" value=\"mailFacture\">");
+            out.println("<input type=\"email\" name=\"mailFacture\">");
             
             out.println("<input type=\"submit\" value=\"Acheter\">");
             out.println("</form>");
