@@ -5,6 +5,7 @@
  */
 package ServletPackage;
 
+import com.sun.xml.internal.org.jvnet.mimepull.MIMEMessage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,6 +30,12 @@ import javax.servlet.http.HttpSession;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 import newBean.requeteException;
+import javax.mail.*;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 /**
  *
@@ -395,6 +403,35 @@ public class Controler extends HttpServlet{
             bd.commit();
             //suppression du caddie de la session
             sess.removeAttribute("caddie");
+
+            
+            //Envoie du mail de facturation
+            if(!request.getParameter("mailFacture").isEmpty())
+            {
+                //Creation de la session de mail
+                Session sessMail;
+                
+                Properties prop = System.getProperties();
+                prop.put("mail.smtp.host", "10.59.26.134");
+                prop.put("mail.disable.top", true);
+
+                sessMail = Session.getDefaultInstance(prop, null);
+                MimeMessage messageComplet = new MimeMessage(sessMail);
+
+                messageComplet.setFrom(new InternetAddress("facturation@parc.be"));
+                messageComplet.setRecipient(Message.RecipientType.TO, new InternetAddress(request.getParameter("mailFacture")));
+                messageComplet.setSubject("Facturation de la commande numero : " + idCommande);
+                messageComplet.setSentDate(new Date());
+
+                Multipart contenu = new MimeMultipart();
+
+                MimeBodyPart corpsMessage = new MimeBodyPart();
+                corpsMessage.setText(messageTextArea.getText());//Mettre le contenu du message ici
+                contenu.addBodyPart(corpsMessage);
+
+                messageComplet.setContent(contenu);
+                Transport.send(messageComplet);
+            }
             
             //Mise à jour de l'ID commande pour le suivant 
             idCommande++;
@@ -414,6 +451,8 @@ public class Controler extends HttpServlet{
         } catch (ServletException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MessagingException ex) {
             Logger.getLogger(Controler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

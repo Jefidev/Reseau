@@ -151,7 +151,11 @@ public class listCaddie extends BodyTagSupport {
             //action
             out.println("<input type=\"hidden\" name=\"action\" value=\"achat\"/>");
             out.println("<input type=\"hidden\" name=\"total\" value=\"" + prixTotal + "\"/>");
-                
+            
+            //E-mail facturation
+            out.println("<p>E-mail de facturation : </p>");
+            out.println("<input type=\"email\" value=\"mailFacture\">");
+            
             out.println("<input type=\"submit\" value=\"Acheter\">");
             out.println("</form>");
             
