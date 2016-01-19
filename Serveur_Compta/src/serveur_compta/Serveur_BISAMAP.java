@@ -80,6 +80,7 @@ public class Serveur_BISAMAP extends Thread
                 
                 paramCo.setProperty("PORT_TRAFIC", "31048");
                 paramCo.setProperty("PORT_COMPTA", "31049");
+                paramCo.setProperty("PORT_SALARY", "31047");
 
                 try
                 {
@@ -106,11 +107,15 @@ public class Serveur_BISAMAP extends Thread
         
         int pt = Integer.parseInt(paramCo.getProperty("PORT_TRAFIC"));
         int pc = Integer.parseInt(paramCo.getProperty("PORT_COMPTA"));
+        int ps = Integer.parseInt(paramCo.getProperty("PORT_SALARY"));
         
         Serveur_CHAMAP sb = new Serveur_CHAMAP(pt, new ListeTaches(), 5);
         sb.start();
         
         Serveur_BISAMAP sc = new Serveur_BISAMAP(pc, new ListeTaches(), 5);
         sc.start();
+        
+        Serveur_SAMOP ss = new Serveur_SAMOP(ps, new ListeTaches(), 5);
+        ss.start();
     }
 }
