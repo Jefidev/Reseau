@@ -2,6 +2,7 @@ package application_compta;
 
 import java.io.*;
 import java.util.Date;
+import javax.crypto.spec.SecretKeySpec;
 
 
 public class Login extends javax.swing.JDialog
@@ -102,7 +103,7 @@ public class Login extends javax.swing.JDialog
             String Password = new String(PwdPF.getPassword());
 
             // envoi
-            byte[] pwdDigest = Crypto.Digest(Password, temps, aleatoire);
+            byte[] pwdDigest = Crypto.saltDigest(Password, temps, aleatoire);
             Utility.SendMsg(ProtocoleBISAMAP.LOGIN, "");
             Utility.dos.writeUTF(LoginTF.getText());
             Utility.dos.writeLong(temps);
@@ -125,7 +126,16 @@ public class Login extends javax.swing.JDialog
                 byte[] CleSecreteHMACChiffreeAsym = new byte[longueur];
                 Utility.dis.readFully(CleSecreteHMACChiffreeAsym);
                 
+                byte[] CleSecreteChiffrementDechiffree = Crypto.asymDecrypt(CleSecreteChiffrementChiffreeAsym, "KSAppCompta.p12", "azerty", "azerty", "AppCompta");
+                byte[] CleSecreteHMACDechiffree = Crypto.asymDecrypt(CleSecreteHMACChiffreeAsym, "KSAppCompta.p12", "azerty", "azerty", "AppCompta");
+                
                 ApplicationCompta a = (ApplicationCompta) this.getParent();
+                a.CleSecreteChiffrement = new SecretKeySpec(CleSecreteChiffrementDechiffree, 0, CleSecreteChiffrementDechiffree.length, "DES");
+                a.CleSecreteHMAC = new SecretKeySpec(CleSecreteHMACDechiffree, 0, CleSecreteHMACDechiffree.length, "DES");
+                
+                System.out.println("=====>> CleSecreteChiffrement = " + a.CleSecreteChiffrement);
+                System.out.println("=====>> CleSecreteHMAC = " + a.CleSecreteHMAC);
+                
                 a.isConnected = true;
                 this.dispose();
             }

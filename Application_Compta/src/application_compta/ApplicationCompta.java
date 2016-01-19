@@ -9,7 +9,7 @@ public class ApplicationCompta extends javax.swing.JFrame
 {
     public static Socket cliSock = null;
     public Boolean isConnected = false;
-    private SecretKey CleSecreteChiffrement, CleSecreteHMAC;
+    public SecretKey CleSecreteChiffrement, CleSecreteHMAC;
     
     
     @SuppressWarnings("unchecked")

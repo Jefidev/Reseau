@@ -14,10 +14,9 @@ import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.SecureRandom;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -29,13 +28,13 @@ import javax.crypto.SecretKey;
 public final class Crypto
 {
     /* ASYMETRIQUE */
-    public static byte[] asymCrypt(byte[] tocrypt, String fichierKS, String mdpKS, String alias)
+    public static byte[] asymCrypt(byte[] tocrypt, String fichierKS, String mdpKS, String aliasCertif)
     {
         try          
         {     
             KeyStore ks = KeyStore.getInstance("PKCS12", "BC");
             ks.load(new FileInputStream(getPathFichier(fichierKS)), mdpKS.toCharArray());
-            X509Certificate certif = (X509Certificate)ks.getCertificate(alias);
+            X509Certificate certif = (X509Certificate)ks.getCertificate(aliasCertif);
             PublicKey ClePublique = certif.getPublicKey();
             Cipher chiffrement = Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
             chiffrement.init(Cipher.ENCRYPT_MODE, ClePublique);
@@ -81,13 +80,12 @@ public final class Crypto
         return null;
     }
     
-    public byte[] asymDecrypt(byte []todecrypt, String fichierKS, String mdpKS, String alias)
+    public static byte[] asymDecrypt(byte []todecrypt, String fichierKS, String mdpKS, String mdpPrivate, String alias)
     {
         try          
         {             
             KeyStore ks = KeyStore.getInstance("PKCS12", "BC");
             ks.load(new FileInputStream(getPathFichier(fichierKS)), mdpKS.toCharArray());
-            Enumeration en = ks.aliases(); 
             PrivateKey Clepriv = (PrivateKey)ks.getKey(alias, mdpPrivate.toCharArray()); 
             Cipher chiffrement= Cipher.getInstance("RSA/ECB/PKCS1Padding", "BC");
             chiffrement.init(Cipher.DECRYPT_MODE, Clepriv);
@@ -132,6 +130,10 @@ public final class Crypto
         catch (InvalidKeyException ex)
         {
             System.err.println("Crypto : asymDecrypt : InvalidKeyException : " + ex.getMessage());
+        }
+        catch (UnrecoverableKeyException ex)
+        {
+            System.err.println("Crypto : asymDecrypt : UnrecoverableKeyException : " + ex.getMessage());
         }        
 
         return null;
