@@ -240,7 +240,7 @@ public class Runnable_BISAMAP implements Runnable
                 int ffp = rs.getInt("FLAG_FACT_PAYEE");
                 Facture facture = new Facture (i, s, ma, th, tt, ffv, l, ffe, me, ffp);
                 
-                byte[] factureToCrypt = ObjectToByteArray(facture);
+                byte[] factureToCrypt = Convert.ObjectToByteArray(facture);
                 byte[] factureCryptee = Crypto.symCrypt(CleSecreteChiffrement, factureToCrypt);
                 
                 SendMsg("OUI");
@@ -345,22 +345,5 @@ public class Runnable_BISAMAP implements Runnable
         }
             
         return message.toString();
-    }
-    
-    byte[] ObjectToByteArray(Object obj)
-    {
-        try
-        {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(obj);
-            return baos.toByteArray();
-        }
-        catch (IOException ex)
-        {
-            System.err.println("Runnable_BISAMAP : ObjectToByteArray : IOException : " + ex.getMessage());
-        }
-        
-        return null;
     }
 }

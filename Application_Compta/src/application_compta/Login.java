@@ -8,11 +8,14 @@ import library_compta.*;
 
 public class Login extends javax.swing.JDialog
 {
+    private ApplicationCompta a;
+    
     public Login(java.awt.Frame parent, boolean modal)
     {
         super(parent, modal);
         initComponents();
         this.setTitle("Login");
+        a = (ApplicationCompta) this.getParent();
         ErrorLabel.setVisible(false);
     }
 
@@ -130,7 +133,6 @@ public class Login extends javax.swing.JDialog
                 byte[] CleSecreteChiffrementDechiffree = Crypto.asymDecrypt(CleSecreteChiffrementChiffreeAsym, "KSAppCompta.p12", "azerty", "azerty", "AppCompta");
                 byte[] CleSecreteHMACDechiffree = Crypto.asymDecrypt(CleSecreteHMACChiffreeAsym, "KSAppCompta.p12", "azerty", "azerty", "AppCompta");
                 
-                ApplicationCompta a = (ApplicationCompta) this.getParent();
                 a.CleSecreteChiffrement = new SecretKeySpec(CleSecreteChiffrementDechiffree, 0, CleSecreteChiffrementDechiffree.length, "DES");
                 a.CleSecreteHMAC = new SecretKeySpec(CleSecreteHMACDechiffree, 0, CleSecreteHMACDechiffree.length, "DES");
                 

@@ -1,14 +1,22 @@
 package application_compta;
 
+import java.io.IOException;
 import javax.swing.SwingUtilities;
+import library_compta.Convert;
+import library_compta.Crypto;
+import library_compta.Facture;
 import library_compta.ProtocoleBISAMAP;
 
 
 public class ValidationFacture extends javax.swing.JPanel
 {
+    private ApplicationCompta a;
+    
     public ValidationFacture()
     {
         initComponents();
+        a = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
+        FeedbackLabel.setVisible(false);
     }
 
     
@@ -20,6 +28,7 @@ public class ValidationFacture extends javax.swing.JPanel
         TitreLabel = new javax.swing.JLabel();
         NextBill = new javax.swing.JButton();
         ValiderFacture = new javax.swing.JButton();
+        FeedbackLabel = new javax.swing.JLabel();
 
         MenuButton.setLabel("Retour au menu");
         MenuButton.addActionListener(new java.awt.event.ActionListener() {
@@ -46,6 +55,10 @@ public class ValidationFacture extends javax.swing.JPanel
             }
         });
 
+        FeedbackLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        FeedbackLabel.setForeground(new java.awt.Color(255, 0, 0));
+        FeedbackLabel.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -63,14 +76,19 @@ public class ValidationFacture extends javax.swing.JPanel
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 78, Short.MAX_VALUE)
                         .addComponent(TitreLabel)
-                        .addGap(84, 84, 84))))
+                        .addGap(84, 84, 84))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(FeedbackLabel)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(TitreLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 233, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 201, Short.MAX_VALUE)
+                .addComponent(FeedbackLabel)
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(MenuButton)
                     .addComponent(NextBill)
@@ -81,11 +99,12 @@ public class ValidationFacture extends javax.swing.JPanel
 
     
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
-        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("Menu");
+        a.ChangePanel("Menu");
     }//GEN-LAST:event_MenuButtonActionPerformed
 
     private void NextBillActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextBillActionPerformed
+        FeedbackLabel.setVisible(false);
+        
         Utility.SendMsg(ProtocoleBISAMAP.GET_NEXT_BILL, "");
         
         String reponse = Utility.ReceiveMsg();  
@@ -93,11 +112,25 @@ public class ValidationFacture extends javax.swing.JPanel
         
         if (parts[0].equals("OUI"))
         {
-        
+            try
+            {
+                int longueur = Utility.dis.readInt();
+                byte[] factureToDecrypt = new byte[longueur];
+                Utility.dis.readFully(factureToDecrypt);
+                
+                byte[] factureDecryptee = Crypto.symDecrypt(a.CleSecreteChiffrement, factureToDecrypt);
+                Facture facture = (Facture)Convert.ByteArrayToObject(factureDecryptee);
+            }
+            catch (IOException ex)
+            {
+                FeedbackLabel.setText("Probleme d'IO côté client");
+                FeedbackLabel.setVisible(true);
+            }       
         }
         else
         {
-        
+            FeedbackLabel.setText(parts[1]);
+            FeedbackLabel.setVisible(true);
         }
     }//GEN-LAST:event_NextBillActionPerformed
 
@@ -107,6 +140,7 @@ public class ValidationFacture extends javax.swing.JPanel
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel FeedbackLabel;
     private javax.swing.JButton MenuButton;
     private javax.swing.JButton NextBill;
     private javax.swing.JLabel TitreLabel;
