@@ -72,6 +72,7 @@ public class Serveur_SAMOP extends Thread{
             SSLServerSocketFactory socketfactory = SllC.getServerSocketFactory();
             
             SSocket = (SSLServerSocket) socketfactory.createServerSocket(port);
+
         }
         catch(IOException e)
         {
