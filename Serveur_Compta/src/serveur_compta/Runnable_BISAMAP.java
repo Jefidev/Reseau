@@ -173,7 +173,7 @@ public class Runnable_BISAMAP implements Runnable
             }
             
             // Comparaison
-            if (!(MessageDigest.isEqual(pwdClient, Crypto.saltDigest(passwordDB, temps, aleatoire))))
+            if (!(MessageDigest.isEqual(pwdClient, Crypto.SaltDigest(passwordDB, temps, aleatoire))))
             {
                 SendMsg("NON#Mauvais mot de passe");
                 System.out.println("Runnable_BISAMAP : Login : Le client " + user + " est refusé (mauvais password)");
@@ -181,10 +181,10 @@ public class Runnable_BISAMAP implements Runnable
             }
             
             // Handshake
-            CleSecreteChiffrement = Crypto.generateSecretKey();
-            CleSecreteHMAC = Crypto.generateSecretKey();
-            byte[] CleSecreteChiffrementChiffreeAsym = Crypto.asymCrypt(CleSecreteChiffrement.getEncoded(), "KSServeurCompta.p12", "azerty", "AppCompta");
-            byte[] CleSecreteHMACChiffreeAsym = Crypto.asymCrypt(CleSecreteHMAC.getEncoded(), "KSServeurCompta.p12", "azerty", "AppCompta");
+            CleSecreteChiffrement = Crypto.GenerateSecretKey();
+            CleSecreteHMAC = Crypto.GenerateSecretKey();
+            byte[] CleSecreteChiffrementChiffreeAsym = Crypto.AsymCrypt(CleSecreteChiffrement.getEncoded(), "KSServeurCompta.p12", "azerty", "AppCompta");
+            byte[] CleSecreteHMACChiffreeAsym = Crypto.AsymCrypt(CleSecreteHMAC.getEncoded(), "KSServeurCompta.p12", "azerty", "AppCompta");
             
             System.out.println("=====>> CleSecreteChiffrement = " + CleSecreteChiffrement);
             System.out.println("=====>> CleSecreteHMAC = " + CleSecreteHMAC);
@@ -242,7 +242,7 @@ public class Runnable_BISAMAP implements Runnable
                 Facture facture = new Facture (i, s, ma, th, tt, ffv, l, ffe, me, ffp);
                 
                 byte[] factureToCrypt = Convert.ObjectToByteArray(facture);
-                byte[] factureCryptee = Crypto.symCrypt(CleSecreteChiffrement, factureToCrypt);
+                byte[] factureCryptee = Crypto.SymCrypt(CleSecreteChiffrement, factureToCrypt);
                 
                 SendMsg("OUI");
                 dos.writeInt(factureCryptee.length); 

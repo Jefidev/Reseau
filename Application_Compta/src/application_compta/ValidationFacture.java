@@ -270,7 +270,7 @@ public class ValidationFacture extends javax.swing.JPanel
                 byte[] factureToDecrypt = new byte[longueur];
                 Utility.dis.readFully(factureToDecrypt);
                 
-                byte[] factureDecryptee = Crypto.symDecrypt(a.CleSecreteChiffrement, factureToDecrypt);
+                byte[] factureDecryptee = Crypto.SymDecrypt(a.CleSecreteChiffrement, factureToDecrypt);
                 facture = (Facture)Convert.ByteArrayToObject(factureDecryptee);
                 
                 RemplirLabels();
@@ -308,6 +308,9 @@ public class ValidationFacture extends javax.swing.JPanel
         
         // Envoi signature du comptable
         
+        String toSign = ProtocoleBISAMAP.VALIDATE_BILL + msg;
+        byte[] signature = Crypto.CreateSignature(toSign.getBytes(), "KSAppCompta.p12", "azerty", "azerty", "AppCompta");
+
         String reponse = Utility.ReceiveMsg();
         String[] parts = reponse.split("#");
         
