@@ -1,7 +1,9 @@
 package library_compta;
 
+import java.io.Serializable;
 
-public class Facture
+
+public class Facture implements Serializable
 {
     public String IdFacture;
     public String IdSociete;

@@ -16,7 +16,9 @@ public final class Convert
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(obj);
-            return baos.toByteArray();
+            byte[] array = baos.toByteArray();
+            baos.flush();
+            return array;
         }
         catch (IOException ex)
         {

@@ -11,10 +11,14 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import library_compta.*;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
+import newBean.requeteException;
 
 
 public class Runnable_BISAMAP implements Runnable
@@ -83,41 +87,41 @@ public class Runnable_BISAMAP implements Runnable
         while(!terminer)
         {
             parts = ReceiveMsg().split("#");
-            switch (parts[0])
+            switch (Integer.parseInt(parts[0]))
             {                          
-                case "GET_NEXT_BILL" :
+                case ProtocoleBISAMAP.GET_NEXT_BILL :
                     getNextBill();
                     break;
                     
-                case "VALIDATE_BILL" :
+                case ProtocoleBISAMAP.VALIDATE_BILL :
                     validateBill(parts);
                     break;
                 
-                case "LIST_BILLS" :
+                case ProtocoleBISAMAP.LIST_BILLS :
                     listBills(parts);
                     break;
                     
-                case "SEND_BILLS" :
+                case ProtocoleBISAMAP.SEND_BILLS :
                     sendBills(parts);
                     break;
                     
-                case "REC_PAY" :
+                case ProtocoleBISAMAP.REC_PAY :
                     recPay(parts);
                     break;
                                         
-                case "LIST_WAITING" :
+                case ProtocoleBISAMAP.LIST_WAITING :
                     listWaiting(parts);
                     break;
                                                             
-                case "COMPUTE_SAL" :
+                case ProtocoleBISAMAP.COMPUTE_SAL :
                     computeSal(parts);
                     break;
                                                                                 
-                case "VALIDATE_SAL" :
+                case ProtocoleBISAMAP.VALIDATE_SAL :
                     validateSal(parts);
                     break;
                     
-                case "LOGOUT" :
+                case ProtocoleBISAMAP.LOGOUT :
                     terminer = true;
                     break;
                     
@@ -141,7 +145,6 @@ public class Runnable_BISAMAP implements Runnable
     
     
     /* LOGIN (à partir de BD_COMPTA) + handshake */
-    /* OUT : OUI/NON */
     private boolean login()
     {
         try
@@ -220,7 +223,7 @@ public class Runnable_BISAMAP implements Runnable
     {
         try
         {
-            ResultSet rs = beanOracle.selection("*", "FACTURE", "FLAG_FACT_VALIDEE = 0 ORDER BY MOIS_ANNEE");
+            ResultSet rs = beanOracle.selection("*", "FACTURES", "FLAG_FACT_VALIDEE = 0 ORDER BY MOIS_ANNEE");
             if(!rs.next())
             {
                 SendMsg("NON#Pas de facture disponible");
@@ -248,6 +251,7 @@ public class Runnable_BISAMAP implements Runnable
                 dos.writeInt(factureCryptee.length); 
                 dos.write(factureCryptee);
                 dos.flush();
+                System.out.println("Runnable_BISAMAP : getNextBill : Facture envoyée au client");
                 
                 break;
             }
@@ -266,37 +270,50 @@ public class Runnable_BISAMAP implements Runnable
                 
     
     /* VALIDATION OU INVALIDATION DE LA FACTURE RECUPEREE PAR getNextVill */
-    private void validateBill(String[] request)
+    /* IN : IdFacture#FlagFactValidee */
+    private void validateBill(String[] parts)
     {
+        try
+        {
+            HashMap map = new HashMap();
+            map.put("", map);
+            beanOracle.miseAJour("FACTURES", map, "ID_FACTURE = " + parts[1]);
+            SendMsg("OUI");
+        }
+        catch (requeteException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : validateBill : requeteException : " + ex.getMessage());
+        }
     }
     
     
-    private void listBills(String[] request)
+    private void listBills(String[] parts)
     {
     }
     
 
-    private void sendBills(String[] request)
+    private void sendBills(String[] parts)
     {
     }
        
     
-    private void recPay(String[] request)
+    private void recPay(String[] parts)
     {
     }
          
     
-    private void listWaiting(String[] request)
+    private void listWaiting(String[] parts)
     {
     }
             
     
-    private void computeSal(String[] request)
+    private void computeSal(String[] parts)
     {
     }
     
     
-    private void validateSal(String[] request)
+    private void validateSal(String[] parts)
     {
     }
     

@@ -1,6 +1,8 @@
 package application_compta;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import library_compta.Convert;
 import library_compta.Crypto;
@@ -10,14 +12,12 @@ import library_compta.ProtocoleBISAMAP;
 
 public class ValidationFacture extends javax.swing.JPanel
 {
-    private ApplicationCompta a;
     private Facture facture;
     
     
     public ValidationFacture()
     {
         initComponents();
-        a = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         FeedbackLabel.setVisible(false);
         CacherLabels();
         facture = null;
@@ -144,13 +144,9 @@ public class ValidationFacture extends javax.swing.JPanel
                         .addComponent(ValiderFactureButton)
                         .addGap(18, 18, 18)
                         .addComponent(RefuserFactureButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
                         .addComponent(MenuButton)
                         .addContainerGap())
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 78, Short.MAX_VALUE)
-                        .addComponent(TitreLabel)
-                        .addGap(84, 84, 84))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(FeedbackLabel)
                         .addGap(0, 0, Short.MAX_VALUE))
@@ -198,7 +194,11 @@ public class ValidationFacture extends javax.swing.JPanel
                                 .addComponent(FactValideeL)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(FactValideeReponseL)))
-                        .addGap(131, 131, 131))))
+                        .addGap(131, 131, 131))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(61, 61, 61)
+                        .addComponent(TitreLabel)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -249,6 +249,7 @@ public class ValidationFacture extends javax.swing.JPanel
 
     
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
+        ApplicationCompta a = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         a.ChangePanel("Menu");
     }//GEN-LAST:event_MenuButtonActionPerformed
 
@@ -256,10 +257,10 @@ public class ValidationFacture extends javax.swing.JPanel
     private void NextBillButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NextBillButtonActionPerformed
         FeedbackLabel.setVisible(false);
         CacherLabels();
-        
+
         Utility.SendMsg(ProtocoleBISAMAP.GET_NEXT_BILL, "");
         
-        String reponse = Utility.ReceiveMsg();  
+        String reponse = Utility.ReceiveMsg();
         String[] parts = reponse.split("#");
         
         if (parts[0].equals("OUI"))
@@ -270,6 +271,7 @@ public class ValidationFacture extends javax.swing.JPanel
                 byte[] factureToDecrypt = new byte[longueur];
                 Utility.dis.readFully(factureToDecrypt);
                 
+                ApplicationCompta a = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
                 byte[] factureDecryptee = Crypto.SymDecrypt(a.CleSecreteChiffrement, factureToDecrypt);
                 facture = (Facture)Convert.ByteArrayToObject(factureDecryptee);
                 
@@ -278,8 +280,7 @@ public class ValidationFacture extends javax.swing.JPanel
             }
             catch (IOException ex)
             {
-                FeedbackLabel.setText("Probleme d'IO côté client");
-                FeedbackLabel.setVisible(true);
+                System.err.println("ValidationFacture : IOException : NextBillButtonActionPerformed : " + ex.getMessage());
             }       
         }
         else
@@ -291,38 +292,52 @@ public class ValidationFacture extends javax.swing.JPanel
 
     
     private void ValiderFactureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValiderFactureButtonActionPerformed
+        if(facture == null)
+            return;
+        
         ModifFacture(facture.IdFacture + "#" + "1");
     }//GEN-LAST:event_ValiderFactureButtonActionPerformed
 
     
     private void RefuserFactureButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RefuserFactureButtonActionPerformed
+        if(facture == null)
+            return;
+        
         ModifFacture(facture.IdFacture + "#" + "2");
     }//GEN-LAST:event_RefuserFactureButtonActionPerformed
 
     
     private void ModifFacture(String msg)
     {
-        FeedbackLabel.setVisible(false);
-        
-        Utility.SendMsg(ProtocoleBISAMAP.VALIDATE_BILL, msg);
-        
-        // Envoi signature du comptable
-        
-        String toSign = ProtocoleBISAMAP.VALIDATE_BILL + msg;
-        byte[] signature = Crypto.CreateSignature(toSign.getBytes(), "KSAppCompta.p12", "azerty", "azerty", "AppCompta");
+        try
+        {
+            FeedbackLabel.setVisible(false);
 
-        String reponse = Utility.ReceiveMsg();
-        String[] parts = reponse.split("#");
-        
-        if (parts[0].equals("OUI"))
-        {
-            FeedbackLabel.setText(parts[1]);
-            FeedbackLabel.setVisible(true);    
+            String toSign = ProtocoleBISAMAP.VALIDATE_BILL + msg;
+            byte[] signature = Crypto.CreateSignature(toSign.getBytes(), "KSAppCompta.p12", "azerty", "azerty", "AppCompta");
+
+            Utility.SendMsg(ProtocoleBISAMAP.VALIDATE_BILL, msg);
+            Utility.dos.writeInt(signature.length); 
+            Utility.dos.write(signature);
+            Utility.dos.flush();
+
+            String reponse = Utility.ReceiveMsg();
+            String[] parts = reponse.split("#");
+
+            if (parts[0].equals("OUI"))
+            {
+                FeedbackLabel.setText(parts[1]);
+                FeedbackLabel.setVisible(true);    
+            }
+            else
+            {
+                FeedbackLabel.setText(parts[1]);
+                FeedbackLabel.setVisible(true);
+            }
         }
-        else
+        catch (IOException ex)
         {
-            FeedbackLabel.setText(parts[1]);
-            FeedbackLabel.setVisible(true);
+            System.err.println("ValidationFacture : IOException : ModifFacture : " + ex.getMessage());
         }
     }
     
