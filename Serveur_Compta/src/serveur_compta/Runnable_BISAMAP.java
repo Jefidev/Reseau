@@ -69,69 +69,76 @@ public class Runnable_BISAMAP implements Runnable
     @Override
     public void run()
     {
-        String[] parts = (ReceiveMsg()).split("#");
-        
-        if(Integer.parseInt(parts[0]) == ProtocoleBISAMAP.LOGIN)
+        try
         {
-            if(!login())
-                return;
-        }
-        else
-        {
-            SendMsg("NON#Requete invalide");
-            return;
-        }
-        
-        boolean terminer = false;
-        
-        while(!terminer)
-        {
-            parts = ReceiveMsg().split("#");
-            switch (Integer.parseInt(parts[0]))
-            {                          
-                case ProtocoleBISAMAP.GET_NEXT_BILL :
-                    getNextBill();
-                    break;
-                    
-                case ProtocoleBISAMAP.VALIDATE_BILL :
-                    validateBill(parts);
-                    break;
-                
-                case ProtocoleBISAMAP.LIST_BILLS :
-                    listBills(parts);
-                    break;
-                    
-                case ProtocoleBISAMAP.SEND_BILLS :
-                    sendBills(parts);
-                    break;
-                    
-                case ProtocoleBISAMAP.REC_PAY :
-                    recPay(parts);
-                    break;
-                                        
-                case ProtocoleBISAMAP.LIST_WAITING :
-                    listWaiting(parts);
-                    break;
-                                                            
-                case ProtocoleBISAMAP.COMPUTE_SAL :
-                    computeSal(parts);
-                    break;
-                                                                                
-                case ProtocoleBISAMAP.VALIDATE_SAL :
-                    validateSal(parts);
-                    break;
-                    
-                case ProtocoleBISAMAP.LOGOUT :
-                    terminer = true;
-                    break;
-                    
-                default :
-                    terminer = true;
-                    break;
+            String[] parts = (ReceiveMsg()).split("#");
+
+            if(Integer.parseInt(parts[0]) == ProtocoleBISAMAP.LOGIN)
+            {
+                if(!login())
+                    return;
             }
+            else
+            {
+                SendMsg("NON#Requete invalide");
+                return;
+            }
+
+            boolean terminer = false;
+
+            while(!terminer)
+            {
+                parts = ReceiveMsg().split("#");
+                switch (Integer.parseInt(parts[0]))
+                {                          
+                    case ProtocoleBISAMAP.GET_NEXT_BILL :
+                        getNextBill();
+                        break;
+
+                    case ProtocoleBISAMAP.VALIDATE_BILL :
+                        validateBill(parts);
+                        break;
+
+                    case ProtocoleBISAMAP.LIST_BILLS :
+                        listBills(parts);
+                        break;
+
+                    case ProtocoleBISAMAP.SEND_BILLS :
+                        sendBills(parts);
+                        break;
+
+                    case ProtocoleBISAMAP.REC_PAY :
+                        recPay(parts);
+                        break;
+
+                    case ProtocoleBISAMAP.LIST_WAITING :
+                        listWaiting(parts);
+                        break;
+
+                    case ProtocoleBISAMAP.COMPUTE_SAL :
+                        computeSal(parts);
+                        break;
+
+                    case ProtocoleBISAMAP.VALIDATE_SAL :
+                        validateSal(parts);
+                        break;
+
+                    case ProtocoleBISAMAP.LOGOUT :
+                        terminer = true;
+                        break;
+
+                    default :
+                        terminer = true;
+                        break;
+                }
+            }
+
+            System.out.println("Runnable_BISAMAP : Run : Fin du runnable");
         }
-        
-        System.out.println("Runnable_BISAMAP : Run : Fin du runnable");
+        catch (NumberFormatException ex)
+        {
+            System.err.println("Runnable_BISAMAP : Run : " + ex.getMessage());
+        }
         
         try
         {
@@ -230,6 +237,7 @@ public class Runnable_BISAMAP implements Runnable
                 System.err.println("Runnable_BISAMAP : getNextBill : Pas de facture dispo");
                 return;
             }
+            rs.beforeFirst();
             while (rs.next())
             {
                 String i = rs.getString("ID_FACTURE");
@@ -276,9 +284,10 @@ public class Runnable_BISAMAP implements Runnable
         try
         {
             HashMap map = new HashMap();
-            map.put("", map);
+            map.put("FLAG_FACT_VALIDEE", parts[2]);
             beanOracle.miseAJour("FACTURES", map, "ID_FACTURE = " + parts[1]);
             SendMsg("OUI");
+            System.err.println("Runnable_BISAMAP : validateBill : Facture modifiée");
         }
         catch (requeteException ex)
         {
