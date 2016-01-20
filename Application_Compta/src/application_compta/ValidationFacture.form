@@ -20,9 +20,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <Component id="NextBill" min="-2" max="-2" attributes="0"/>
+                      <Component id="NextBillButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="ValiderFacture" min="-2" max="-2" attributes="0"/>
+                      <Component id="ValiderFactureButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="RefuserFactureButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                       <Component id="MenuButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -32,9 +34,67 @@
                       <Component id="TitreLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="84" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <Component id="FeedbackLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="IdFactureL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="IdFactureReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="IdSocieteL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="IdSocieteReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="TotalHTVAL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="TotalHTVAReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="TotalTVACL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="TotalTVACReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="MoisAnneeL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="MoisAnneeReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="FactPayeeL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="FactPayeeReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="MoyenEnvoiL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="MoyenEnvoiReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="FactEnvoyeeL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="FactEnvoyeeReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="LoginL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="LoginReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="FactValideeL" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="FactValideeReponseL" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="131" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -45,13 +105,49 @@
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="TitreLabel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="201" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="IdFactureL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="FactValideeL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="IdFactureReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="FactValideeReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="IdSocieteL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="LoginL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="IdSocieteReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="LoginReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="MoisAnneeL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="FactEnvoyeeL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="MoisAnneeReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="FactEnvoyeeReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="TotalHTVAL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="MoyenEnvoiL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="TotalHTVAReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="MoyenEnvoiReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="TotalTVACL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="FactPayeeL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="TotalTVACReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="FactPayeeReponseL" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="65" max="32767" attributes="0"/>
               <Component id="FeedbackLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="MenuButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="NextBill" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="ValiderFacture" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="NextBillButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="ValiderFactureButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="RefuserFactureButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -78,20 +174,20 @@
         <Property name="text" type="java.lang.String" value="FACTURE PLUS ANCIENNE NON VALIDEE :"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JButton" name="NextBill">
+    <Component class="javax.swing.JButton" name="NextBillButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Prochaine facture"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="NextBillActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="NextBillButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="ValiderFacture">
+    <Component class="javax.swing.JButton" name="ValiderFactureButton">
       <Properties>
         <Property name="text" type="java.lang.String" value="Valider la facture"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ValiderFactureActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ValiderFactureButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="FeedbackLabel">
@@ -104,6 +200,114 @@
         </Property>
         <Property name="text" type="java.lang.String" value="jLabel1"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="IdFactureL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Id facture :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="IdSocieteL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Id soci&#xe9;t&#xe9; :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="MoisAnneeL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Mois et ann&#xe9;e concern&#xe9;s :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="TotalHTVAL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total HTVA :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="TotalTVACL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Total TVAC :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="FactValideeL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Facture valid&#xe9;e ?"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="LoginL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Comptable validateur :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="FactEnvoyeeL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Facture envoy&#xe9;e ?"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="MoyenEnvoiL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Moyen d&apos;envoi :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="FactPayeeL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Facture pay&#xe9;e ?"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="IdFactureReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel1"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="IdSocieteReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel2"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="MoisAnneeReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel3"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="TotalHTVAReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel4"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="TotalTVACReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel5"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="FactValideeReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel6"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="LoginReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel7"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="FactEnvoyeeReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel8"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="MoyenEnvoiReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel9"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="FactPayeeReponseL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="jLabel10"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="RefuserFactureButton">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Refuser la facture"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RefuserFactureButtonActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

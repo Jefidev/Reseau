@@ -214,7 +214,8 @@ public class Runnable_BISAMAP implements Runnable
         return false;
     }
 
-            
+    
+    /* RECUPERATION DE LA PLUS ANCIENNE FACTURE PAS ENCORE VALIDEE (flag = 0) */
     private void getNextBill()
     {
         try
@@ -263,7 +264,8 @@ public class Runnable_BISAMAP implements Runnable
         }
     }
                 
-      
+    
+    /* VALIDATION OU INVALIDATION DE LA FACTURE RECUPEREE PAR getNextVill */
     private void validateBill(String[] request)
     {
     }
