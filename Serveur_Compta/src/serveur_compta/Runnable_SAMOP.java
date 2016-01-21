@@ -65,17 +65,17 @@ public class Runnable_SAMOP implements Runnable{
         
         String[] parts = (ReceiveMsg()).split("#");
         
-        if(parts[0].equals("LOGIN_TRAF"))
+        if(parts[0].equals("LOGIN_SSL"))
         {
-            //if(!loginTraf(parts))
-               // return;
+            if(!login(parts))
+                return;
         }
         else
         {
             SendMsg("ERR#Requete invalide");
             return;
         }
-        
+        /*
         boolean terminer = false;
                
         while(!terminer)
@@ -105,10 +105,16 @@ public class Runnable_SAMOP implements Runnable{
         catch (IOException ex)
         {
             System.err.println("Runnable_SAMOP : Erreur de close : " + ex.getMessage());
-        }
+        }*/
         
     }
     
+    
+    private boolean login(String[] requete)
+    {
+        SendMsg("yes maggle");
+        return false;
+    }
     
     
     /* Envoi d'un message au client */

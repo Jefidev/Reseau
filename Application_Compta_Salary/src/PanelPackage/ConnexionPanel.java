@@ -5,6 +5,9 @@
  */
 package PanelPackage;
 
+import application_compta_salary.GUIsalary;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author Jerome
@@ -101,7 +104,31 @@ public class ConnexionPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void connexionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_connexionButtonActionPerformed
-        //Connexion SSL côté client
+        
+        errorLabel.setVisible(false);
+        
+        if(loginTF.getText().isEmpty())
+        {
+            errorLabel.setText("Vous devez indiquer un login");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        if(passwordField.getText().isEmpty())
+        {
+            errorLabel.setText("Vous devez indiquer votre mot de passe");
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        //Recuperation de la frame pour les methodes de connexion
+        GUIsalary frame = (GUIsalary)SwingUtilities.getWindowAncestor(this);
+        
+        frame.connect();
+        frame.SendMsg("LOGIN_SSL#"+loginTF.getText()+"#"+passwordField.getText());
+        
+        System.err.println(frame.ReceiveMsg());
+        
     }//GEN-LAST:event_connexionButtonActionPerformed
 
 
