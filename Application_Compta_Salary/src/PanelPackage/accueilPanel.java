@@ -5,6 +5,9 @@
  */
 package PanelPackage;
 
+import application_compta_salary.GUIsalary;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author John
@@ -61,6 +64,11 @@ public class accueilPanel extends javax.swing.JPanel {
         payementsButton.setToolTipText("");
 
         askButton.setText("Payements effectues");
+        askButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                askButtonActionPerformed(evt);
+            }
+        });
 
         moisLabel.setText("Date : ");
 
@@ -69,6 +77,11 @@ public class accueilPanel extends javax.swing.JPanel {
         anneeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2016", "2015", "2014", " " }));
 
         logoutButton.setText("Logout");
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
 
         errorAskLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorAskLabel.setText("jLabel1");
@@ -141,6 +154,38 @@ public class accueilPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void askButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_askButtonActionPerformed
+        resetError();
+        
+        //Recuperation de la frame pour les methodes de connexion
+        GUIsalary frame = (GUIsalary)SwingUtilities.getWindowAncestor(this);
+        
+        String date = anneeCombo.getSelectedItem()+"/"+moisCombo.getSelectedItem();
+        System.err.println(date);
+        
+        frame.SendMsg("ASK_PAYEMENTS#"+date);
+        String[] resutat = frame.ReceiveMsg().split("#");
+        
+        if(resutat[0].equals("ERR"))
+        {
+            errorAskLabel.setText(resutat[1]);
+            return;
+        }
+        
+        //Envoyer la list au GUI ad hock
+    }//GEN-LAST:event_askButtonActionPerformed
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        resetError();
+        
+        //Recuperation de la frame pour les methodes de connexion
+        GUIsalary frame = (GUIsalary)SwingUtilities.getWindowAncestor(this);
+        
+        frame.SendMsg("LOGOUT");
+        frame.changeLayout("connexion");
+        return;
+    }//GEN-LAST:event_logoutButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

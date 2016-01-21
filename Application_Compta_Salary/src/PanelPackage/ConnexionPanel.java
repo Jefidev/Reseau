@@ -138,6 +138,9 @@ public class ConnexionPanel extends javax.swing.JPanel {
         
         
         //Changement de page
+        loginTF.setText("");
+        passwordField.setText("");
+        
         frame.changeLayout("accueil");
     }//GEN-LAST:event_connexionButtonActionPerformed
 

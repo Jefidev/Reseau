@@ -173,7 +173,30 @@ public class Runnable_SAMOP implements Runnable{
     
     private void askPayements(String[] requete)
     {
+        //On va recuperer toutes les fiches de salaire pour une date 
+        String where = "MOIS_ANNEE = '"+requete[1]+"' AND FLAG_FICHE_ENVOYEE = 1";
         
+        try {
+            ResultSet rs = beanOracle.selection("*", "SALAIRES", where);
+            
+            String listResultat = "";
+            while(!rs.next())
+            {
+                listResultat += rs.getString("LOGIN") + "   /   ";
+                listResultat += rs.getString("MONTANT_BRUT")+"#";
+            }
+            
+            if(listResultat.isEmpty())
+            {
+                SendMsg("ERR#Aucun salaire verse ce mois");
+                return;
+            }
+            
+            SendMsg("OK#"+listResultat);
+            
+        } catch (SQLException ex) {
+            SendMsg("ERR#Base de donnees hors ligne");
+        }
     }
     
     
