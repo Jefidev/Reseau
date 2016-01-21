@@ -46,8 +46,8 @@ public class AccueilPanel extends javax.swing.JPanel {
         payementsButton = new javax.swing.JButton();
         askButton = new javax.swing.JButton();
         moisLabel = new javax.swing.JLabel();
-        moisCombo = new javax.swing.JComboBox<>();
-        anneeCombo = new javax.swing.JComboBox<>();
+        moisCombo = new javax.swing.JComboBox<String>();
+        anneeCombo = new javax.swing.JComboBox<String>();
         logoutButton = new javax.swing.JButton();
         errorAskLabel = new javax.swing.JLabel();
         errorPayements = new javax.swing.JLabel();
@@ -69,6 +69,11 @@ public class AccueilPanel extends javax.swing.JPanel {
 
         payementsButton.setText("Payements");
         payementsButton.setToolTipText("");
+        payementsButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payementsButtonActionPerformed(evt);
+            }
+        });
 
         askButton.setText("Payements effectues");
         askButton.addActionListener(new java.awt.event.ActionListener() {
@@ -79,9 +84,9 @@ public class AccueilPanel extends javax.swing.JPanel {
 
         moisLabel.setText("Date : ");
 
-        moisCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" }));
+        moisCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" }));
 
-        anneeCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2016", "2015", "2014", " " }));
+        anneeCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "2016", "2015", "2014", " " }));
 
         logoutButton.setText("Logout");
         logoutButton.addActionListener(new java.awt.event.ActionListener() {
@@ -235,6 +240,29 @@ public class AccueilPanel extends javax.swing.JPanel {
         
         frame.changeLayout("display");
     }//GEN-LAST:event_payementButtonActionPerformed
+
+    private void payementsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payementsButtonActionPerformed
+        resetError();
+        //Recuperation de la frame pour les methodes de connexion
+        GUIsalary frame = (GUIsalary)SwingUtilities.getWindowAncestor(this);
+
+        frame.SendMsg("LAUNCH_PAYEMENTS");
+        
+        String[] resultat = frame.ReceiveMsg().split("#");
+        
+        if(resultat[0].equals("ERR"))
+        {
+            errorPayements.setText(resultat[1]);
+            errorPayements.setVisible(true);
+            return;
+        }
+        
+        DisplayPanel d = frame.getDisplay();
+        d.setTitle("Payements effectués");
+        d.setDisplay(resultat, "OK");
+        
+        frame.changeLayout("display");
+    }//GEN-LAST:event_payementsButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
