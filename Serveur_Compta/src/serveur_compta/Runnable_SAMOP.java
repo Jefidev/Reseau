@@ -13,10 +13,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
+import newBean.requeteException;
 
 /**
  *
@@ -161,7 +163,50 @@ public class Runnable_SAMOP implements Runnable{
     
     private void launchPayement(String[] requete)
     {
+        String login = requete[1];
         
+        ResultSet rs;
+        try {
+            rs = beanOracle.selection("*", "PERSONNEL", "LOGIN = '"+login+"'");
+            
+            if(!rs.next())
+            {
+                SendMsg("ERR#Aucun employe pour ce login");
+                return;
+            }
+            
+            String where = "LOGIN = '"+login+"' AND FLAG_FICHE_ENVOYEE = 0 AND FLAG_VALIDE = 1";
+            rs = beanOracle.selection("*", "SALAIRES", where);
+            String resultat = "";
+            
+            while(rs.next())
+            {
+                resultat += rs.getString("LOGIN") + "  /  ";
+                resultat += rs.getString("MONTANT_BRUT")+ "  /  ";
+                resultat += rs.getString("MOIS_ANNEE")+ "#";
+            }
+            
+            if(resultat.isEmpty())
+            {
+                SendMsg("ERR#Aucun payements a effectuer pour ce login");
+                return;
+            }
+            
+            //MAJ des salaires
+            
+            HashMap update = new HashMap();
+            
+            update.put("FLAG_FICHE_ENVOYEE", 1);
+            update.put("FLAG_SALAIRE_VERSE", 1);
+            
+            beanOracle.miseAJour("SALAIRES", update, where);
+            
+            SendMsg("OK#"+resultat);
+            
+        } catch (SQLException | requeteException ex) {
+            ex.printStackTrace();
+            SendMsg("ERR#Erreur BD");
+        } 
     }
     
     

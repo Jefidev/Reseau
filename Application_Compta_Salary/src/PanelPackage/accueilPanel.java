@@ -12,12 +12,12 @@ import javax.swing.SwingUtilities;
  *
  * @author John
  */
-public class accueilPanel extends javax.swing.JPanel {
+public class AccueilPanel extends javax.swing.JPanel {
 
     /**
      * Creates new form accueilPanel
      */
-    public accueilPanel() {
+    public AccueilPanel() {
         initComponents();
         resetError();
     }
@@ -26,6 +26,7 @@ public class accueilPanel extends javax.swing.JPanel {
     {
         errorAskLabel.setVisible(false);
         errorPayementLabel.setVisible(false);
+        errorPayements.setVisible(false);
     }
 
     /**
@@ -49,11 +50,17 @@ public class accueilPanel extends javax.swing.JPanel {
         anneeCombo = new javax.swing.JComboBox<>();
         logoutButton = new javax.swing.JButton();
         errorAskLabel = new javax.swing.JLabel();
+        errorPayements = new javax.swing.JLabel();
 
         titreLabel.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         titreLabel.setText("Application salary");
 
         payementButton.setText("Payement");
+        payementButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                payementButtonActionPerformed(evt);
+            }
+        });
 
         payementLabel.setText("Login employé à payer : ");
 
@@ -86,6 +93,9 @@ public class accueilPanel extends javax.swing.JPanel {
         errorAskLabel.setForeground(new java.awt.Color(255, 0, 0));
         errorAskLabel.setText("jLabel1");
 
+        errorPayements.setForeground(new java.awt.Color(255, 0, 0));
+        errorPayements.setText("jLabel1");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -106,6 +116,7 @@ public class accueilPanel extends javax.swing.JPanel {
                             .addGap(140, 140, 140)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(errorPayements)
                             .addComponent(errorAskLabel)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addGroup(layout.createSequentialGroup()
@@ -138,7 +149,9 @@ public class accueilPanel extends javax.swing.JPanel {
                 .addComponent(errorPayementLabel)
                 .addGap(18, 18, 18)
                 .addComponent(payementsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(39, 39, 39)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(errorPayements)
+                .addGap(19, 19, 19)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(askButton, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
@@ -162,18 +175,22 @@ public class accueilPanel extends javax.swing.JPanel {
         GUIsalary frame = (GUIsalary)SwingUtilities.getWindowAncestor(this);
         
         String date = anneeCombo.getSelectedItem()+"/"+moisCombo.getSelectedItem();
-        System.err.println(date);
         
         frame.SendMsg("ASK_PAYEMENTS#"+date);
         String[] resutat = frame.ReceiveMsg().split("#");
-        
+
         if(resutat[0].equals("ERR"))
         {
             errorAskLabel.setText(resutat[1]);
+            errorAskLabel.setVisible(true);
             return;
         }
         
-        //Envoyer la list au GUI ad hock
+        DisplayPanel d = frame.getDisplay();
+        d.setTitle("Payements effectués le " + date);
+        d.setDisplay(resutat, "OK");
+        
+        frame.changeLayout("display");
     }//GEN-LAST:event_askButtonActionPerformed
 
     private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
@@ -187,12 +204,45 @@ public class accueilPanel extends javax.swing.JPanel {
         return;
     }//GEN-LAST:event_logoutButtonActionPerformed
 
+    private void payementButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_payementButtonActionPerformed
+        
+        resetError();
+        //Recuperation de la frame pour les methodes de connexion
+        GUIsalary frame = (GUIsalary)SwingUtilities.getWindowAncestor(this);
+        
+        if(loginEmployeTF.getText().isEmpty())
+        {
+            errorPayementLabel.setText("Vous devez mentionner un login d'employé");
+            errorPayementLabel.setVisible(true);
+            return;
+        }
+        String login = loginEmployeTF.getText();
+        //On envoie le login
+        frame.SendMsg("LAUNCH_PAYEMENT#"+login);
+        
+        String[] resultat = frame.ReceiveMsg().split("#");
+        
+        if(resultat[0].equals("ERR"))
+        {
+            errorPayementLabel.setText(resultat[1]);
+            errorPayementLabel.setVisible(true);
+            return;
+        }
+        
+        DisplayPanel d = frame.getDisplay();
+        d.setTitle("Payements effectués pour " + login);
+        d.setDisplay(resultat, "OK");
+        
+        frame.changeLayout("display");
+    }//GEN-LAST:event_payementButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<String> anneeCombo;
     private javax.swing.JButton askButton;
     private javax.swing.JLabel errorAskLabel;
     private javax.swing.JLabel errorPayementLabel;
+    private javax.swing.JLabel errorPayements;
     private javax.swing.JTextField loginEmployeTF;
     private javax.swing.JButton logoutButton;
     private javax.swing.JComboBox<String> moisCombo;
