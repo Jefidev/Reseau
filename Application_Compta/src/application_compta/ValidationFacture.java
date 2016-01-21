@@ -249,6 +249,8 @@ public class ValidationFacture extends javax.swing.JPanel
 
     
     private void MenuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuButtonActionPerformed
+        CacherLabels();
+        facture = null;
         ApplicationCompta a = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
         a.ChangePanel("Menu");
     }//GEN-LAST:event_MenuButtonActionPerformed

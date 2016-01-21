@@ -137,9 +137,6 @@ public class Login extends javax.swing.JDialog
                 a.CleSecreteChiffrement = new SecretKeySpec(CleSecreteChiffrementDechiffree, 0, CleSecreteChiffrementDechiffree.length, "DES");
                 a.CleSecreteHMAC = new SecretKeySpec(CleSecreteHMACDechiffree, 0, CleSecreteHMACDechiffree.length, "DES");
                 
-                System.out.println("=====>> CleSecreteChiffrement = " + a.CleSecreteChiffrement);
-                System.out.println("=====>> CleSecreteHMAC = " + a.CleSecreteHMAC);
-                
                 a.isConnected = true;
                 this.dispose();
             }

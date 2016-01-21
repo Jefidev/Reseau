@@ -2,11 +2,9 @@ package serveur_compta;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
@@ -137,7 +135,6 @@ public class Runnable_BISAMAP implements Runnable
         }
         catch (NumberFormatException ex)
         {
-            System.err.println("Runnable_BISAMAP : Run : " + ex.getMessage());
         }
         
         try
@@ -196,9 +193,6 @@ public class Runnable_BISAMAP implements Runnable
             byte[] CleSecreteChiffrementChiffreeAsym = Crypto.AsymCrypt(CleSecreteChiffrement.getEncoded(), "KSServeurCompta.p12", "azerty", "AppCompta");
             byte[] CleSecreteHMACChiffreeAsym = Crypto.AsymCrypt(CleSecreteHMAC.getEncoded(), "KSServeurCompta.p12", "azerty", "AppCompta");
             
-            System.out.println("=====>> CleSecreteChiffrement = " + CleSecreteChiffrement);
-            System.out.println("=====>> CleSecreteHMAC = " + CleSecreteHMAC);
-            
             // Réponse
             SendMsg("OUI");
             dos.writeInt(CleSecreteChiffrementChiffreeAsym.length); 
@@ -237,32 +231,27 @@ public class Runnable_BISAMAP implements Runnable
                 System.err.println("Runnable_BISAMAP : getNextBill : Pas de facture dispo");
                 return;
             }
-            rs.beforeFirst();
-            while (rs.next())
-            {
-                String i = rs.getString("ID_FACTURE");
-                String s = rs.getString("ID_SOCIETE");
-                String ma = rs.getString("MOIS_ANNEE");
-                double th = rs.getDouble("TOTAL_HTVA");
-                double tt = rs.getDouble("TOTAL_TVAC");
-                int ffv = rs.getInt("FLAG_FACT_VALIDEE");
-                String l = rs.getString("LOGIN");
-                int ffe = rs.getInt("FLAG_FACT_ENVOYEE");
-                String me = rs.getString("MOYEN_ENVOI");
-                int ffp = rs.getInt("FLAG_FACT_PAYEE");
-                Facture facture = new Facture (i, s, ma, th, tt, ffv, l, ffe, me, ffp);
+            
+            String i = rs.getString("ID_FACTURE");
+            String s = rs.getString("ID_SOCIETE");
+            String ma = rs.getString("MOIS_ANNEE");
+            double th = rs.getDouble("TOTAL_HTVA");
+            double tt = rs.getDouble("TOTAL_TVAC");
+            int ffv = rs.getInt("FLAG_FACT_VALIDEE");
+            String l = rs.getString("LOGIN");
+            int ffe = rs.getInt("FLAG_FACT_ENVOYEE");
+            String me = rs.getString("MOYEN_ENVOI");
+            int ffp = rs.getInt("FLAG_FACT_PAYEE");
+            Facture facture = new Facture (i, s, ma, th, tt, ffv, l, ffe, me, ffp);
                 
-                byte[] factureToCrypt = Convert.ObjectToByteArray(facture);
-                byte[] factureCryptee = Crypto.SymCrypt(CleSecreteChiffrement, factureToCrypt);
+            byte[] factureToCrypt = Convert.ObjectToByteArray(facture);
+            byte[] factureCryptee = Crypto.SymCrypt(CleSecreteChiffrement, factureToCrypt);
                 
-                SendMsg("OUI");
-                dos.writeInt(factureCryptee.length); 
-                dos.write(factureCryptee);
-                dos.flush();
-                System.out.println("Runnable_BISAMAP : getNextBill : Facture envoyée au client");
-                
-                break;
-            }
+            SendMsg("OUI");
+            dos.writeInt(factureCryptee.length); 
+            dos.write(factureCryptee);
+            dos.flush();
+            System.out.println("Runnable_BISAMAP : getNextBill : Facture envoyée au client");
         }
         catch (SQLException ex)
         {
@@ -283,16 +272,34 @@ public class Runnable_BISAMAP implements Runnable
     {
         try
         {
+            int longueur = dis.readInt();
+            byte[] signature = new byte[longueur];
+            dis.readFully(signature);
+            
+            String toSign = ProtocoleBISAMAP.VALIDATE_BILL + parts[1] + "#" + parts[2];
+            boolean comparaisonSignature = Crypto.CompareSignature(toSign.getBytes(), "KSServeurCompta.p12", "azerty", "AppCompta", signature);
+            
+            if(comparaisonSignature == false)
+            {
+                SendMsg("NON#Signature non verifiee");
+                System.err.println("Runnable_BISAMAP : validateBill : Signature non vérifiée");
+            }
+            
             HashMap map = new HashMap();
             map.put("FLAG_FACT_VALIDEE", parts[2]);
-            beanOracle.miseAJour("FACTURES", map, "ID_FACTURE = " + parts[1]);
-            SendMsg("OUI");
-            System.err.println("Runnable_BISAMAP : validateBill : Facture modifiée");
+            beanOracle.miseAJour("FACTURES", map, "ID_FACTURE = '" + parts[1] + "'");
+            SendMsg("OUI#Facture modifiee");
+            System.out.println("Runnable_BISAMAP : validateBill : Facture modifiée");
         }
         catch (requeteException ex)
         {
             SendMsg("NON#Erreur interne au serveur");
             System.err.println("Runnable_BISAMAP : validateBill : requeteException : " + ex.getMessage());
+        }
+        catch (IOException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : validateBill : IOException : " + ex.getMessage());
         }
     }
     
