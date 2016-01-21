@@ -9,9 +9,9 @@ import java.net.Socket;
 import java.security.MessageDigest;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
 import javax.crypto.SecretKey;
 import library_compta.*;
 import newBean.BeanBDAccess;
@@ -283,6 +283,7 @@ public class Runnable_BISAMAP implements Runnable
             {
                 SendMsg("NON#Signature non verifiee");
                 System.err.println("Runnable_BISAMAP : validateBill : Signature non vérifiée");
+                return;
             }
             
             HashMap map = new HashMap();
@@ -304,8 +305,72 @@ public class Runnable_BISAMAP implements Runnable
     }
     
     
+    /* LISTER TOUTES LES FACTURES SUIVANT DES CRITERES */
+    /* IN : IdSociete#DateMin#DateMax */
     private void listBills(String[] parts)
     {
+        try
+        {
+            int longueur = dis.readInt();
+            byte[] signature = new byte[longueur];
+            dis.readFully(signature);
+            
+            String toSign = ProtocoleBISAMAP.LIST_BILLS + parts[1] + "#" + parts[2] + "#" + parts[3];
+            boolean comparaisonSignature = Crypto.CompareSignature(toSign.getBytes(), "KSServeurCompta.p12", "azerty", "AppCompta", signature);
+            
+            if(comparaisonSignature == false)
+            {
+                SendMsg("NON#Signature non verifiee");
+                System.err.println("Runnable_BISAMAP : listBills : Signature non vérifiée");
+                return;
+            }
+            
+            ResultSet rs = beanOracle.selection("*", "FACTURES", "ID_SOCIETE = '" + parts[1]  + "' AND MOIS_ANNEE > '" + parts[2] + "' AND MOIS_ANNEE < '" + parts[3] + "'");
+            if(!rs.next())
+            {
+                SendMsg("NON#Pas de facture disponible");
+                System.err.println("Runnable_BISAMAP : listBills : Pas de facture dispo");
+                return;
+            }
+            
+            List<Facture> listFactures = new ArrayList<Facture>();
+            rs.beforeFirst();
+            while(rs.next())
+            {
+                String i = rs.getString("ID_FACTURE");
+                String s = rs.getString("ID_SOCIETE");
+                String ma = rs.getString("MOIS_ANNEE");
+                double th = rs.getDouble("TOTAL_HTVA");
+                double tt = rs.getDouble("TOTAL_TVAC");
+                int ffv = rs.getInt("FLAG_FACT_VALIDEE");
+                String l = rs.getString("LOGIN");
+                int ffe = rs.getInt("FLAG_FACT_ENVOYEE");
+                String me = rs.getString("MOYEN_ENVOI");
+                int ffp = rs.getInt("FLAG_FACT_PAYEE");
+                
+                Facture facture = new Facture (i, s, ma, th, tt, ffv, l, ffe, me, ffp);
+                listFactures.add(facture);
+            }
+                
+            byte[] listToCrypt = Convert.ObjectToByteArray(listFactures);
+            byte[] listCryptee = Crypto.SymCrypt(CleSecreteChiffrement, listToCrypt);
+            
+            SendMsg("OUI#Factures envoyées");
+            dos.writeInt(listCryptee.length); 
+            dos.write(listCryptee);
+            dos.flush();
+            System.out.println("Runnable_BISAMAP : listBills : Factures envoyées");
+        }
+        catch (IOException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : listBills : IOException : " + ex.getMessage());
+        }
+        catch (SQLException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : listBills : SQLException : " + ex.getMessage());
+        }
     }
     
 
