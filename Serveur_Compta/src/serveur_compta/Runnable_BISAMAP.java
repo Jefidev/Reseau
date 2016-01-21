@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.crypto.SecretKey;
 import library_compta.*;
 import newBean.BeanBDAccess;
@@ -379,8 +381,65 @@ public class Runnable_BISAMAP implements Runnable
     }
        
     
+    /* ENREGISTRER LE PAIEMENT D'UNE FACTURE */
+    /* IN : IdFacture#Montant#Compte */
     private void recPay()
     {
+        try
+        {
+            int longueur = dis.readInt();
+            byte[] crypte = new byte[longueur];
+            dis.readFully(crypte);
+
+            byte[] rpaDecrypte = Crypto.SymDecrypt(CleSecreteChiffrement, crypte);
+            RecPayAuth rpa = (RecPayAuth)Convert.ByteArrayToObject(rpaDecrypte);
+            
+            byte[] toHMAC = Convert.ObjectToByteArray(rpa.data);
+            boolean comparaisonHMAC = Crypto.CompareHMAC(CleSecreteHMAC, toHMAC, rpa.hmac);
+            
+            if(comparaisonHMAC == false)
+            {
+                SendMsg("NON#Comparaison des HMACs ratee !");
+                System.err.println("Runnable_BISAMAP : recPay : HMACs différents");
+                return;
+            }
+            
+            ResultSet rs = beanOracle.selection("*", "FACTURES", "ID_FACTURE = '" + rpa.data.idFacture  + "'");
+            if(!rs.next())
+            {
+                SendMsg("NON#Le numero de facture n'existe pas !");
+                System.err.println("Runnable_BISAMAP : recPay : Numéro de facture inexistant");
+                return;
+            }
+            
+            if(rpa.data.montant != rs.getDouble("TOTAL_TVAC"))
+            {
+                SendMsg("NON#Le montant paye differe du montant attendu !");
+                System.err.println("Runnable_BISAMAP : recPay : Le montant à payer diffère du montant attendu");
+                return;
+            }
+            
+            HashMap map = new HashMap();
+            map.put("FLAG_FACT_PAYEE", "1");
+            beanOracle.miseAJour("FACTURES", map, "ID_FACTURE = '" + rpa.data.idFacture + "'");
+            SendMsg("OUI#Facture modifiee (payée)");
+            System.out.println("Runnable_BISAMAP : recPay : Facture modifiée (payée)");
+        }
+        catch (IOException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : recPay : IOException : " + ex.getMessage());
+        }
+        catch (SQLException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : recPay : SQLException : " + ex.getMessage());
+        }
+        catch (requeteException ex)
+        {
+            SendMsg("NON#Erreur interne au serveur");
+            System.err.println("Runnable_BISAMAP : recPay : requeteException : " + ex.getMessage());
+        }
     }
          
     

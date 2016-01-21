@@ -1,13 +1,12 @@
 package application_compta;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import library_compta.Convert;
 import library_compta.Crypto;
 import library_compta.ProtocoleBISAMAP;
 import library_compta.RecPayAuth;
+import library_compta.RecPayClass;
 
 
 public class RecPay extends javax.swing.JPanel
@@ -158,7 +157,7 @@ public class RecPay extends javax.swing.JPanel
  
             ApplicationCompta a = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
             
-            RecPay rp = new RecPay(idFacture, montant, compte);
+            RecPayClass rp = new RecPayClass(idFacture, montant, compte);
             byte[] toHMAC = Convert.ObjectToByteArray(rp);
             byte[] hmac = Crypto.CreateHMAC(a.CleSecreteHMAC, toHMAC);
             
