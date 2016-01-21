@@ -140,6 +140,8 @@ public class ListerFactures extends javax.swing.JPanel
     private void ListerButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListerButtonActionPerformed
         try
         {
+            ErreurL.setVisible(false);
+            
             String idSociete = IdSocieteTF.getText();
             if (idSociete.isEmpty())
             {
@@ -173,28 +175,18 @@ public class ListerFactures extends javax.swing.JPanel
             {
                 try
                 {
-                    System.out.println("===> 1");
-                    
                     int longueur = Utility.dis.readInt();
                     byte[] listToDecrypt = new byte[longueur];
                     Utility.dis.readFully(listToDecrypt);
-                    
-                    System.out.println("===> 2");
 
                     ApplicationCompta a = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
                     byte[] listDecryptee = Crypto.SymDecrypt(a.CleSecreteChiffrement, listToDecrypt);
                     
-                    System.out.println("===> 3");
-                    
                     DefaultListModel dlm = (DefaultListModel)FacturesjList.getModel();
-                    
-                    System.out.println("===> 4");
-                    
+
                     List<Facture> listFactures = new ArrayList<Facture>();
                     listFactures = (List<Facture>)Convert.ByteArrayToObject(listDecryptee);
-                    
-                    System.out.println("===> 5");
-                    
+
                     for(Facture facture : listFactures)
                     {
                         System.out.println(facture);

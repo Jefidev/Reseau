@@ -325,7 +325,7 @@ public class Runnable_BISAMAP implements Runnable
                 return;
             }
             
-            ResultSet rs = beanOracle.selection("*", "FACTURES", "ID_SOCIETE = '" + parts[1]  + "' AND MOIS_ANNEE > '" + parts[2] + "' AND MOIS_ANNEE < '" + parts[3] + "'");
+            ResultSet rs = beanOracle.selection("*", "FACTURES", "ID_SOCIETE = '" + parts[1]  + "' AND MOIS_ANNEE >= '" + parts[2] + "' AND MOIS_ANNEE <= '" + parts[3] + "'");
             if(!rs.next())
             {
                 SendMsg("NON#Pas de facture disponible");
@@ -351,12 +351,12 @@ public class Runnable_BISAMAP implements Runnable
                 Facture facture = new Facture (i, s, ma, th, tt, ffv, l, ffe, me, ffp);
                 listFactures.add(facture);
             }
-                
+
             byte[] listToCrypt = Convert.ObjectToByteArray(listFactures);
             byte[] listCryptee = Crypto.SymCrypt(CleSecreteChiffrement, listToCrypt);
             
             SendMsg("OUI#Factures envoyées");
-            dos.writeInt(listCryptee.length); 
+            dos.writeInt(listCryptee.length);
             dos.write(listCryptee);
             dos.flush();
             System.out.println("Runnable_BISAMAP : listBills : Factures envoyées");
