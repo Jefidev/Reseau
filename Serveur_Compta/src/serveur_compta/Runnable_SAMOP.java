@@ -78,7 +78,7 @@ public class Runnable_SAMOP implements Runnable{
             SendMsg("ERR#Requete invalide");
             return;
         }
-        /*
+        
         boolean terminer = false;
                
         while(!terminer)
@@ -86,16 +86,21 @@ public class Runnable_SAMOP implements Runnable{
             parts = ReceiveMsg().split("#");
             switch (parts[0])
             {       
-                case "MAKE_BILL" :
-                        //makeBill(parts);
+                case "LAUNCH_PAYEMENT" :
+                        launchPayement(parts);
                         break;
-                case "LOGOUT" :
-                    terminer = true;
-                    break;
-                    
+                        
+                case "LAUNCH_PAYEMENTS" :
+                        launchPayements();
+                        break;
+                
+                case "ASK_PAYEMENTS" :
+                        askPayements(parts);
+                        break;
+
                 default :
-                    terminer = true;
-                    break;
+                        terminer = true;
+                        break;
             }
         }
         
@@ -108,8 +113,7 @@ public class Runnable_SAMOP implements Runnable{
         catch (IOException ex)
         {
             System.err.println("Runnable_SAMOP : Erreur de close : " + ex.getMessage());
-        }*/
-        
+        }
     }
     
     
@@ -150,6 +154,26 @@ public class Runnable_SAMOP implements Runnable{
             SendMsg("ERR#Base de donnee inaccessible. Reessaye plus tard");
             return false;
         }
+    }
+    
+    
+    
+    
+    private void launchPayement(String[] requete)
+    {
+        
+    }
+    
+    
+    private void launchPayements()
+    {
+        
+    }
+    
+    
+    private void askPayements(String[] requete)
+    {
+        
     }
     
     

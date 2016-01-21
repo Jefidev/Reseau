@@ -6,6 +6,8 @@ BEGIN
 	-- INSERTION DU PERSONNEL
 	INSERT INTO PERSONNEL VALUES ('oce', 'oce', 'SEEL', 'OCEANE', 'oce@pro.be', '04/111.11.11', 'oce@priv.be', '087/11.11.11', 'COMPTABILITE', 'COMPTABLE', '2', '2015/12/01', 'BE29 1234 5678 9012');
 	INSERT INTO PERSONNEL VALUES ('je', 'je', 'FINK', 'JEROME', 'je@pro.be', '04/222.22.22', 'je@priv.be', '087/22.22.22', 'COMPTABILITE', 'CHEF-COMPTABLE', '1', '2015/11/01', 'BE29 9876 5432 1098');
+	INSERT INTO PERSONNEL VALUES ('jerome', 'je', 'FINK', 'JEROME', 'finkje@u2.tech.hepl.local', '04/222.22.22', 'finkje@u2.tech.hepl.local', '087/22.22.22', 'DOCKER', 'OUVRIER', '1', '2015/11/01', 'BE29 9876 5432 1098');
+	INSERT INTO PERSONNEL VALUES ('oceane', 'oce', 'SEEL', 'OCEANE', 'seeloc@u2.tech.hepl.local', '04/222.22.22', 'seeloc@u2.tech.hepl.local', '087/22.22.22', 'DOCKER', 'EMPLOYE', '2', '2015/11/01', 'BE29 9876 5432 1098');
 
 	-- INSERTION DES FACTURES
 	INSERT INTO FACTURES VALUES ('F1', 'TNT', '2016/01', 200, 250, 0, 'je', 0, NULL, 0);
@@ -29,6 +31,16 @@ BEGIN
 	INSERT INTO FACTURES VALUES ('F19', 'DHL', '2016/01', 700, 875, 0, 'oce', 0, NULL, 0);
 	INSERT INTO FACTURES VALUES ('F20', 'UPS', '2016/01', 1000, 1250, 0, 'oce', 0, NULL, 0);
 	
+
+	--Insertion de salaires
+	INSERT INTO SALAIRES VALUES ('1', 'oceane', '2016/01', 2300, 500, 200, 0, 0, 0);
+	INSERT INTO SALAIRES VALUES ('2', 'oceane', '2015/12', 2300, 500, 200, 1, 0, 0);
+	INSERT INTO SALAIRES VALUES ('3', 'oceane', '2015/11', 2300, 500, 200, 1, 0, 0);
+	INSERT INTO SALAIRES VALUES ('4', 'oceane', '2015/10', 2300, 500, 200, 1, 1, 1);
+	INSERT INTO SALAIRES VALUES ('5', 'jerome', '2016/01', 2300, 500, 200, 0, 0, 0);
+	INSERT INTO SALAIRES VALUES ('6', 'jerome', '2015/12', 2300, 500, 200, 1, 0, 0);
+	INSERT INTO SALAIRES VALUES ('7', 'jerome', '2015/11', 2300, 500, 200, 1, 0, 0);
+	INSERT INTO SALAIRES VALUES ('8', 'jerome', '2015/10', 2300, 500, 200, 1, 1, 1);
 	
 	COMMIT;
 END;
