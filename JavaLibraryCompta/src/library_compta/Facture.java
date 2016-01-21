@@ -30,4 +30,31 @@ public class Facture implements Serializable
         MoyenEnvoi = me;
         FlagFactPayee = ffp;
     }
+    
+    
+    public String toString()
+    {
+        String msg = "Id facture = " + IdFacture + "; Id société = " + IdSociete + "; Mois/année = " + MoisAnnee;
+        msg += "; Total HTVA = " + TotalHTVA + "; Total TVAC = " + TotalTVAC + "; Comptable = " + Login;
+        msg += "; Moyen d'envoi = " + MoyenEnvoi;
+        
+        if(FlagFactValidee == 0)
+            msg += "; Validée ? Pas encore";
+        else if(FlagFactValidee == 1)
+            msg += "; Validée ? Oui";
+        else
+            msg += "; Validée ? Refusée";
+        
+        if(FlagFactEnvoyee == 0)
+            msg += "; Envoyée ? Non";
+        else
+            msg += "; Envoyée ? Oui";
+        
+        if(FlagFactPayee == 0)
+            msg += "; Payée ? Non";
+        else
+            msg += "; Payée ? Oui";
+        
+        return msg;
+    }
 }

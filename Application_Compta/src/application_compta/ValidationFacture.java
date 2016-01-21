@@ -1,8 +1,6 @@
 package application_compta;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import library_compta.Convert;
 import library_compta.Crypto;

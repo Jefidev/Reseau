@@ -32,7 +32,7 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="ValidationFactButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="GrCouleurRepButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="ListerFacturesButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="GrCouleurCompButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="StatInferTestConfButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="StatInferTestHomogButton" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -52,7 +52,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="ValidationFactButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="GrCouleurRepButton" min="-2" max="-2" attributes="0"/>
+              <Component id="ListerFacturesButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="GrCouleurCompButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -91,12 +91,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ValidationFactButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="GrCouleurRepButton">
+    <Component class="javax.swing.JButton" name="ListerFacturesButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="R&#xe9;partition du nombre de containers par destination (diagramme sectoriel)"/>
+        <Property name="text" type="java.lang.String" value="Lister les factures"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GrCouleurRepButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ListerFacturesButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="GrCouleurCompButton">
