@@ -138,8 +138,7 @@ public class ConnexionPanel extends javax.swing.JPanel {
         
         
         //Changement de page
-        errorLabel.setText(resultat[0]);
-            errorLabel.setVisible(true);
+        frame.changeLayout("accueil");
     }//GEN-LAST:event_connexionButtonActionPerformed
 
 

@@ -30,5 +30,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="PanelPackage.accueilPanel" name="accueilPanel">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="accueil"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>

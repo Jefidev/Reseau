@@ -5,6 +5,7 @@
  */
 package application_compta_salary;
 
+import java.awt.CardLayout;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -162,6 +163,14 @@ public class GUIsalary extends javax.swing.JFrame {
             
         return message.toString();
     }
+    
+    
+    //Methode permettant de changer le panel affiché
+    public void changeLayout(String nomCard)
+    {
+        CardLayout card = (CardLayout) this.getContentPane().getLayout();
+        card.show(this.getContentPane(), nomCard);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -173,10 +182,12 @@ public class GUIsalary extends javax.swing.JFrame {
     private void initComponents() {
 
         connexionPanel = new PanelPackage.ConnexionPanel();
+        accueilPanel = new PanelPackage.accueilPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
         getContentPane().add(connexionPanel, "connexion");
+        getContentPane().add(accueilPanel, "accueil");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -261,6 +272,7 @@ public class GUIsalary extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private PanelPackage.accueilPanel accueilPanel;
     private PanelPackage.ConnexionPanel connexionPanel;
     // End of variables declaration//GEN-END:variables
 }
