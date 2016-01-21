@@ -33,11 +33,11 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="ValidationFactButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="ListerFacturesButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="GrCouleurCompButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="RecPayButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="StatInferTestConfButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="StatInferTestHomogButton" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="111" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="295" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -54,7 +54,7 @@
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="ListerFacturesButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="GrCouleurCompButton" min="-2" max="-2" attributes="0"/>
+              <Component id="RecPayButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="StatInferTestConfButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -99,12 +99,12 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="ListerFacturesButtonActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="GrCouleurCompButton">
+    <Component class="javax.swing.JButton" name="RecPayButton">
       <Properties>
-        <Property name="text" type="java.lang.String" value="R&#xe9;partition du nombre de containers par destination par trimestre (histogramme)"/>
+        <Property name="label" type="java.lang.String" value="Enregistrement du paiement d&apos;une facture"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GrCouleurCompButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RecPayButtonActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JButton" name="StatInferTestConfButton">

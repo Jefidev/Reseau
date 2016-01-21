@@ -83,15 +83,15 @@ public class RecPay extends javax.swing.JPanel
                             .addComponent(MontantL)
                             .addComponent(ErreurL)
                             .addComponent(CompteL))
-                        .addGap(36, 36, 36)
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(idFactureTF)
-                            .addComponent(MontantTF, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
-                            .addComponent(CompteTF)))
+                            .addComponent(CompteTF, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                            .addComponent(MontantTF)
+                            .addComponent(idFactureTF)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(203, 203, 203)
                         .addComponent(EnregistrerButton)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(209, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -141,7 +141,7 @@ public class RecPay extends javax.swing.JPanel
             
             if(MontantTF.getText().isEmpty())
             {
-                ErreurL.setText("Entrer un id de facture !");
+                ErreurL.setText("Entrer un montant TVAC !");
                 ErreurL.setVisible(true);
                 return;
             }

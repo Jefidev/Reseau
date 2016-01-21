@@ -39,11 +39,11 @@
                           <Component id="ErreurL" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="CompteL" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="idFactureTF" max="32767" attributes="0"/>
-                          <Component id="MontantTF" pref="100" max="32767" attributes="0"/>
-                          <Component id="CompteTF" alignment="0" max="32767" attributes="0"/>
+                          <Component id="CompteTF" alignment="0" pref="100" max="32767" attributes="0"/>
+                          <Component id="MontantTF" alignment="0" max="32767" attributes="0"/>
+                          <Component id="idFactureTF" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -51,7 +51,7 @@
                       <Component id="EnregistrerButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="209" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

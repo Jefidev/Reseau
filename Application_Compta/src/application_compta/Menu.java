@@ -18,7 +18,7 @@ public class Menu extends javax.swing.JPanel
         TitreLabel = new javax.swing.JLabel();
         ValidationFactButton = new javax.swing.JButton();
         ListerFacturesButton = new javax.swing.JButton();
-        GrCouleurCompButton = new javax.swing.JButton();
+        RecPayButton = new javax.swing.JButton();
         StatInferTestConfButton = new javax.swing.JButton();
         StatInferTestHomogButton = new javax.swing.JButton();
         StatInferTestAnovaButton = new javax.swing.JButton();
@@ -42,10 +42,10 @@ public class Menu extends javax.swing.JPanel
             }
         });
 
-        GrCouleurCompButton.setText("Répartition du nombre de containers par destination par trimestre (histogramme)");
-        GrCouleurCompButton.addActionListener(new java.awt.event.ActionListener() {
+        RecPayButton.setLabel("Enregistrement du paiement d'une facture");
+        RecPayButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                GrCouleurCompButtonActionPerformed(evt);
+                RecPayButtonActionPerformed(evt);
             }
         });
 
@@ -96,10 +96,10 @@ public class Menu extends javax.swing.JPanel
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ValidationFactButton)
                             .addComponent(ListerFacturesButton)
-                            .addComponent(GrCouleurCompButton)
+                            .addComponent(RecPayButton)
                             .addComponent(StatInferTestConfButton)
                             .addComponent(StatInferTestHomogButton))
-                        .addGap(0, 111, Short.MAX_VALUE)))
+                        .addGap(0, 295, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -112,7 +112,7 @@ public class Menu extends javax.swing.JPanel
                 .addGap(18, 18, 18)
                 .addComponent(ListerFacturesButton)
                 .addGap(18, 18, 18)
-                .addComponent(GrCouleurCompButton)
+                .addComponent(RecPayButton)
                 .addGap(18, 18, 18)
                 .addComponent(StatInferTestConfButton)
                 .addGap(18, 18, 18)
@@ -137,10 +137,10 @@ public class Menu extends javax.swing.JPanel
         app.ChangePanel("ListerFactures");
     }//GEN-LAST:event_ListerFacturesButtonActionPerformed
 
-    private void GrCouleurCompButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GrCouleurCompButtonActionPerformed
+    private void RecPayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RecPayButtonActionPerformed
         ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("GrCouleurComp");
-    }//GEN-LAST:event_GrCouleurCompButtonActionPerformed
+        app.ChangePanel("RecPay");
+    }//GEN-LAST:event_RecPayButtonActionPerformed
 
     private void StatInferTestConfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestConfButtonActionPerformed
         ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
@@ -163,9 +163,9 @@ public class Menu extends javax.swing.JPanel
     }//GEN-LAST:event_QuitterButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton GrCouleurCompButton;
     private javax.swing.JButton ListerFacturesButton;
     private javax.swing.JButton QuitterButton;
+    private javax.swing.JButton RecPayButton;
     private javax.swing.JButton StatInferTestAnovaButton;
     private javax.swing.JButton StatInferTestConfButton;
     private javax.swing.JButton StatInferTestHomogButton;

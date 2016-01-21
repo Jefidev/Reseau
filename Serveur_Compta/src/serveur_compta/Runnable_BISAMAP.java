@@ -422,7 +422,7 @@ public class Runnable_BISAMAP implements Runnable
             HashMap map = new HashMap();
             map.put("FLAG_FACT_PAYEE", "1");
             beanOracle.miseAJour("FACTURES", map, "ID_FACTURE = '" + rpa.data.idFacture + "'");
-            SendMsg("OUI#Facture modifiee (payée)");
+            SendMsg("OUI#Facture modifiee (payee)");
             System.out.println("Runnable_BISAMAP : recPay : Facture modifiée (payée)");
         }
         catch (IOException ex)
