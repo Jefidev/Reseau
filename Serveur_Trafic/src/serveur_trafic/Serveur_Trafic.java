@@ -91,6 +91,8 @@ public class Serveur_Trafic extends Thread{
                 
                 paramCo.setProperty("PORT_SERVEUR_IN", "31042");
                 paramCo.setProperty("PORT_SERVEUR_RES", "31041");
+                paramCo.setProperty("IP_SERVER_COMPTA", "localhost");
+                paramCo.setProperty("PORT_SERVER_COMPTA", "31048");
 
                 try {
                     paramCo.store(Oflux, null);
@@ -116,11 +118,17 @@ public class Serveur_Trafic extends Thread{
         int p = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_IN"));
         int pb = Integer.parseInt(paramCo.getProperty("PORT_SERVEUR_RES"));
         
+        String ip = paramCo.getProperty("IP_SERVER_COMPTA");
+        int pc = Integer.parseInt(paramCo.getProperty("PORT_SERVER_COMPTA"));
+        
         Serveur_Trafic sc = new Serveur_Trafic(p, new ListeTaches(), 5);
         sc.start();
         
         Serveur_BOOMAP sb = new Serveur_BOOMAP(pb, new ListeTaches(), 5);
         sb.start();
+        
+        client_CHAMAP ch = new client_CHAMAP(ip, pc);
+        ch.run();
     }
     
 }

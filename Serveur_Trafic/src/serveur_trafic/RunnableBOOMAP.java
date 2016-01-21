@@ -17,8 +17,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 import newBean.requeteException;
