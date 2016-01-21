@@ -23,13 +23,14 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 
 public final class Crypto
 {
-    /* ASYMETRIQUE */
+    /* CHIFFREMENT ASYMETRIQUE (INTEGRITE) */
     public static byte[] AsymCrypt(byte[] tocrypt, String fichierKS, String mdpKS, String aliasCertif)
     {
         try          
@@ -170,10 +171,60 @@ public final class Crypto
     }
     
     
-    /* HMAC */
+    /* HMAC (AUTHENTIFICATION) */
+    public static byte[] CreateHMAC(SecretKey cleSecrete, byte[] toPut)
+    {
+        try
+        {
+            Mac hmac = Mac.getInstance("HMAC-MD5", "BC");
+            hmac.init(cleSecrete);
+            hmac.update(toPut);
+            return hmac.doFinal();
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            System.err.println("Crypto : CreateHMAC : NoSuchAlgorithmException : " + ex.getMessage());
+        }
+        catch (NoSuchProviderException ex)
+        {
+            System.err.println("Crypto : CreateHMAC : NoSuchProviderException : " + ex.getMessage());
+        }
+        catch (InvalidKeyException ex)
+        {
+            System.err.println("Crypto : CreateHMAC : InvalidKeyException : " + ex.getMessage());
+        }
+        
+        return null;
+    }
+    
+    public static boolean CompareHMAC(SecretKey cleSecrete, byte[] toPut, byte[] hmacRemote)
+    {
+        try
+        {
+            Mac hmacLocal = Mac.getInstance("HMAC-MD5", "BC");
+            hmacLocal.init(cleSecrete);
+            hmacLocal.update(toPut);
+            byte[] hmacLocalBytes = hmacLocal.doFinal();
+            return MessageDigest.isEqual(hmacRemote, hmacLocalBytes);
+        }
+        catch (NoSuchAlgorithmException ex)
+        {
+            System.err.println("Crypto : CompareHMAC : NoSuchAlgorithmException : " + ex.getMessage());
+        }
+        catch (NoSuchProviderException ex)
+        {
+            System.err.println("Crypto : CompareHMAC : NoSuchProviderException : " + ex.getMessage());
+        }
+        catch (InvalidKeyException ex)
+        {
+            System.err.println("Crypto : CompareHMAC : InvalidKeyException : " + ex.getMessage());
+        }
+        
+        return false;
+    }
     
     
-    /* SIGNATURE */
+    /* SIGNATURE (AUTHENTIFICATION) */
     public static byte[] CreateSignature(byte[] toSign, String fichierKS, String mdpKS, String mdpPrivate, String aliasKeyPair)
     {
         try          
@@ -269,7 +320,7 @@ public final class Crypto
     }
     
         
-    /* SYMETRIQUE */
+    /* CHIFFREMENT SYMETRIQUE (INTEGRITE) */
     public static SecretKey GenerateSecretKey()
     {        
         try
