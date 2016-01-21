@@ -37,11 +37,13 @@
                           <Component id="idFactureL" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="MontantL" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="ErreurL" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="CompteL" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
                           <Component id="idFactureTF" max="32767" attributes="0"/>
                           <Component id="MontantTF" pref="100" max="32767" attributes="0"/>
+                          <Component id="CompteTF" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -68,11 +70,16 @@
                   <Component id="MontantL" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="MontantTF" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="CompteL" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="CompteTF" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="19" max="32767" attributes="0"/>
               <Component id="EnregistrerButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="27" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
               <Component id="ErreurL" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="50" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
               <Component id="MenuButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -131,6 +138,13 @@
         </Property>
         <Property name="text" type="java.lang.String" value="jLabel1"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="CompteL">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Compte bancaire :"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="CompteTF">
     </Component>
   </SubComponents>
 </Form>

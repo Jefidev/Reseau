@@ -1,7 +1,13 @@
 package application_compta;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import library_compta.Convert;
+import library_compta.Crypto;
 import library_compta.ProtocoleBISAMAP;
+import library_compta.RecPayAuth;
 
 
 public class RecPay extends javax.swing.JPanel
@@ -25,6 +31,8 @@ public class RecPay extends javax.swing.JPanel
         EnregistrerButton = new javax.swing.JButton();
         MenuButton = new javax.swing.JButton();
         ErreurL = new javax.swing.JLabel();
+        CompteL = new javax.swing.JLabel();
+        CompteTF = new javax.swing.JTextField();
 
         TitreLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         TitreLabel.setForeground(new java.awt.Color(0, 0, 255));
@@ -52,6 +60,8 @@ public class RecPay extends javax.swing.JPanel
         ErreurL.setForeground(new java.awt.Color(255, 0, 0));
         ErreurL.setText("jLabel1");
 
+        CompteL.setText("Compte bancaire :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -72,11 +82,13 @@ public class RecPay extends javax.swing.JPanel
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(idFactureL)
                             .addComponent(MontantL)
-                            .addComponent(ErreurL))
+                            .addComponent(ErreurL)
+                            .addComponent(CompteL))
                         .addGap(36, 36, 36)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(idFactureTF)
-                            .addComponent(MontantTF, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)))
+                            .addComponent(MontantTF, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                            .addComponent(CompteTF)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(203, 203, 203)
                         .addComponent(EnregistrerButton)))
@@ -95,11 +107,15 @@ public class RecPay extends javax.swing.JPanel
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(MontantL)
                     .addComponent(MontantTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CompteL)
+                    .addComponent(CompteTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                 .addComponent(EnregistrerButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
                 .addComponent(ErreurL)
-                .addGap(50, 50, 50)
+                .addGap(22, 22, 22)
                 .addComponent(MenuButton)
                 .addContainerGap())
         );
@@ -132,15 +148,28 @@ public class RecPay extends javax.swing.JPanel
             }
             double montant = Integer.parseInt(MontantTF.getText());
             
+            String compte = CompteTF.getText();
+            if (compte.isEmpty())
+            {
+                ErreurL.setText("Entrer un compte bancaire !");
+                ErreurL.setVisible(true);
+                return;
+            }
+ 
+            ApplicationCompta a = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
             
+            RecPay rp = new RecPay(idFacture, montant, compte);
+            byte[] toHMAC = Convert.ObjectToByteArray(rp);
+            byte[] hmac = Crypto.CreateHMAC(a.CleSecreteHMAC, toHMAC);
             
+            RecPayAuth rpa = new RecPayAuth(rp, hmac);
+            byte[] toCrypt = Convert.ObjectToByteArray(rpa);
+            byte[] Crypte = Crypto.SymCrypt(a.CleSecreteChiffrement, toCrypt);
             
             Utility.SendMsg(ProtocoleBISAMAP.REC_PAY, "");
-
-            
-            
-            
-            
+            Utility.dos.writeInt(Crypte.length); 
+            Utility.dos.write(Crypte);
+            Utility.dos.flush();
             
             String reponse = Utility.ReceiveMsg();
             String[] parts = reponse.split("#");
@@ -153,10 +182,17 @@ public class RecPay extends javax.swing.JPanel
             ErreurL.setText("Entrer un montant valide !");
             ErreurL.setVisible(true);
         }
+        catch (IOException ex)
+        {
+            ErreurL.setText("Erreur !");
+            ErreurL.setVisible(true);
+        }
     }//GEN-LAST:event_EnregistrerButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel CompteL;
+    private javax.swing.JTextField CompteTF;
     private javax.swing.JButton EnregistrerButton;
     private javax.swing.JLabel ErreurL;
     private javax.swing.JButton MenuButton;

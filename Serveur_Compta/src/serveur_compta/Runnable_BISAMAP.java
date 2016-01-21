@@ -106,7 +106,7 @@ public class Runnable_BISAMAP implements Runnable
                         break;
 
                     case ProtocoleBISAMAP.REC_PAY :
-                        recPay(parts);
+                        recPay();
                         break;
 
                     case ProtocoleBISAMAP.LIST_WAITING :
@@ -379,7 +379,7 @@ public class Runnable_BISAMAP implements Runnable
     }
        
     
-    private void recPay(String[] parts)
+    private void recPay()
     {
     }
          

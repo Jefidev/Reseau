@@ -172,13 +172,13 @@ public final class Crypto
     
     
     /* HMAC (AUTHENTIFICATION) */
-    public static byte[] CreateHMAC(SecretKey cleSecrete, byte[] toPut)
+    public static byte[] CreateHMAC(SecretKey cleSecrete, byte[] toHMAC)
     {
         try
         {
             Mac hmac = Mac.getInstance("HMAC-MD5", "BC");
             hmac.init(cleSecrete);
-            hmac.update(toPut);
+            hmac.update(toHMAC);
             return hmac.doFinal();
         }
         catch (NoSuchAlgorithmException ex)
@@ -197,13 +197,13 @@ public final class Crypto
         return null;
     }
     
-    public static boolean CompareHMAC(SecretKey cleSecrete, byte[] toPut, byte[] hmacRemote)
+    public static boolean CompareHMAC(SecretKey cleSecrete, byte[] toHMAC, byte[] hmacRemote)
     {
         try
         {
             Mac hmacLocal = Mac.getInstance("HMAC-MD5", "BC");
             hmacLocal.init(cleSecrete);
-            hmacLocal.update(toPut);
+            hmacLocal.update(toHMAC);
             byte[] hmacLocalBytes = hmacLocal.doFinal();
             return MessageDigest.isEqual(hmacRemote, hmacLocalBytes);
         }
