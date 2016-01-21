@@ -11,7 +11,10 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import newBean.BeanBDAccess;
 import newBean.connexionException;
 
@@ -112,8 +115,41 @@ public class Runnable_SAMOP implements Runnable{
     
     private boolean login(String[] requete)
     {
-        SendMsg("yes maggle");
-        return false;
+        String login = requete[1];
+        String password = requete[2];
+        
+        try {
+            //Recuperation des infos dans la BD
+            ResultSet rs = beanOracle.selection("PASSWORD, FONCTION", "PERSONNEL", "LOGIN = '" + login + "'");
+            
+            if(!rs.next())
+            {
+                SendMsg("ERR#Login incorrecte");
+                return false;
+            }
+            
+            String pwdBD = rs.getString("PASSWORD");
+            String fonction = rs.getString("FONCTION");
+            
+            if(!fonction.equalsIgnoreCase("chef-comptable"))
+            {
+                SendMsg("ERR#Seul les chefs comptable ont acces à cette application");
+                return false;
+            }
+            
+            if(!password.equals(pwdBD))
+            {
+                SendMsg("ERR#Mot de pass invalide");
+                return false;
+            }
+            
+            SendMsg("OK");
+            return true;
+            
+        } catch (SQLException ex) {
+            SendMsg("ERR#Base de donnee inaccessible. Reessaye plus tard");
+            return false;
+        }
     }
     
     

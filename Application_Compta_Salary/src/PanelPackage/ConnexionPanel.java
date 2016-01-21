@@ -127,8 +127,19 @@ public class ConnexionPanel extends javax.swing.JPanel {
         frame.connect();
         frame.SendMsg("LOGIN_SSL#"+loginTF.getText()+"#"+passwordField.getText());
         
-        System.err.println(frame.ReceiveMsg());
+        String[] resultat = frame.ReceiveMsg().split("#");
         
+        if(resultat[0].equals("ERR"))
+        {
+            errorLabel.setText(resultat[1]);
+            errorLabel.setVisible(true);
+            return;
+        }
+        
+        
+        //Changement de page
+        errorLabel.setText(resultat[0]);
+            errorLabel.setVisible(true);
     }//GEN-LAST:event_connexionButtonActionPerformed
 
 
