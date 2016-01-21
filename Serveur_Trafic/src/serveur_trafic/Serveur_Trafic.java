@@ -74,7 +74,7 @@ public class Serveur_Trafic extends Thread{
     public static void main(String[] args) {
         
         /*Fichier properties*/
-        String pathProperties = "serveurChat.properties";
+        String pathProperties = "serverTrafic.properties";
         
         Properties paramCo = new Properties();
         
@@ -93,6 +93,8 @@ public class Serveur_Trafic extends Thread{
                 paramCo.setProperty("PORT_SERVEUR_RES", "31041");
                 paramCo.setProperty("IP_SERVER_COMPTA", "localhost");
                 paramCo.setProperty("PORT_SERVER_COMPTA", "31048");
+                paramCo.setProperty("LOGIN", "trafic");
+                paramCo.setProperty("PWD", "trafic");
 
                 try {
                     paramCo.store(Oflux, null);
@@ -121,13 +123,16 @@ public class Serveur_Trafic extends Thread{
         String ip = paramCo.getProperty("IP_SERVER_COMPTA");
         int pc = Integer.parseInt(paramCo.getProperty("PORT_SERVER_COMPTA"));
         
+        String login = paramCo.getProperty("LOGIN");
+        String pwd = paramCo.getProperty("PWD");
+        
         Serveur_Trafic sc = new Serveur_Trafic(p, new ListeTaches(), 5);
         sc.start();
         
         Serveur_BOOMAP sb = new Serveur_BOOMAP(pb, new ListeTaches(), 5);
         sb.start();
         
-        client_CHAMAP ch = new client_CHAMAP(ip, pc);
+        client_CHAMAP ch = new client_CHAMAP(ip, pc, login, pwd);
         ch.run();
     }
     

@@ -2,6 +2,9 @@
 
 
 BEGIN
+	
+	--Log pour le serveur trafic
+	INSERT INTO LOG_SERVER VALUES('trafic', 'trafic');
 
 	-- INSERTION DU PERSONNEL
 	INSERT INTO PERSONNEL VALUES ('oce', 'oce', 'SEEL', 'OCEANE', 'oce@pro.be', '04/111.11.11', 'oce@priv.be', '087/11.11.11', 'COMPTABILITE', 'COMPTABLE', '2', '2015/12/01', 'BE29 1234 5678 9012');
