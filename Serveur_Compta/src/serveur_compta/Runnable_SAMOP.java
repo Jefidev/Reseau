@@ -180,7 +180,7 @@ public class Runnable_SAMOP implements Runnable{
             ResultSet rs = beanOracle.selection("*", "SALAIRES", where);
             
             String listResultat = "";
-            while(!rs.next())
+            while(rs.next())
             {
                 listResultat += rs.getString("LOGIN") + "   /   ";
                 listResultat += rs.getString("MONTANT_BRUT")+"#";
@@ -195,6 +195,7 @@ public class Runnable_SAMOP implements Runnable{
             SendMsg("OK#"+listResultat);
             
         } catch (SQLException ex) {
+            ex.printStackTrace();
             SendMsg("ERR#Base de donnees hors ligne");
         }
     }

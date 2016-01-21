@@ -5,6 +5,7 @@
  */
 package application_compta_salary;
 
+import PanelPackage.DisplayPanel;
 import java.awt.CardLayout;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -171,6 +172,11 @@ public class GUIsalary extends javax.swing.JFrame {
         CardLayout card = (CardLayout) this.getContentPane().getLayout();
         card.show(this.getContentPane(), nomCard);
     }
+    
+    public DisplayPanel getDisplay()
+    {
+        return displayPanel;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -182,12 +188,14 @@ public class GUIsalary extends javax.swing.JFrame {
     private void initComponents() {
 
         connexionPanel = new PanelPackage.ConnexionPanel();
-        accueilPanel = new PanelPackage.accueilPanel();
+        accueilPanel = new PanelPackage.AccueilPanel();
+        displayPanel = new PanelPackage.DisplayPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
         getContentPane().add(connexionPanel, "connexion");
         getContentPane().add(accueilPanel, "accueil");
+        getContentPane().add(displayPanel, "display");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -272,7 +280,8 @@ public class GUIsalary extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private PanelPackage.accueilPanel accueilPanel;
+    private PanelPackage.AccueilPanel accueilPanel;
     private PanelPackage.ConnexionPanel connexionPanel;
+    private PanelPackage.DisplayPanel displayPanel;
     // End of variables declaration//GEN-END:variables
 }
