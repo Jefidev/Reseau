@@ -105,6 +105,8 @@ public class GUIsalary extends javax.swing.JFrame {
         } catch (KeyManagementException ex) {
             Logger.getLogger(GUIsalary.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        return "ok";
     }
     
     public void logout()
