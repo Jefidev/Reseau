@@ -310,13 +310,13 @@ public class Controler extends HttpServlet{
             
             //pour la date de commande
             SimpleDateFormat sdf = new SimpleDateFormat("DD/MM/YYYY", Locale.FRENCH);
-            System.err.println(idCommande);
+            System.err.println(request.getParameter("total"));
             //Creation de la commande :
             HashMap mapInsert = new HashMap();
             mapInsert.put("ID_COMMANDE", idCommande);
             mapInsert.put("ID_CLIENT", sess.getAttribute("login"));
             mapInsert.put("DATE_COMMANDE", sdf.format(new Date()));
-            mapInsert.put("TOTAL", request.getParameter("total"));
+            mapInsert.put("TOTAL", 50);
                 
             bd.ecriture("COMMANDES", mapInsert);
             

@@ -115,8 +115,8 @@ public class displayProduct extends BodyTagSupport {
             while(rs.next())
             {
                 out.println("<div>");
-                out.println("<h2>" + bundle.getString(rs.getString("NOM"))+ "</h2>");
-                out.println("<p>" + bundle.getString(rs.getString("DESCRIPTION")) + "</p>");
+                out.println("<h2>" + bundle.getString("nom"+rs.getString("ID_PRODUIT"))+ "</h2>");
+                out.println("<p>" + bundle.getString("desc"+rs.getString("ID_PRODUIT")) + "</p>");
                 out.println("<p>"+bundle.getString("Prix")+" : "+ rs.getFloat("PRIX") + "</p>");
                 
                 int qttStock = rs.getInt("QUANTITE") - rs.getInt("RESERVE");
