@@ -212,7 +212,40 @@ public class Runnable_SAMOP implements Runnable{
     
     private void launchPayements()
     {
-        
+        ResultSet rs;
+        try {           
+            String where = "FLAG_FICHE_ENVOYEE = 0 AND FLAG_VALIDE = 1";
+            rs = beanOracle.selection("*", "SALAIRES", where);
+            String resultat = "";
+            
+            while(rs.next())
+            {
+                resultat += rs.getString("LOGIN") + "  /  ";
+                resultat += rs.getString("MONTANT_BRUT")+ "  /  ";
+                resultat += rs.getString("MOIS_ANNEE")+ "#";
+            }
+            
+            if(resultat.isEmpty())
+            {
+                SendMsg("ERR#Aucun payements a effectuer pour ce login");
+                return;
+            }
+            
+            //MAJ des salaires
+            
+            HashMap update = new HashMap();
+            
+            update.put("FLAG_FICHE_ENVOYEE", 1);
+            update.put("FLAG_SALAIRE_VERSE", 1);
+            
+            beanOracle.miseAJour("SALAIRES", update, where);
+            
+            SendMsg("OK#"+resultat);
+            
+        } catch (SQLException | requeteException ex) {
+            ex.printStackTrace();
+            SendMsg("ERR#Erreur BD");
+        } 
     }
     
     
