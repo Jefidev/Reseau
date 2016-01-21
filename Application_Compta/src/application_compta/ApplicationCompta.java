@@ -20,6 +20,7 @@ public class ApplicationCompta extends javax.swing.JFrame
         ValidationFacture = new application_compta.ValidationFacture();
         ListerFactures = new application_compta.ListerFactures();
         RecPay = new application_compta.RecPay();
+        ListWaiting = new application_compta.ListWaiting();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new java.awt.CardLayout());
@@ -27,6 +28,7 @@ public class ApplicationCompta extends javax.swing.JFrame
         getContentPane().add(ValidationFacture, "ValidationFacture");
         getContentPane().add(ListerFactures, "ListerFactures");
         getContentPane().add(RecPay, "RecPay");
+        getContentPane().add(ListWaiting, "ListWaiting");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -91,6 +93,7 @@ public class ApplicationCompta extends javax.swing.JFrame
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private application_compta.ListWaiting ListWaiting;
     private application_compta.ListerFactures ListerFactures;
     private application_compta.Menu Menu;
     private application_compta.RecPay RecPay;

@@ -51,5 +51,12 @@
         </Constraint>
       </Constraints>
     </Component>
+    <Component class="application_compta.ListWaiting" name="ListWaiting">
+      <Constraints>
+        <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignCardLayout" value="org.netbeans.modules.form.compat2.layouts.DesignCardLayout$CardConstraintsDescription">
+          <CardConstraints cardName="ListWaiting"/>
+        </Constraint>
+      </Constraints>
+    </Component>
   </SubComponents>
 </Form>

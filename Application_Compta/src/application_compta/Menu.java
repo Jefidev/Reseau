@@ -19,9 +19,7 @@ public class Menu extends javax.swing.JPanel
         ValidationFactButton = new javax.swing.JButton();
         ListerFacturesButton = new javax.swing.JButton();
         RecPayButton = new javax.swing.JButton();
-        StatInferTestConfButton = new javax.swing.JButton();
-        StatInferTestHomogButton = new javax.swing.JButton();
-        StatInferTestAnovaButton = new javax.swing.JButton();
+        ListWaitingButton = new javax.swing.JButton();
         QuitterButton = new javax.swing.JButton();
 
         TitreLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -49,24 +47,10 @@ public class Menu extends javax.swing.JPanel
             }
         });
 
-        StatInferTestConfButton.setText("Test d'hypothèse de conformité");
-        StatInferTestConfButton.addActionListener(new java.awt.event.ActionListener() {
+        ListWaitingButton.setText("Liste des factures non payées");
+        ListWaitingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StatInferTestConfButtonActionPerformed(evt);
-            }
-        });
-
-        StatInferTestHomogButton.setText("Test d'hypothèse d'homogénéité");
-        StatInferTestHomogButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StatInferTestHomogButtonActionPerformed(evt);
-            }
-        });
-
-        StatInferTestAnovaButton.setText("Test d'hypothèse de type ANOVA");
-        StatInferTestAnovaButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                StatInferTestAnovaButtonActionPerformed(evt);
+                ListWaitingButtonActionPerformed(evt);
             }
         });
 
@@ -89,16 +73,14 @@ public class Menu extends javax.swing.JPanel
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(StatInferTestAnovaButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(QuitterButton))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(ValidationFactButton)
                             .addComponent(ListerFacturesButton)
                             .addComponent(RecPayButton)
-                            .addComponent(StatInferTestConfButton)
-                            .addComponent(StatInferTestHomogButton))
+                            .addComponent(ListWaitingButton))
                         .addGap(0, 295, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -114,17 +96,15 @@ public class Menu extends javax.swing.JPanel
                 .addGap(18, 18, 18)
                 .addComponent(RecPayButton)
                 .addGap(18, 18, 18)
-                .addComponent(StatInferTestConfButton)
-                .addGap(18, 18, 18)
-                .addComponent(StatInferTestHomogButton)
-                .addGap(18, 18, 18)
-                .addComponent(StatInferTestAnovaButton)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addComponent(ListWaitingButton)
+                .addContainerGap(103, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(QuitterButton)
                 .addContainerGap())
         );
+
+        ListWaitingButton.getAccessibleContext().setAccessibleName("Factures non payées");
     }// </editor-fold>//GEN-END:initComponents
 
     private void ValidationFactButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ValidationFactButtonActionPerformed
@@ -142,20 +122,10 @@ public class Menu extends javax.swing.JPanel
         app.ChangePanel("RecPay");
     }//GEN-LAST:event_RecPayButtonActionPerformed
 
-    private void StatInferTestConfButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestConfButtonActionPerformed
+    private void ListWaitingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ListWaitingButtonActionPerformed
         ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("StatInferTestConf");
-    }//GEN-LAST:event_StatInferTestConfButtonActionPerformed
-
-    private void StatInferTestHomogButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestHomogButtonActionPerformed
-        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("StatInferTestHomog");
-    }//GEN-LAST:event_StatInferTestHomogButtonActionPerformed
-
-    private void StatInferTestAnovaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StatInferTestAnovaButtonActionPerformed
-        ApplicationCompta app = (ApplicationCompta)SwingUtilities.getWindowAncestor(this);
-        app.ChangePanel("StatInferTestAnova");
-    }//GEN-LAST:event_StatInferTestAnovaButtonActionPerformed
+        app.ChangePanel("ListWaiting");
+    }//GEN-LAST:event_ListWaitingButtonActionPerformed
 
     private void QuitterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuitterButtonActionPerformed
         Utility.SendMsg(ProtocoleBISAMAP.LOGOUT, null);
@@ -163,12 +133,10 @@ public class Menu extends javax.swing.JPanel
     }//GEN-LAST:event_QuitterButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ListWaitingButton;
     private javax.swing.JButton ListerFacturesButton;
     private javax.swing.JButton QuitterButton;
     private javax.swing.JButton RecPayButton;
-    private javax.swing.JButton StatInferTestAnovaButton;
-    private javax.swing.JButton StatInferTestConfButton;
-    private javax.swing.JButton StatInferTestHomogButton;
     private javax.swing.JLabel TitreLabel;
     private javax.swing.JButton ValidationFactButton;
     // End of variables declaration//GEN-END:variables
