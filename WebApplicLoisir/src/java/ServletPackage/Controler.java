@@ -976,6 +976,7 @@ public class Controler extends HttpServlet{
         ResourceBundle res = ResourceBundle.getBundle("../Bundles/TextesSite", localLangue);
         
         sess.setAttribute("langue", res);
+       
         
         //Redirection à l'accueil
         RequestDispatcher rd = request.getRequestDispatcher("accueil.jsp");
