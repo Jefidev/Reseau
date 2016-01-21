@@ -6,10 +6,7 @@
 package serveur_compta;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -17,7 +14,6 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.net.ssl.KeyManagerFactory;
@@ -106,7 +102,7 @@ public class Serveur_SAMOP extends Thread{
                 System.err.println("Serveur_SAMOP : Erreur d'accept : " + e);
             }
 
-            tachesAExecuter.recordTache(new Runnable_BISAMAP(CSocket));
+            tachesAExecuter.recordTache(new Runnable_SAMOP(CSocket));
         }
     }
 }

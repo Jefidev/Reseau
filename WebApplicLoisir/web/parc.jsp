@@ -19,7 +19,7 @@
         <title>Parc</title>
     </head>
     <body>
-        <h1>Réserver vos tikets pour le parc</h1>
+        <h1>Réserver vos tickets pour le parc</h1>
         <p>Session de <%=session.getAttribute("login")%></p>
         <outil:currentDate langue="UK"/>
         

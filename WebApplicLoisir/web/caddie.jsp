@@ -14,7 +14,7 @@
         <title>caddie</title>
     </head>
     <body>
-        <h1>Contenus de votre caddie</h1>
+        <h1>Contenu de votre caddie</h1>
         <!--afficher le contenu-->
         
         <form action="Controler" method="POST">
