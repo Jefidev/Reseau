@@ -454,7 +454,20 @@ public class Runnable_BISAMAP implements Runnable
             byte[] signature = new byte[longueur];
             dis.readFully(signature);
             
-            String toSign = ProtocoleBISAMAP.LIST_BILLS + parts[1] + "#" + parts[2] + "#" + parts[3];
+            String msg = parts[1];
+            String where = "FLAG_FACT_PAYEE = 0";
+            if(parts[1].equals("2")) // Depuis plus d'un mois
+            {
+                String date = new SimpleDateFormat("yyyy/MM").format(new Date());
+                where += " AND MOIS_ANNEE < '" + date + "'";
+            }
+            else if(parts[1].equals("3"))   // Société
+            {
+                where += " AND ID_SOCIETE = '" + parts[2]  + "'";
+                msg += "#" + parts[2];
+            }
+            
+            String toSign = ProtocoleBISAMAP.LIST_WAITING + msg;
             boolean comparaisonSignature = Crypto.CompareSignature(toSign.getBytes(), "KSServeurCompta.p12", "azerty", "AppCompta", signature);
             
             if(comparaisonSignature == false)
@@ -463,15 +476,6 @@ public class Runnable_BISAMAP implements Runnable
                 System.err.println("Runnable_BISAMAP : listWaiting : Signature non vérifiée");
                 return;
             }
-            
-            String where = "FLAG_FACT_PAYEE = 0";
-            if(parts[1].equals("2")) // Depuis plus d'un mois
-            {
-                String date = new SimpleDateFormat("yyyy/MM").format(new Date());
-                where += " AND MOIS_ANNEE < '" + date + "'";
-            }
-            else if(parts[1].equals("3"))   // Société
-                where += " AND ID_SOCIETE = '" + parts[2]  + "'";
             
             ResultSet rs = beanOracle.selection("*", "FACTURES",  where);
             if(!rs.next())
