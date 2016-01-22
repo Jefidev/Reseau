@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.DefaultListModel;
+import javax.swing.JComboBox;
 import javax.swing.SwingUtilities;
 import library_compta.Convert;
 import library_compta.Crypto;
@@ -19,12 +20,13 @@ public class ListWaiting extends javax.swing.JPanel
     {
         initComponents();
         
-        IdSocieteTF.setVisible(false);
-        FiltreCB.addItem("Toutes");
+        /*FiltreCB.addItem("Toutes");
         FiltreCB.addItem("Emises depuis plus d'un mois");
-        FiltreCB.addItem("D'une société données");
+        FiltreCB.addItem("D'une société donnée");*/
         FiltreCB.setSelectedItem("Toutes");
+        
         ErreurL.setVisible(false);
+        
         FacturesjList.setModel(new DefaultListModel());
     }
 
@@ -42,12 +44,13 @@ public class ListWaiting extends javax.swing.JPanel
         IdSocieteTF = new javax.swing.JTextField();
         ListerButton = new javax.swing.JButton();
         ErreurL = new javax.swing.JLabel();
+        IdSocieteL = new javax.swing.JLabel();
 
         TitreLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         TitreLabel.setForeground(new java.awt.Color(0, 0, 255));
         TitreLabel.setText("FACTURES NON PAYEES :");
 
-        FiltreCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        FiltreCB.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Toutes", "Emises depuis plus d'un mois", "D'une société donnée" }));
         FiltreCB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 FiltreCBActionPerformed(evt);
@@ -63,14 +66,7 @@ public class ListWaiting extends javax.swing.JPanel
 
         AfficherL.setText("Afficher :");
 
-        FacturesjList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
         jScrollPane1.setViewportView(FacturesjList);
-
-        IdSocieteTF.setText("Id de la société");
 
         ListerButton.setText("Lister");
         ListerButton.addActionListener(new java.awt.event.ActionListener() {
@@ -83,6 +79,8 @@ public class ListWaiting extends javax.swing.JPanel
         ErreurL.setForeground(new java.awt.Color(255, 0, 0));
         ErreurL.setText("jLabel1");
 
+        IdSocieteL.setText("Id société :");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -90,21 +88,25 @@ public class ListWaiting extends javax.swing.JPanel
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(ErreurL)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(MenuButton))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(TitreLabel)
                         .addGap(18, 18, 18)
+                        .addComponent(ErreurL)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(AfficherL)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(FiltreCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
-                        .addComponent(IdSocieteTF, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                        .addComponent(IdSocieteL)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ListerButton)))
+                        .addComponent(IdSocieteTF, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ListerButton))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(MenuButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -113,16 +115,18 @@ public class ListWaiting extends javax.swing.JPanel
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(TitreLabel)
-                    .addComponent(FiltreCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(AfficherL)
-                    .addComponent(IdSocieteTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ListerButton))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 205, Short.MAX_VALUE)
+                    .addComponent(ErreurL))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(MenuButton)
-                    .addComponent(ErreurL))
+                    .addComponent(AfficherL)
+                    .addComponent(FiltreCB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ListerButton)
+                    .addComponent(IdSocieteTF, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(IdSocieteL))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(MenuButton)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -135,14 +139,7 @@ public class ListWaiting extends javax.swing.JPanel
 
     
     private void FiltreCBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FiltreCBActionPerformed
-        IdSocieteTF.setVisible(false);
-        
         filtre = FiltreCB.getSelectedItem().toString();
-        
-        if(filtre.equals("Emises depuis plus d'un mois"))
-        {
-            IdSocieteTF.setVisible(true);
-        }
     }//GEN-LAST:event_FiltreCBActionPerformed
 
     
@@ -165,7 +162,7 @@ public class ListWaiting extends javax.swing.JPanel
                     return;
                 }
 
-                msg = "3" + IdSocieteTF.getText();
+                msg = "3#" + IdSocieteTF.getText();
             }
 
             String toSign = ProtocoleBISAMAP.LIST_WAITING + msg;
@@ -213,6 +210,7 @@ public class ListWaiting extends javax.swing.JPanel
     private javax.swing.JLabel ErreurL;
     private javax.swing.JList FacturesjList;
     private javax.swing.JComboBox FiltreCB;
+    private javax.swing.JLabel IdSocieteL;
     private javax.swing.JTextField IdSocieteTF;
     private javax.swing.JButton ListerButton;
     private javax.swing.JButton MenuButton;
