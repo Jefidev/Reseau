@@ -30,7 +30,7 @@ import javax.crypto.SecretKey;
 
 public final class Crypto
 {
-    /* CHIFFREMENT ASYMETRIQUE (INTEGRITE) */
+    /* CHIFFREMENT ASYMETRIQUE */
     public static byte[] AsymCrypt(byte[] tocrypt, String fichierKS, String mdpKS, String aliasCertif)
     {
         try          
@@ -320,7 +320,7 @@ public final class Crypto
     }
     
         
-    /* CHIFFREMENT SYMETRIQUE (INTEGRITE) */
+    /* CHIFFREMENT SYMETRIQUE */
     public static SecretKey GenerateSecretKey()
     {        
         try
