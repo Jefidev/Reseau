@@ -189,7 +189,6 @@ public class ListerFactures extends javax.swing.JPanel
 
                     for(Facture facture : listFactures)
                     {
-                        System.out.println(facture);
                         dlm.addElement(facture);
                     }
                 }

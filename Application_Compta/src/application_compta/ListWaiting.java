@@ -1,11 +1,13 @@
 package application_compta;
 
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.DefaultListModel;
 import javax.swing.SwingUtilities;
+import library_compta.Convert;
 import library_compta.Crypto;
+import library_compta.Facture;
 import library_compta.ProtocoleBISAMAP;
 
 
@@ -19,8 +21,8 @@ public class ListWaiting extends javax.swing.JPanel
         
         IdSocieteTF.setVisible(false);
         FiltreCB.addItem("Toutes");
-        FiltreCB.addItem("D'une société données");
         FiltreCB.addItem("Emises depuis plus d'un mois");
+        FiltreCB.addItem("D'une société données");
         FiltreCB.setSelectedItem("Toutes");
         ErreurL.setVisible(false);
         FacturesjList.setModel(new DefaultListModel());
@@ -173,10 +175,30 @@ public class ListWaiting extends javax.swing.JPanel
             Utility.dos.writeInt(signature.length); 
             Utility.dos.write(signature);
             Utility.dos.flush();
-            
 
+            String reponse = Utility.ReceiveMsg();
+            String[] parts = reponse.split("#");
 
-            //Réception et traitement
+            if (parts[0].equals("OUI"))
+            {
+                int longueur = Utility.dis.readInt();
+                byte[] list = new byte[longueur];
+                Utility.dis.readFully(list);
+                
+                List<Facture> listFactures = new ArrayList<Facture>();
+                listFactures = (List<Facture>)Convert.ByteArrayToObject(list);
+                
+                DefaultListModel dlm = (DefaultListModel)FacturesjList.getModel();
+                for(Facture facture : listFactures)
+                {
+                    dlm.addElement(facture);
+                }
+            }
+            else
+            {
+                ErreurL.setText(parts[1]);
+                ErreurL.setVisible(true);
+            }
         }
         catch (IOException ex)
         {
