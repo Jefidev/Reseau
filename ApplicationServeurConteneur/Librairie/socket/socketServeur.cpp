@@ -46,7 +46,7 @@ int SocketServeur::accepter()
 
 	int t = sizeof(struct sockaddr);
 
-    if((service = accept(socketHandle, (struct sockaddr*)&socketAdress, &t))==-1)
+    if((service = accept(socketHandle, (struct sockaddr*)&socketAdress,(unsigned int*) &t))==-1)
         throw ErrnoException(errno, "Erreur accept");
     
     else
